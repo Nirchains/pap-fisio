@@ -520,6 +520,11 @@ table .fabrik___heading span.heading{
 	white-space: nowrap;
 }
 
+div.fabrik___heading{
+	white-space: nowrap;
+	font-weight: bold;
+}
+
 table.fabrikList td,
 table.fabrikList th{
 	padding: 5px;
@@ -556,8 +561,8 @@ td.repeat-reduce {
 
 td.repeat-merge ul.fabrikRepeatData li,
 td.repeat-reduce ul.fabrikRepeatData li {
-	/*padding: 5px !important;
-	border-bottom: 1px solid #CCCCCC;*/
+	padding: 5px !important;
+	border-bottom: 1px solid #CCCCCC;
 }
 /*********************************************************/
 /************  Misc. Workarounds *************************/
@@ -704,4 +709,9 @@ form.fabrikForm label.radio {
 
 @media print {
 	a[href]:after { content: none !important; }
+	.fabrikPrintIcon { display: none !important; }
+	table {
+		page-break-inside: avoid;
+	}
+
 }

@@ -1,21 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<extension version="3.6" client="administrator" type="language" method="upgrade">
+<extension version="3.9" client="administrator" type="language" method="upgrade">
 	<name>Spanish (español)</name>
 	<tag>es-ES</tag>
-	<version>3.6.3.1</version>
-	<creationDate>23/10/2016</creationDate>
-	<author>ComunidadJoomla</author>
-	<authorEmail>jcomunidad@gmail.com</authorEmail>
-	<authorUrl></authorUrl>
-	<copyright>Copyright (C) 2005 - 2016 Comunidadjoomla.org. All rights reserved.</copyright>
+	<version>3.9.1.1</version>
+	<creationDate>19/12/2018</creationDate>
+	<author></author>
+	<authorEmail>es.es.translation.team@gmail.com</authorEmail>
+	<authorUrl>http://joomlaes.org</authorUrl>
+	<copyright>Copyright (C) 2005 - 2018 Open Source Matters, Inc. All rights reserved.</copyright>
 	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
 	<description>es-ES - Administration language</description>
 	<files>
 		<filename>es-ES.ini</filename>
+		<filename>es-ES.com_actionlogs.ini</filename>
+		<filename>es-ES.com_actionlogs.sys.ini</filename>
 		<filename>es-ES.com_admin.ini</filename>
 		<filename>es-ES.com_admin.sys.ini</filename>
 		<filename>es-ES.com_ajax.ini</filename>
 		<filename>es-ES.com_ajax.sys.ini</filename>
+		<filename>es-ES.com_associations.ini</filename>
+		<filename>es-ES.com_associations.sys.ini</filename>
 		<filename>es-ES.com_banners.ini</filename>
 		<filename>es-ES.com_banners.sys.ini</filename>
 		<filename>es-ES.com_cache.ini</filename>
@@ -34,6 +38,8 @@
 		<filename>es-ES.com_contenthistory.sys.ini</filename>
 		<filename>es-ES.com_cpanel.ini</filename>
 		<filename>es-ES.com_cpanel.sys.ini</filename>
+		<filename>es-ES.com_fields.ini</filename>
+		<filename>es-ES.com_fields.sys.ini</filename>
 		<filename>es-ES.com_finder.ini</filename>
 		<filename>es-ES.com_finder.sys.ini</filename>
 		<filename>es-ES.com_installer.ini</filename>
@@ -59,6 +65,8 @@
 		<filename>es-ES.com_plugins.sys.ini</filename>
 		<filename>es-ES.com_postinstall.ini</filename>
 		<filename>es-ES.com_postinstall.sys.ini</filename>
+		<filename>es-ES.com_privacy.ini</filename>
+		<filename>es-ES.com_privacy.sys.ini</filename>
 		<filename>es-ES.com_redirect.ini</filename>
 		<filename>es-ES.com_redirect.sys.ini</filename>
 		<filename>es-ES.com_search.ini</filename>
@@ -80,6 +88,8 @@
 		<filename>es-ES.mod_feed.sys.ini</filename>
 		<filename>es-ES.mod_latest.ini</filename>
 		<filename>es-ES.mod_latest.sys.ini</filename>
+		<filename>es-ES.mod_latestactions.ini</filename>
+		<filename>es-ES.mod_latestactions.sys.ini</filename>
 		<filename>es-ES.mod_logged.ini</filename>
 		<filename>es-ES.mod_logged.sys.ini</filename>
 		<filename>es-ES.mod_login.ini</filename>
@@ -90,8 +100,12 @@
 		<filename>es-ES.mod_multilangstatus.sys.ini</filename>
 		<filename>es-ES.mod_popular.ini</filename>
 		<filename>es-ES.mod_popular.sys.ini</filename>
+		<filename>es-ES.mod_privacy_dashboard.ini</filename>
+		<filename>es-ES.mod_privacy_dashboard.sys.ini</filename>
 		<filename>es-ES.mod_quickicon.ini</filename>
 		<filename>es-ES.mod_quickicon.sys.ini</filename>
+		<filename>es-ES.mod_sampledata.ini</filename>
+		<filename>es-ES.mod_sampledata.sys.ini</filename>
 		<filename>es-ES.mod_stats_admin.ini</filename>
 		<filename>es-ES.mod_stats_admin.sys.ini</filename>
 		<filename>es-ES.mod_status.ini</filename>
@@ -104,6 +118,8 @@
 		<filename>es-ES.mod_toolbar.sys.ini</filename>
 		<filename>es-ES.mod_version.ini</filename>
 		<filename>es-ES.mod_version.sys.ini</filename>
+		<filename>es-ES.plg_actionlog_joomla.ini</filename>
+		<filename>es-ES.plg_actionlog_joomla.sys.ini</filename>
 		<filename>es-ES.plg_authentication_cookie.ini</filename>
 		<filename>es-ES.plg_authentication_cookie.sys.ini</filename>
 		<filename>es-ES.plg_authentication_gmail.ini</filename>
@@ -114,14 +130,18 @@
 		<filename>es-ES.plg_authentication_ldap.sys.ini</filename>
 		<filename>es-ES.plg_captcha_recaptcha.ini</filename>
 		<filename>es-ES.plg_captcha_recaptcha.sys.ini</filename>
+		<filename>es-ES.plg_captcha_recaptcha_invisible.ini</filename>
+		<filename>es-ES.plg_captcha_recaptcha_invisible.sys.ini</filename>
+		<filename>es-ES.plg_content_confirmconsent.ini</filename>
+		<filename>es-ES.plg_content_confirmconsent.sys.ini</filename>
 		<filename>es-ES.plg_content_contact.ini</filename>
 		<filename>es-ES.plg_content_contact.sys.ini</filename>
 		<filename>es-ES.plg_content_emailcloak.ini</filename>
 		<filename>es-ES.plg_content_emailcloak.sys.ini</filename>
+		<filename>es-ES.plg_content_fields.ini</filename>
+		<filename>es-ES.plg_content_fields.sys.ini</filename>
 		<filename>es-ES.plg_content_finder.ini</filename>
 		<filename>es-ES.plg_content_finder.sys.ini</filename>
-		<filename>es-ES.plg_content_geshi.ini</filename>
-		<filename>es-ES.plg_content_geshi.sys.ini</filename>
 		<filename>es-ES.plg_content_joomla.ini</filename>
 		<filename>es-ES.plg_content_joomla.sys.ini</filename>
 		<filename>es-ES.plg_content_loadmodule.ini</filename>
@@ -134,8 +154,14 @@
 		<filename>es-ES.plg_content_vote.sys.ini</filename>
 		<filename>es-ES.plg_editors-xtd_article.ini</filename>
 		<filename>es-ES.plg_editors-xtd_article.sys.ini</filename>
+		<filename>es-ES.plg_editors-xtd_contact.ini</filename>
+		<filename>es-ES.plg_editors-xtd_contact.sys.ini</filename>
+		<filename>es-ES.plg_editors-xtd_fields.ini</filename>
+		<filename>es-ES.plg_editors-xtd_fields.sys.ini</filename>
 		<filename>es-ES.plg_editors-xtd_image.ini</filename>
 		<filename>es-ES.plg_editors-xtd_image.sys.ini</filename>
+		<filename>es-ES.plg_editors-xtd_menu.ini</filename>
+		<filename>es-ES.plg_editors-xtd_menu.sys.ini</filename>
 		<filename>es-ES.plg_editors-xtd_module.ini</filename>
 		<filename>es-ES.plg_editors-xtd_module.sys.ini</filename>
 		<filename>es-ES.plg_editors-xtd_pagebreak.ini</filename>
@@ -150,6 +176,40 @@
 		<filename>es-ES.plg_editors_tinymce.sys.ini</filename>
 		<filename>es-ES.plg_extension_joomla.ini</filename>
 		<filename>es-ES.plg_extension_joomla.sys.ini</filename>
+		<filename>es-ES.plg_fields_calendar.ini</filename>
+		<filename>es-ES.plg_fields_calendar.sys.ini</filename>
+		<filename>es-ES.plg_fields_checkboxes.ini</filename>
+		<filename>es-ES.plg_fields_checkboxes.sys.ini</filename>
+		<filename>es-ES.plg_fields_color.ini</filename>
+		<filename>es-ES.plg_fields_color.sys.ini</filename>
+		<filename>es-ES.plg_fields_editor.ini</filename>
+		<filename>es-ES.plg_fields_editor.sys.ini</filename>
+		<filename>es-ES.plg_fields_image.ini</filename>
+		<filename>es-ES.plg_fields_image.sys.ini</filename>
+		<filename>es-ES.plg_fields_imagelist.ini</filename>
+		<filename>es-ES.plg_fields_imagelist.sys.ini</filename>
+		<filename>es-ES.plg_fields_integer.ini</filename>
+		<filename>es-ES.plg_fields_integer.sys.ini</filename>
+		<filename>es-ES.plg_fields_list.ini</filename>
+		<filename>es-ES.plg_fields_list.sys.ini</filename>
+		<filename>es-ES.plg_fields_media.ini</filename>
+		<filename>es-ES.plg_fields_media.sys.ini</filename>
+		<filename>es-ES.plg_fields_radio.ini</filename>
+		<filename>es-ES.plg_fields_radio.sys.ini</filename>
+		<filename>es-ES.plg_fields_repeatable.ini</filename>
+		<filename>es-ES.plg_fields_repeatable.sys.ini</filename>
+		<filename>es-ES.plg_fields_sql.ini</filename>
+		<filename>es-ES.plg_fields_sql.sys.ini</filename>
+		<filename>es-ES.plg_fields_text.ini</filename>
+		<filename>es-ES.plg_fields_text.sys.ini</filename>
+		<filename>es-ES.plg_fields_textarea.ini</filename>
+		<filename>es-ES.plg_fields_textarea.sys.ini</filename>
+		<filename>es-ES.plg_fields_url.ini</filename>
+		<filename>es-ES.plg_fields_url.sys.ini</filename>
+		<filename>es-ES.plg_fields_user.ini</filename>
+		<filename>es-ES.plg_fields_user.sys.ini</filename>
+		<filename>es-ES.plg_fields_usergrouplist.ini</filename>
+		<filename>es-ES.plg_fields_usergrouplist.sys.ini</filename>
 		<filename>es-ES.plg_finder_categories.ini</filename>
 		<filename>es-ES.plg_finder_categories.sys.ini</filename>
 		<filename>es-ES.plg_finder_contacts.ini</filename>
@@ -170,10 +230,28 @@
 		<filename>es-ES.plg_installer_urlinstaller.sys.ini</filename>
 		<filename>es-ES.plg_installer_webinstaller.ini</filename>
 		<filename>es-ES.plg_installer_webinstaller.sys.ini</filename>
+		<filename>es-ES.plg_privacy_actionlogs.ini</filename>
+		<filename>es-ES.plg_privacy_actionlogs.sys.ini</filename>
+		<filename>es-ES.plg_privacy_consents.ini</filename>
+		<filename>es-ES.plg_privacy_consents.sys.ini</filename>
+		<filename>es-ES.plg_privacy_contact.ini</filename>
+		<filename>es-ES.plg_privacy_contact.sys.ini</filename>
+		<filename>es-ES.plg_privacy_content.ini</filename>
+		<filename>es-ES.plg_privacy_content.sys.ini</filename>
+		<filename>es-ES.plg_privacy_message.ini</filename>
+		<filename>es-ES.plg_privacy_message.sys.ini</filename>
+		<filename>es-ES.plg_privacy_user.ini</filename>
+		<filename>es-ES.plg_privacy_user.sys.ini</filename>
 		<filename>es-ES.plg_quickicon_extensionupdate.ini</filename>
 		<filename>es-ES.plg_quickicon_extensionupdate.sys.ini</filename>
 		<filename>es-ES.plg_quickicon_joomlaupdate.ini</filename>
 		<filename>es-ES.plg_quickicon_joomlaupdate.sys.ini</filename>
+		<filename>es-ES.plg_quickicon_phpversioncheck.ini</filename>
+		<filename>es-ES.plg_quickicon_phpversioncheck.sys.ini</filename>
+		<filename>es-ES.plg_quickicon_privacycheck.ini</filename>
+		<filename>es-ES.plg_quickicon_privacycheck.sys.ini</filename>
+		<filename>es-ES.plg_sampledata_blog.ini</filename>
+		<filename>es-ES.plg_sampledata_blog.sys.ini</filename>
 		<filename>es-ES.plg_search_categories.ini</filename>
 		<filename>es-ES.plg_search_categories.sys.ini</filename>
 		<filename>es-ES.plg_search_contacts.ini</filename>
@@ -186,10 +264,14 @@
 		<filename>es-ES.plg_search_tags.sys.ini</filename>
 		<filename>es-ES.plg_search_weblinks.ini</filename>
 		<filename>es-ES.plg_search_weblinks.sys.ini</filename>
+		<filename>es-ES.plg_system_actionlogs.ini</filename>
+		<filename>es-ES.plg_system_actionlogs.sys.ini</filename>
 		<filename>es-ES.plg_system_cache.ini</filename>
 		<filename>es-ES.plg_system_cache.sys.ini</filename>
 		<filename>es-ES.plg_system_debug.ini</filename>
 		<filename>es-ES.plg_system_debug.sys.ini</filename>
+		<filename>es-ES.plg_system_fields.ini</filename>
+		<filename>es-ES.plg_system_fields.sys.ini</filename>
 		<filename>es-ES.plg_system_highlight.ini</filename>
 		<filename>es-ES.plg_system_highlight.sys.ini</filename>
 		<filename>es-ES.plg_system_languagecode.ini</filename>
@@ -200,14 +282,20 @@
 		<filename>es-ES.plg_system_log.sys.ini</filename>
 		<filename>es-ES.plg_system_logout.ini</filename>
 		<filename>es-ES.plg_system_logout.sys.ini</filename>
+		<filename>es-ES.plg_system_logrotation.ini</filename>
+		<filename>es-ES.plg_system_logrotation.sys.ini</filename>
 		<filename>es-ES.plg_system_p3p.ini</filename>
 		<filename>es-ES.plg_system_p3p.sys.ini</filename>
+		<filename>es-ES.plg_system_privacyconsent.ini</filename>
+		<filename>es-ES.plg_system_privacyconsent.sys.ini</filename>
 		<filename>es-ES.plg_system_redirect.ini</filename>
 		<filename>es-ES.plg_system_redirect.sys.ini</filename>
 		<filename>es-ES.plg_system_remember.ini</filename>
 		<filename>es-ES.plg_system_remember.sys.ini</filename>
 		<filename>es-ES.plg_system_sef.ini</filename>
 		<filename>es-ES.plg_system_sef.sys.ini</filename>
+		<filename>es-ES.plg_system_sessiongc.ini</filename>
+		<filename>es-ES.plg_system_sessiongc.sys.ini</filename>
 		<filename>es-ES.plg_system_stats.ini</filename>
 		<filename>es-ES.plg_system_stats.sys.ini</filename>
 		<filename>es-ES.plg_system_updatenotification.ini</filename>
@@ -222,6 +310,8 @@
 		<filename>es-ES.plg_user_joomla.sys.ini</filename>
 		<filename>es-ES.plg_user_profile.ini</filename>
 		<filename>es-ES.plg_user_profile.sys.ini</filename>
+		<filename>es-ES.plg_user_terms.ini</filename>
+		<filename>es-ES.plg_user_terms.sys.ini</filename>
 		<filename>es-ES.tpl_hathor.ini</filename>
 		<filename>es-ES.tpl_hathor.sys.ini</filename>
 		<filename>es-ES.tpl_isis.ini</filename>

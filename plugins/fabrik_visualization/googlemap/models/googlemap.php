@@ -11,12 +11,13 @@
 // No direct access
 defined('_JEXEC') or die('Restricted access');
 
+use Fabrik\Helpers\Googlemap;
+use Fabrik\Helpers\Lizt;
 use Joomla\Utilities\ArrayHelper;
 
 jimport('joomla.application.component.model');
 
 require_once JPATH_SITE . '/components/com_fabrik/models/visualization.php';
-require_once JPATH_SITE . '/components/com_fabrik/helpers/googlemap.php';
 
 /**
  * Fabrik Google Map Plug-in Model
@@ -83,8 +84,8 @@ class FabrikModelGooglemap extends FabrikFEModelVisualization
 		$viz    = $this->getVisualization();
 
 		$opts            = new stdClass;
-		$opts->lat       = (float) $params->get('fb_gm_default_lat', 0);
-		$opts->lon       = (float) $params->get('fb_gm_default_lon', 0);
+		$opts->lat       = floatval($params->get('fb_gm_default_lat', 0));
+		$opts->lon       = floatval($params->get('fb_gm_default_lon', 0));
 		$opts->ajaxDefer = (bool) $params->get('fb_gm_ajax_defer', '0');
 
 		if ($params->get('fb_gm_ajax_defer', '0') !== '1')
@@ -200,11 +201,18 @@ class FabrikModelGooglemap extends FabrikFEModelVisualization
 		$opts->zoomStyle            = (int) $params->get('fb_gm_zoom_control_style', 0);
 		$opts->zoom                 = $params->get('fb_gm_zoom', 1);
 		$opts->show_radius          = $params->get('fb_gm_use_radius', '1') == '1' ? true : false;
+		$opts->heatmap              = $params->get('fb_gm_heatmap', '0') == '1' ? true : false;
+
+		if ($opts->heatmap)
+		{
+			$opts->clustering = false;
+		}
+
 		$opts->radius_defaults      = (array) $params->get('fb_gm_radius_default');
 		$opts->radius_fill_colors   = (array) $params->get('fb_gm_radius_fill_color');
-		$opts->styles               = FabGoogleMapHelper::styleJs($params);
+		$opts->styles               = Googlemap::styleJs($params);
 		$config                     = JComponentHelper::getParams('com_fabrik');
-		$apiKey                     = $config->get('google_api_key', '');
+		$apiKey                     = trim($config->get('google_api_key', ''));
 		$opts->key                  = empty($apiKey) ? false : $apiKey;
 		$opts->showLocation         = $params->get('fb_gm_show_location', '0') === '1';
 		$opts                       = json_encode($opts);
@@ -254,7 +262,7 @@ class FabrikModelGooglemap extends FabrikFEModelVisualization
 				continue;
 			}
 
-			$mapsElements = FabrikHelperList::getElements($listModel, array('plugin' => 'googlemap', 'published' => 1));
+			$mapsElements = Lizt::getElements($listModel, array('plugin' => 'googlemap', 'published' => 1));
 			$coordColumn = $mapsElements[0]->getFullName(false, false);
 			$table = $listModel->getTable();
 
@@ -355,6 +363,7 @@ class FabrikModelGooglemap extends FabrikFEModelVisualization
 		$radiusDefaults = (array) $params->get('fb_gm_radius_default');
 		$radiusUnits = (array) $params->get('fb_gm_radius_unit');
 		$groupClass = (array) $params->get('fb_gm_group_class');
+		$heatmapWeightingElements = (array) $params->get('fb_gm_heatmap_weighting_element');
 
 		$c = 0;
 		$this->recordCount = 0;
@@ -368,7 +377,7 @@ class FabrikModelGooglemap extends FabrikFEModelVisualization
 
 		foreach ($listIds as $listId)
 		{
-			$listModel = $this->getlistModel($listId);
+			$listModel = $this->getlistModel($listId, $c);
 
 			$template = FArrayHelper::getValue($templates, $c, '');
 			/**
@@ -377,13 +386,15 @@ class FabrikModelGooglemap extends FabrikFEModelVisualization
 			* which isn't set for list display, which then wouldn't get rendered unless we do this.
 			*/
 
+			/*
 			if (FabrikString::usesElementPlaceholders($template))
 			{
 				$listModel->formatAll(true);
 			}
+            */
 
 			$template_nl2br = FArrayHelper::getValue($templates_nl2br, $c, '1') == '1';
-			$mapsElements = FabrikHelperList::getElements($listModel, array('plugin' => 'googlemap', 'published' => 1));
+			$mapsElements = Lizt::getElements($listModel, array('plugin' => 'googlemap', 'published' => 1));
 			$coordColumn = $mapsElements[0]->getFullName(true, false) . "_raw";
 
 			// Are we using random start location for icons?
@@ -393,7 +404,13 @@ class FabrikModelGooglemap extends FabrikFEModelVisualization
 			$input->set('limit' . $listId, $recLimit);
 			$listModel->setLimits(0, $recLimit);
 			$listModel->getPagination(0, 0, $recLimit);
-			$data = $listModel->getData();
+			$data = $listModel->getData(
+			    array (
+			        'rollover' => false,
+                    'custom_layout' => false,
+                    'add_box_and_links' => strstr($template, '{fabrik_')
+                )
+            );
 			$this->txt = array();
 			$k = 0;
 
@@ -429,7 +446,17 @@ class FabrikModelGooglemap extends FabrikFEModelVisualization
 
 					$rowData = ArrayHelper::fromObject($row);
 					$rowData['rowid'] = $rowData['__pk_val'];
+
+					$matches = array();
+
+					// alllow {coords:X} to specify number of decimal points to show
+					if (preg_match('/\{coords:(\d+)\}/', $template, $matches))
+					{
+						$rowData[trim($matches[0],'{}')] = sprintf('%.' . $matches[1] . 'f', $v[0]) . ',' . sprintf('%.' . $matches[1] . 'f', $v[1]);
+					}
+
 					$rowData['coords'] = $v[0] . ',' . $v[1];
+
 					$rowData['nav_url'] = "http://maps.google.com/maps?q=loc:" . $rowData['coords'] . "&navigate=yes";
 					$html = $w->parseMessageForPlaceHolder($template, $rowData);
 					FabrikHelperHTML::runContentPlugins($html, true);
@@ -625,6 +652,21 @@ class FabrikModelGooglemap extends FabrikFEModelVisualization
 						}
 					}
 
+					if ($params->get('fb_gm_heatmap', '0') == '1')
+					{
+						$heatmapWeightingElement = FArrayHelper::getValue($heatmapWeightingElements, $c, '');
+
+						if (!empty($heatmapWeightingElement))
+						{
+							$heatmapWeighting = (float) $row->$heatmapWeightingElement;
+							$icons[$v[0] . $v[1]]['heatmapWeighting'] = $heatmapWeighting;
+						}
+						else
+						{
+							$icons[$v[0] . $v[1]]['heatmapWeighting'] = 1;
+						}
+					}
+
 					$icons[$v[0] . $v[1]]['c'] = $c;
 					$this->recordCount++;
 					$k++;
@@ -641,6 +683,8 @@ class FabrikModelGooglemap extends FabrikFEModelVisualization
 				$icons[$v[0] . $v[1]][5] = $height;
 			}
 
+			// $$$ hugh - not used?  And doesn't make sense
+			/*
 			if (!empty($icons))
 			{
 				$this->iconRowData[] = array(
@@ -648,6 +692,7 @@ class FabrikModelGooglemap extends FabrikFEModelVisualization
 					'data' => $rowData
 				);
 			}
+			*/
 
 			$c++;
 		}
@@ -795,7 +840,7 @@ class FabrikModelGooglemap extends FabrikFEModelVisualization
 		$src = $uri->getScheme() . "://maps.google.com/staticmap?center=$lat,$lon&zoom={$z}&size={$w}x{$h}&maptype=mobile$iconStr";
 
 		$config = JComponentHelper::getParams('com_fabrik');
-		$apiKey = $config->get('google_api_key', '');
+		$apiKey = trim($config->get('google_api_key', ''));
 		$client = $config->get('google_buisness_client_id', '');
 		$signature = $config->get('google_buisness_signature', '');
 

@@ -50,6 +50,7 @@ class FabrikViewGooglemap extends JViewLegacy
 			return false;
 		}
 
+		$this->row->label     = FText::_($this->row->label);
 		$js                   = $model->getJs();
 		$this->txt            = $model->getText();
 		$params               = $model->getParams();
@@ -98,11 +99,6 @@ class FabrikViewGooglemap extends JViewLegacy
 				{
 					$srcs['Cluster'] = 'components/com_fabrik/libs/googlemaps/markerclustererplus/src/markerclusterer_packed.js';
 				}
-			}
-			else
-			{
-				// Doesn't work in v3
-				// FabrikHelperHTML::script('components/com_fabrik/libs/googlemaps/markermanager.js');
 			}
 
 			$template = null;

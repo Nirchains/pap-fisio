@@ -10,6 +10,8 @@ define(['jquery', 'fab/fabrik', 'fab/advanced-search'], function (jQuery, Fabrik
 
         Implements: [Events],
 
+        Binds: [],
+
         options: {
             'container'     : '',
             'filters'       : [],
@@ -121,12 +123,22 @@ define(['jquery', 'fab/fabrik', 'fab/advanced-search'], function (jQuery, Fabrik
                     f.onSubmit();
                 });
             }
+            if (this.filters.jdate) {
+                jQuery.each(this.filters.jdate, function (key, f) {
+                    f.onSubmit();
+                });
+            }
             this.showFilterState();
         },
 
         onUpdateData: function () {
             if (this.filters.date) {
                 jQuery.each(this.filters.date, function (key, f) {
+                    f.onUpdateData();
+                });
+            }
+            if (this.filters.jdate) {
+                jQuery.each(this.filters.jdate, function (key, f) {
                     f.onUpdateData();
                 });
             }
@@ -256,7 +268,7 @@ define(['jquery', 'fab/fabrik', 'fab/advanced-search'], function (jQuery, Fabrik
                 } else {
                     v = v2 = input.val();
                 }
-                if (v !== '' && v2 !== '') {
+                if (typeof v !== 'undefined' && v !== null && v !== '' && v2 !== '') {
                     show = true;
                     clone = label.clone();
                     clone.find('*[data-filter-clear]').data('filter-clear', filter.name);
@@ -271,6 +283,21 @@ define(['jquery', 'fab/fabrik', 'fab/advanced-search'], function (jQuery, Fabrik
                 this.container.find('*[data-modal-state-container]').hide();
             }
             this.watchClearOne();
+        },
+
+        /**
+         * Update CSS after an AJAX filter
+         */
+        updateFilterCSS: function(data) {
+            var c = this.container.find('.clearFilters');
+            if (c) {
+                if (data.hasFilters) {
+                    c.addClass('hasFilters');
+                }
+                else {
+                    c.removeClass('hasFilters');
+                }
+            }
         }
 
     });

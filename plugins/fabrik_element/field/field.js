@@ -25,10 +25,11 @@ define(['jquery', 'fab/element', 'components/com_fabrik/libs/masked_input/jquery
         Extends: FbElement,
 
         options: {
-            use_input_mask        : false,
-            input_mask_definitions: '',
-            geocomplete           : false,
-            mapKey                : false
+            use_input_mask         : false,
+            input_mask_definitions : '',
+            input_mask_autoclear   : false,
+            geocomplete            : false,
+            mapKey                 : false
         },
 
         initialize: function (element, options) {
@@ -44,19 +45,17 @@ define(['jquery', 'fab/element', 'components/com_fabrik/libs/masked_input/jquery
                     definitions = JSON.parse(this.options.input_mask_definitions);
                     jQuery.extend(jQuery.mask.definitions, definitions);
                 }
-                jQuery('#' + element).mask(this.options.input_mask);
+                jQuery('#' + element).mask(this.options.input_mask, {autoclear: this.options.input_mask_autoclear});
             }
             if (this.options.geocomplete) {
                 this.gcMade = false;
                 this.loadFn = function () {
                     if (this.gcMade === false) {
                         var self = this;
-                        jQuery('#' + this.element.id).geocomplete()
-                            .bind(
+                        jQuery('#' + this.element.id).geocomplete({}).bind(
                             'geocode:result',
                             function(event, result){
-                                //self.element.fireEvent('change', new Event.Mock(self.element, 'change'));
-                                Fabrik.fireEvent('fabrik.element.field.geocode', self);
+                                Fabrik.fireEvent('fabrik.element.field.geocode', [self, result]);
                             }
                         );
                         this.gcMade = true;
@@ -92,12 +91,18 @@ define(['jquery', 'fab/element', 'components/com_fabrik/libs/masked_input/jquery
                             jQuery.mask.definitions[k] = v;
                         });
                     }
-                    jQuery('#' + element.id).mask(this.options.input_mask);
+                    jQuery('#' + element.id).mask(this.options.input_mask, {autoclear: this.options.input_mask_autoclear});
                 }
             }
             if (this.options.geocomplete) {
                 if (element) {
-                    jQuery('#' + element.id).geocomplete();
+                    var self = this;
+                    jQuery('#' + this.element.id).geocomplete().bind(
+                        'geocode:result',
+                        function(event, result){
+                            Fabrik.fireEvent('fabrik.element.field.geocode', [self, result]);
+                        }
+                    );
                 }
             }
             this.parent(c);

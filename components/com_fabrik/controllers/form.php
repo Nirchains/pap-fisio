@@ -13,6 +13,9 @@ defined('_JEXEC') or die('Restricted access');
 
 jimport('joomla.application.component.controller');
 
+use Fabrik\Helpers\Html;
+use Fabrik\Helpers\Worker;
+
 /**
  * Fabrik From Controller
  *
@@ -131,7 +134,7 @@ class FabrikControllerForm extends JControllerLegacy
 		$model->getData();
 
 		// If we can't edit the record redirect to details view
-		if ($model->checkAccessFromListSettings() <= 1)
+		if (!$this->isMambot && $model->checkAccessFromListSettings() <= 1)
 		{
 			$app = JFactory::getApplication();
 			$input = $app->input;
@@ -170,9 +173,7 @@ class FabrikControllerForm extends JControllerLegacy
 
 		$user = JFactory::getUser();
 
-		if ($user->get('id') == 0
-			|| $listParams->get('list_disable_caching', '0') === '1'
-			|| in_array($input->get('format'), array('raw', 'csv', 'pdf'))
+		if (!Worker::useCache($listModel)
 			|| $input->get('fabrik_social_profile_hash', '') !== ''
 		)
 		{
@@ -186,6 +187,7 @@ class FabrikControllerForm extends JControllerLegacy
 			$cache = JFactory::getCache('com_' . $package, 'view');
 			ob_start();
 			$cache->get($view, 'display', $cacheId);
+			Html::addToSessionCacheIds($cacheId);
 			$contents = ob_get_contents();
 			ob_end_clean();
 
@@ -342,7 +344,7 @@ class FabrikControllerForm extends JControllerLegacy
 		 * If debug submit is requested (&fabrikdebug=2, and J! debug on, and Fabrik debug allowed),
 		 * bypass any and all redirects, so we can see the profile for the submit
 		 */
-		if (FabrikHelperHTML::isDebugSubmit())
+		if (Html::isDebugSubmit())
 		{
 			echo '<p>' . $msg . '</p>';
 			echo '<p>Form submission profiling has stopped the automatic redirect. </p>';
@@ -493,10 +495,9 @@ class FabrikControllerForm extends JControllerLegacy
 
 		if (!$validated)
 		{
-			$this->savepage();
-
 			if ($this->isMambot)
 			{
+				$this->savepage();
 				$this->setRedirect($this->getRedirectURL($model, false));
 			}
 			else

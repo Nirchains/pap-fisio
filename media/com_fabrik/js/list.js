@@ -349,7 +349,7 @@ define(['jquery', 'fab/fabrik', 'fab/list-toggle', 'fab/list-grouped-toggler', '
                 var yes = Joomla.JText._('JYES'),
                     no = Joomla.JText._('JNO'),
                     self = this,
-                    url = 'index.php?option=com_fabrik&view=list&listid=' +
+                    url = Fabrik.liveSite + '/index.php?option=com_fabrik&view=list&listid=' +
                         this.id + '&format=csv&Itemid=' + this.options.Itemid,
                     label = jQuery('<label />').css('clear', 'left');
 
@@ -478,20 +478,23 @@ define(['jquery', 'fab/fabrik', 'fab/list-toggle', 'fab/list-grouped-toggler', '
                 opts.option = 'com_fabrik';
                 opts.view = 'list';
                 opts.format = 'csv';
-                opts.Itemid = this.options.Itemid;
+                //opts.Itemid = this.options.Itemid;
                 opts.listid = this.id;
                 opts.listref = this.options.listRef;
                 opts.download = 0;
                 opts.setListRefFromRequest = 1;
 
+                var url = '?' + 'Itemid=' + this.options.Itemid;
+
                 this.options.csvOpts.custom_qs.split('&').each(function (qs) {
-                    var key = qs.split('=');
-                    opts[key[0]] = key[1];
+                    //var key = qs.split('=');
+                    //opts[key[0]] = key[1];
+                    url += '&' + qs;
                 });
 
                 // Append the custom_qs to the URL to enable querystring filtering of the list data
                 var myAjax = new Request.JSON({
-                    url       : '?' + this.options.csvOpts.custom_qs,
+                    url       : url,
                     method    : 'post',
                     data      : opts,
                     onError   : function (text, error) {
@@ -508,8 +511,32 @@ define(['jquery', 'fab/fabrik', 'fab/list-toggle', 'fab/list-grouped-toggler', '
                             if (res.count < res.total) {
                                 self.triggerCSVExport(res.count);
                             } else {
-                                var finalurl = '/index.php?option=com_fabrik&view=list&format=csv&listid=' + self.id +
-                                    '&start=' + res.count + '&Itemid=' + self.options.Itemid;
+                                var finalurl;
+                                if (self.options.admin) {
+                                    finalurl = Fabrik.liveSite + '/administrator/index.php' +
+                                        '?option=com_fabrik' +
+                                        '&task=list.view' +
+                                        '&format=csv' +
+                                        '&listid=' + self.id +
+                                        '&start=' + res.count;
+                                }
+                                else {
+                                    /*
+                                    finalurl = Fabrik.liveSite + '/index.php' +
+                                        '?option=com_fabrik' +
+                                        '&view=list' +
+                                        '&format=csv' +
+                                        '&listid=' + self.id +
+                                        '&start=' + res.count +
+                                        '&Itemid=' + self.options.Itemid;
+                                        */
+                                    finalurl = self.options.csvOpts.exportLink;
+                                    finalurl += finalurl.contains('?') ? '&' : '?';
+                                    finalurl += 'start=' + res.count;
+                                }
+
+                                finalurl += '&' + self.options.csvOpts.custom_qs;
+
                                 var msg = '<div class="alert alert-success" style="padding:10px;margin-bottom:3px"><h3>' + Joomla.JText._('COM_FABRIK_CSV_COMPLETE');
                                 msg += '</h3><p><a class="btn btn-success" href="' + finalurl + '">' +
                                     '<i class="icon-download"></i> ' +
@@ -788,12 +815,12 @@ define(['jquery', 'fab/fabrik', 'fab/list-toggle', 'fab/list-grouped-toggler', '
 
                 this.getFilters().each(function (x, f) {
                     f = jQuery(f);
-                    e = f.prop('tagName') === 'SELECT' ? 'change' : 'blur';
+                    e = f.prop('tagName') === 'SELECT' || f.prop('type') === 'checkbox' ? 'change' : 'blur';
                     if (self.options.filterMethod !== 'submitform') {
                         f.off(e);
                         f.on(e, function (e) {
                             e.preventDefault();
-                            if (f.data('initialvalue') !== f.val()) {
+                            if (f.prop('type') === 'checkbox' || f.data('initialvalue') !== f.val()) {
                                 self.doFilter();
                             }
                         });
@@ -948,11 +975,11 @@ define(['jquery', 'fab/fabrik', 'fab/list-toggle', 'fab/list-grouped-toggler', '
 
                     var data = this.form.toQueryString();
 
-                    if (task === 'list.doPlugin') {
+                    //if (task === 'list.doPlugin') {
                         data += '&setListRefFromRequest=1';
                         data += '&listref=' + this.options.listRef;
                         data += '&Itemid=' + this.options.Itemid;
-                    }
+                    //}
 
                     if (task === 'list.filter' && this.advancedSearch !== false) {
                         var advSearchForm = document.getElement('form.advancedSearch_' + this.options.listRef);
@@ -973,12 +1000,14 @@ define(['jquery', 'fab/fabrik', 'fab/list-toggle', 'fab/list-grouped-toggler', '
                             'url'     : this.form.get('action'),
                             'data'    : data,
                             onComplete: function (json) {
-                                json = JSON.decode(json);
+                                json = JSON.parse(json);
                                 self._updateRows(json);
                                 Fabrik.loader.stop('listform_' + self.options.listRef);
                                 Fabrik['filter_listform_' + self.options.listRef].onUpdateData();
+                                Fabrik['filter_listform_' + self.options.listRef].updateFilterCSS(json);
+                                jQuery('#searchall_' + self.options.listRef).val(json.searchallvalue);
                                 Fabrik.fireEvent('fabrik.list.submit.ajax.complete', [self, json]);
-                                if (json.msg) {
+                                if (json.msg && json.showmsg) {
                                     window.alert(json.msg);
                                 }
                             }
@@ -1033,6 +1062,25 @@ define(['jquery', 'fab/fabrik', 'fab/list-toggle', 'fab/list-grouped-toggler', '
                     });
                 });
                 return keys;
+            },
+
+            /**
+             * Get the primary keys for all checked rows
+             *
+             * @since   3.7
+             *
+             * @return  array
+             */
+            getCheckedRowIds: function () {
+                var chxs = this.getForm().getElements('input[name^=ids]').filter(function (i) {
+                    return i.checked;
+                });
+
+                var ids = chxs.map(function (chx) {
+                    return chx.get('value');
+                });
+
+                return ids;
             },
 
             /**
@@ -1117,7 +1165,7 @@ define(['jquery', 'fab/fabrik', 'fab/list-toggle', 'fab/list-grouped-toggler', '
 
                 if (this.options.groupedBy !== '')
                 {
-                    data['grouped_by'] = this.options.groupedBy;
+                    data['group_by'] = this.options.groupedBy;
                 }
 
                 new Request({
@@ -1126,7 +1174,7 @@ define(['jquery', 'fab/fabrik', 'fab/list-toggle', 'fab/list-grouped-toggler', '
                     'evalScripts': false,
                     onSuccess    : function (json) {
                         json = json.stripScripts();
-                        json = JSON.decode(json);
+                        json = JSON.parse(json);
                         self._updateRows(json);
                         // Fabrik.fireEvent('fabrik.list.update', [this, json]);
                     },
@@ -1246,7 +1294,8 @@ define(['jquery', 'fab/fabrik', 'fab/list-toggle', 'fab/list-grouped-toggler', '
                 gdata.each(function (groupData, groupKey) {
                     tbody = self.options.isGrouped ? self.list.getElements('.fabrik_groupdata')[gcounter] : self.tbody;
                     tbody = jQuery(tbody);
-                    tbody.empty();
+                    //tbody.empty();
+                    tbody.children().not('.groupDataMsg').remove();
 
                     // Set the group by heading
                     if (self.options.isGrouped) {
@@ -1257,7 +1306,7 @@ define(['jquery', 'fab/fabrik', 'fab/list-toggle', 'fab/list-grouped-toggler', '
                     gcounter++;
                     for (i = 0; i < groupData.length; i++) {
                         var row = $H(groupData[i]);
-                        item = self.injectItemData(itemTemplate, row);
+                        item = self.injectItemData(itemTemplate, row, tmpl);
                         items.push(item);
                     }
 
@@ -1287,7 +1336,7 @@ define(['jquery', 'fab/fabrik', 'fab/list-toggle', 'fab/list-grouped-toggler', '
             _updateEmptyDataMsg: function (empty) {
                 var list = jQuery(this.list);
                 var fabrikDataContainer = list.parent('.fabrikDataContainer');
-                var emptyDataMessage = list.parent('.fabrikForm').find('.emptyDataMessage');
+                var emptyDataMessage = list.closest('.fabrikForm').find('.emptyDataMessage');
                 if (empty) {
                     /*
                      * if (typeOf(fabrikDataContainer) !== 'null') {
@@ -1313,9 +1362,10 @@ define(['jquery', 'fab/fabrik', 'fab/list-toggle', 'fab/list-grouped-toggler', '
              * Inject item data into the item data template
              * @param {jQuery} template
              * @param {object} row
+             * @param {string}  div or row template
              * @return {jQuery}
              */
-            injectItemData: function (template, row) {
+            injectItemData: function (template, row, tmpl) {
                 var r, cell, c, j;
                 jQuery.each(row.data, function (key, val) {
                     cell = template.find('.' + key);
@@ -1344,13 +1394,22 @@ define(['jquery', 'fab/fabrik', 'fab/list-toggle', 'fab/list-grouped-toggler', '
                 if (typeof(this.options.itemTemplate) === 'string') {
                     c = template.find('.fabrik_row').addBack(template);
                     c.prop('id', row.id);
-                    c.removeClass('oddRow0');
-                    c.removeClass('oddRow1');
-                    var newClass = row['class'].split(/\s+/);
-                    for (j = 0; j < newClass.length; j++) {
-                        if (!c.hasClass(newClass[j])) {
-                            c.addClass(newClass[j]);
-                        }
+                    if (tmpl !== 'div') {
+	                    c.removeClass();
+	                    var newClass = row['class'].split(/\s+/);
+	                    for (j = 0; j < newClass.length; j++) {
+		                    c.addClass(newClass[j]);
+	                    }
+                    }
+                    else {
+	                    c.removeClass('oddRow0');
+	                    c.removeClass('oddRow1');
+	                    var newClass = row['class'].split(/\s+/);
+	                    for (j = 0; j < newClass.length; j++) {
+		                    if (!c.hasClass(newClass[j])) {
+			                    c.addClass(newClass[j]);
+		                    }
+	                    }
                     }
                     r = template.clone();
                 } else {

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<extension version="3.6" client="site" type="language" method="upgrade">
+<extension version="3.9" client="site" type="language" method="upgrade">
 	<name>Spanish (español)</name>
 	<tag>es-ES</tag>
-	<version>3.6.3.1</version>
-	<creationDate>23/10/2016</creationDate>
-	<author>ComunidadJoomla</author>
-	<authorEmail>jcomunidad@gmail.com</authorEmail>
-	<authorUrl></authorUrl>
-	<copyright>Copyright (C) 2005 - 2016 Comunidadjoomla.org. All rights reserved.</copyright>
+	<version>3.9.1.1</version>
+	<creationDate>19/12/2018</creationDate>
+	<author></author>
+	<authorEmail>es.es.translation.team@gmail.com</authorEmail>
+	<authorUrl>http://joomlaes.org</authorUrl>
+	<copyright>Copyright (C) 2005 - 2018 Open Source Matters, Inc. All rights reserved.</copyright>
 	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
 	<description>es-ES - Site language</description>
 	<files>
@@ -21,6 +21,7 @@
 		<filename>es-ES.com_media.ini</filename>
 		<filename>es-ES.com_messages.ini</filename>
 		<filename>es-ES.com_newsfeeds.ini</filename>
+		<filename>es-ES.com_privacy.ini</filename>
 		<filename>es-ES.com_search.ini</filename>
 		<filename>es-ES.com_tags.ini</filename>
 		<filename>es-ES.com_users.ini</filename>
@@ -30,7 +31,6 @@
 		<filename>es-ES.finder_cli.ini</filename>
 		<filename>es-ES.lib_fof.ini</filename>
 		<filename>es-ES.lib_fof.sys.ini</filename>
-		<filename>es-ES.lib_fof30.ini</filename>
 		<filename>es-ES.lib_idna_convert.sys.ini</filename>
 		<filename>es-ES.lib_joomla.ini</filename>
 		<filename>es-ES.lib_joomla.sys.ini</filename>

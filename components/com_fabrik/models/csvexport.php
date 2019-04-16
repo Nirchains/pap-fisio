@@ -11,7 +11,8 @@
 // No direct access
 defined('_JEXEC') or die('Restricted access');
 
-use \Joomla\Utilities\ArrayHelper;
+use Joomla\Utilities\ArrayHelper;
+use Fabrik\Helpers\Html;
 
 jimport('joomla.application.component.model');
 
@@ -344,16 +345,12 @@ class FabrikFEModelCSVExport extends FabModel
 	private function getFileName()
 	{
 		$this->model->setId($this->app->input->getInt('listid'));
-		$table    = $this->model->getTable();
-		$filename = $this->model->getParams()->get('csv_filename');
-		if ($filename == '')
-		{
-			$filename = $table->db_table_name . '-export.csv';
-		}
-		else
-		{
-			$filename = sprintf($filename, date('Y-m-d'));
-		}
+
+		$filename = Html::getLayout('fabrik-csv-filename')
+			->render((object) array(
+				'model' => $this->model,
+				'filename' => $this->model->getParams()->get('csv_filename')
+			));
 		return $filename;
 	}
 
@@ -483,11 +480,12 @@ class FabrikFEModelCSVExport extends FabModel
 
 							if (count($json) == 1)
 							{
-								$default = $json['Total']->value;
+								$default = $defaultRaw = $json['Total']->value;
 							}
 							else
 							{
-								$default = json_encode($json);
+								$default = strip_tags($calcs[$calKey][$aKey]);
+								$defaultRaw = json_encode($json);
 							}
 						}
 
@@ -524,7 +522,7 @@ class FabrikFEModelCSVExport extends FabModel
 
 							if ($incRaw)
 							{
-								$calculations[$calKey][$x + 1] = $default;
+								$calculations[$calKey][$x + 1] = $defaultRaw;
 							}
 						}
 					}
@@ -582,7 +580,9 @@ class FabrikFEModelCSVExport extends FabModel
 
 		if (function_exists('iconv'))
 		{
-			return iconv('UTF-8', $csvEncoding, $n);
+			$res = iconv('UTF-8', $csvEncoding, $n);
+			//$$$ trob: if iconv returns false try mb_convert instead of returning an empty field
+			if ($res !== false) return $res;
 		}
 		return mb_convert_encoding($n, $csvEncoding, 'UTF-8');
 	}
@@ -732,7 +732,7 @@ class FabrikFEModelCSVExport extends FabModel
 		}
 
 		$this->model->csvExportHeadings = $h;
-		$pluginResults = FabrikWorker::getPluginManager()->runPlugins('onExportCSVHeadings', $this->model, 'list', $a);
+		$pluginResults = FabrikWorker::getPluginManager()->runPlugins('onExportCSVHeadings', $this->model, 'list', $h);
 		if (in_array(false, $pluginResults))
 		{
 			return false;

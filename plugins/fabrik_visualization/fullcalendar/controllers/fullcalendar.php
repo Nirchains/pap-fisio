@@ -13,8 +13,6 @@ defined('_JEXEC') or die('Restricted access');
 
 jimport('joomla.application.component.controller');
 
-require_once COM_FABRIK_FRONTEND . '/helpers/params.php';
-
 /**
  * Fabrik Calendar Plug-in Controller
  *
@@ -45,8 +43,8 @@ class FabrikControllerVisualizationfullcalendar extends FabrikControllerVisualiz
 	{
 		$input  = $this->input;
 		$config = JComponentHelper::getParams('com_fabrik');
-		$model  = $this->getModel('calendar');
-		$id     = $input->getInt('id', $config->get('visualizationid', $config->getInt('visualizationid', 0)));
+		$model  = $this->getModel('fullcalendar');
+		$id     = $input->getInt('visualizationid', $config->get('visualizationid', 0));
 		$model->setId($id);
 		echo $model->getEvents();
 	}
@@ -90,8 +88,9 @@ class FabrikControllerVisualizationfullcalendar extends FabrikControllerVisualiz
 
 		if (array_key_exists($listId, $model->events))
 		{
-			$startDateField = $model->events[$listId][0]['startdate'];
-			$endDateField   = $model->events[$listId][0]['enddate'];
+			$events = array_shift($model->events[$listId]);
+			$startDateField = $events['startdate'];
+			$endDateField   = $events['enddate'];
 		}
 		else
 		{
@@ -112,6 +111,7 @@ class FabrikControllerVisualizationfullcalendar extends FabrikControllerVisualiz
 		$input->set('tmpl', 'component');
 		$input->set('ajax', '1');
 		$nextView = $input->get('nextview', 'form');
+
 		$link     = 'index.php?option=com_' . $package . '&view=' . $nextView . '&formid=' . $table->form_id . '&rowid=' . $rowId . '&tmpl=component&ajax=1';
 		$link .= '&format=partial&fabrik_window_id=' . $input->get('fabrik_window_id');
 

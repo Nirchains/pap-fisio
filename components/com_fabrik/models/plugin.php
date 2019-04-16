@@ -295,7 +295,7 @@ class FabrikPlugin extends JPlugin
 		$type    = str_replace('fabrik_', '', $this->_type);
 
 		$form         = $this->getPluginForm($repeatCounter);
-		$repeatScript = '';
+		$repeatScript = array();
 
 		// Copy over the data into the params array - plugin fields can have data in either
 		// jform[params][name] or jform[name]
@@ -434,7 +434,7 @@ class FabrikPlugin extends JPlugin
 
 				foreach ($form->getFieldset($fieldset->name) as $field)
 				{
-					if ($repeatDataMax < count($field->value))
+					if (is_array($field->value) && $repeatDataMax < count($field->value))
 					{
 						$repeatDataMax = count($field->value);
 					}
@@ -500,7 +500,26 @@ class FabrikPlugin extends JPlugin
 
 					if ($j3)
 					{
-						$str[] = '<div class="control-group">';
+						if ($field->showon)
+						{
+							$showOns = JFormHelper::parseShowOnConditions($field->showon, $field->formControl, $field->group);
+
+							if ($field->repeat)
+							{
+								foreach ($showOns as &$showOn)
+								{
+									$showOn['field'] .= '[' . $form->repeatCounter . ']';
+								}
+							}
+
+							$dataShowOn = ' data-showon=\'' . json_encode($showOns) . '\'';
+
+						}
+						else
+						{
+							$dataShowOn = '';
+						}
+						$str[] = '<div class="control-group"' . $dataShowOn . '>';
 						$str[] = '<div class="control-label">' . $field->label . '</div>';
 						$str[] = '<div class="controls">' . $field->input . '</div>';
 						$str[] = '</div>';

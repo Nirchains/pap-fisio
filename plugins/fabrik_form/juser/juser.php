@@ -145,12 +145,21 @@ class PlgFabrik_FormJUser extends plgFabrik_Form
 			}
 		}
 
+		$rowId = FabrikWorker::getMenuOrRequestVar('rowid');
+		$loadCurrentUser = $rowId === '-1' && $this->getFieldName('juser_sync_load_current_user');
+
 		// If we are editing a user, we need to make sure the password field is cleared
-		if (FabrikWorker::getMenuOrRequestVar('rowid'))
+		if ($rowId > 0 || $loadCurrentUser)
 		{
-			$this->passwordfield                            = $this->getFieldName('juser_field_password');
-			$formModel->data[$this->passwordfield]          = '';
-			$formModel->data[$this->passwordfield . '_raw'] = '';
+			// don't clear if confirmation plugin is loading, leave it, it'll get encrypted readonly and resubmitted
+			if ($this->app->input->get('fabrik_confirmation', '') !== '1')
+			{
+				$this->passwordfield                            = $this->getFieldName('juser_field_password');
+				$formModel->data[$this->passwordfield]          = '';
+				$formModel->data[$this->passwordfield . '_raw'] = '';
+			}
+
+			$userId = $loadCurrentUser ? JFactory::getUser()->id : null;
 
 			// $$$$ hugh - testing 'sync on edit'
 			if ($params->get('juser_sync_on_edit', 0) == 1)
@@ -311,8 +320,20 @@ class PlgFabrik_FormJUser extends plgFabrik_Form
 		$formModel = $this->getModel();
 		$params    = $this->getParams();
 		$input     = $this->app->input;
-		$mail      = JFactory::getMailer();
-		$mail->isHtml(true);
+
+		// clear the 'newuserid' stuff
+		$input->set('newuserid', '');
+		$input->cookie->set('newuserid', '');
+		$this->session->set('newuserid', '');
+		$input->set('newuserid_element', '');
+		$input->cookie->set('newuserid_element', '');
+		$this->session->set('newuserid_element', '');
+
+		// check for confirmation plugin first submit
+		if ($input->get('fabrik_confirmation', '') === '0')
+		{
+			return;
+		}
 
 		// Load up com_users lang - used in email text
 		$this->lang->load('com_users', JPATH_SITE);
@@ -653,8 +674,14 @@ class PlgFabrik_FormJUser extends plgFabrik_Form
 				// Send the registration email.
 				if ($emailSubject !== '')
 				{
-					$return = $mail->sendMail($data['mailfrom'], $data['fromname'], $data['email'], $emailSubject, $emailBody);
-
+					$return = FabrikWorker::sendMail(
+						$data['mailfrom'],
+						$data['fromname'],
+						$data['email'],
+						$emailSubject,
+						$emailBody,
+						true
+					);
 					/*
 					 * Added email to admin code, but haven't had a chance to test it yet.
 					 */
@@ -854,7 +881,12 @@ class PlgFabrik_FormJUser extends plgFabrik_Form
 			// Send mail to all superadministrators id
 			foreach ($rows as $row)
 			{
-				$return = JFactory::getMailer()->sendMail($data['mailfrom'], $data['fromname'], $row->email, $emailSubject, $emailBodyAdmin);
+				$return = FabrikWorker::sendMail(
+					$data['mailfrom'],
+					$data['fromname'],
+					$row->email, $emailSubject,
+					$emailBodyAdmin
+				);
 
 				// Check for an error.
 				if ($return !== true)
@@ -880,7 +912,8 @@ class PlgFabrik_FormJUser extends plgFabrik_Form
 		$isNew          = $user->get('id') < 1;
 		$params         = $this->getParams();
 		$this->gidfield = $this->getFieldName('juser_field_usertype');
-		$defaultGroup   = (int) $params->get('juser_field_default_group');
+		// if editing, set the default to the existing user's groups
+		$defaultGroup   = $isNew ? (array) $params->get('juser_field_default_group') : $user->groups;
 		$groupIds       = (array) $this->getFieldValue('juser_field_usertype', $formModel->formData, $defaultGroup);
 
 		// If the group ids where encrypted (e.g. user can't edit the element) they appear as an object in groupIds[0]
@@ -912,8 +945,12 @@ class PlgFabrik_FormJUser extends plgFabrik_Form
 		}
 		else
 		{
-			// If editing an existing user and no gid field being used,  use default group id
-			$data[] = $defaultGroup;
+			/*
+			 * Mo 'usertype' field was set, so use default, which is either the default ocnfigured
+			 * in the plugin (for new users), or an existing users current groups.
+			 *
+			 */
+			$data = (array) $defaultGroup;
 		}
 
 		return $data;
@@ -964,7 +1001,7 @@ class PlgFabrik_FormJUser extends plgFabrik_Form
 			return;
 		}
 
-		if ($params->get('juser_auto_login', false))
+		if ($params->get('juser_auto_login', true))
 		{
 			$this->autoLogin();
 		}
@@ -1004,6 +1041,7 @@ class PlgFabrik_FormJUser extends plgFabrik_Form
 
 		if ($this->app->login($credentials, $options) === true)
 		{
+			$this->app->setUserState('rememberLogin', true);
 			$this->session->set($context . 'created', true);
 			$user = JFactory::getUser();
 

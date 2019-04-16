@@ -66,7 +66,11 @@ class PlgFabrik_ElementYesno extends PlgFabrik_ElementRadiobutton
 	 */
 	public function renderListData($data, stdClass &$thisRow, $opts = array())
 	{
-		FabrikHelperHTML::addPath(COM_FABRIK_BASE . 'plugins/fabrik_element/yesno/images/', 'image', 'list', false);
+	    $params = $this->getParams();
+        $profiler = JProfiler::getInstance('Application');
+        JDEBUG ? $profiler->mark("renderListData: {$this->element->plugin}: start: {$this->element->name}") : null;
+
+        FabrikHelperHTML::addPath(COM_FABRIK_BASE . 'plugins/fabrik_element/yesno/images/', 'image', 'list', false);
 
 		// Check if the data is in csv format, if so then the element is a multi drop down
 		$raw = $this->getFullName(true, false) . '_raw';
@@ -74,10 +78,10 @@ class PlgFabrik_ElementYesno extends PlgFabrik_ElementRadiobutton
 		$rawData = FabrikWorker::JSONtoData($rawData, true);
 		$displayData        = new stdClass;
 		$displayData->tmpl  = isset($this->tmpl) ? $this->tmpl : '';
-		$displayData->format = $this->app->input->get('format', '');;
-		$basePath           = JPATH_ROOT . '/plugins/fabrik_element/yesno/layouts';
-		$layout             = new FabrikLayoutFile('fabrik_element_yesno_list', $basePath);
-		$layout->addIncludePaths(JPATH_THEMES . '/' . $this->app->getTemplate() . '/html/layouts');
+		$displayData->format = $this->app->input->get('format', '');
+		$displayData->yesIcon = $params->get('yesno_icon_yes', '');
+        $displayData->noIcon = $params->get('yesno_icon_no', '');
+		$layout = $this->getLayout('list');
 		$labelData = array();
 
 		foreach ($rawData as $d)
@@ -220,14 +224,15 @@ class PlgFabrik_ElementYesno extends PlgFabrik_ElementRadiobutton
 	 */
 	protected function getReadOnlyOutput($value, $label)
 	{
+	    $params = $this->getParams();
 		$displayData = new stdClass;
+        $displayData->format = $this->app->input->get('format', '');
+        $displayData->yesIcon = $params->get('yesno_icon_yes', '');
+        $displayData->noIcon = $params->get('yesno_icon_no', '');
 		$displayData->value = $value;
 		$displayData->tmpl = @$this->tmpl;
 		$displayData->format = $this->app->input->get('format', '');;
-		$basePath = JPATH_ROOT . '/plugins/fabrik_element/yesno/layouts';
-		$layout = new FabrikLayoutFile('fabrik_element_yesno_details', $basePath);
-		$layout->addIncludePaths(JPATH_THEMES . '/' . $this->app->getTemplate() . '/html/layouts');
-
+		$layout = $this->getLayout('details');
 		return $layout->render($displayData);
 	}
 
@@ -244,8 +249,17 @@ class PlgFabrik_ElementYesno extends PlgFabrik_ElementRadiobutton
 		$params = $this->getParams();
 		$params->set('options_per_row', 4);
 
-		return parent::render($data, $repeatCounter);
-	}
+		$rendered = parent::render($data, $repeatCounter);
+
+		$displayData = new stdClass;
+		$displayData->rendered = $rendered;
+		$displayData->elementModel = $this;
+		$displayData->value = $this->getValue($data, $repeatCounter);
+		$displayData->tmpl = @$this->tmpl;
+		$displayData->format = $this->app->input->get('format', '');;
+		$layout = $this->getLayout('form');
+
+		return $layout->render($displayData);	}
 
 	/**
 	 * Should the grid be rendered as a Bootstrap button-group
@@ -273,6 +287,7 @@ class PlgFabrik_ElementYesno extends PlgFabrik_ElementRadiobutton
 	{
 		$id = $this->getHTMLId($repeatCounter);
 		$opts = $this->getElementJSOptions($repeatCounter);
+		$opts->defaultVal = $this->getDefaultValue();
 		$opts->changeEvent = $this->getChangeEvent();
 
 		return array('FbYesno', $id, $opts);

@@ -369,7 +369,7 @@ class PlgFabrik_ElementList extends PlgFabrik_Element
 
 			if ($params->get('filter_groupby') != -1)
 			{
-				ArrayHelper::sortObjects($rows, $params->get('filter_groupby', 'text'));
+				$rows = ArrayHelper::sortObjects($rows, $params->get('filter_groupby', 'text'));
 			}
 
 			$this->getFilterDisplayValues($default, $rows);
@@ -378,6 +378,23 @@ class PlgFabrik_ElementList extends PlgFabrik_Element
 			{
 				array_unshift($rows, JHTML::_('select.option', '', $this->filterSelectLabel()));
 			}
+
+			foreach ($rows as &$r)
+			{
+				// translate
+				$r->text = FText::_($r->text);
+
+				// decode first, to decode all hex entities (like &#39;)
+				$r->text = html_entity_decode($r->text, ENT_QUOTES | ENT_XML1, 'UTF-8');
+
+				// Encode if necessary
+				if (!in_array($element->get('filter_type'), array('checkbox')))
+				{
+					$r->text = strip_tags($r->text);
+					$r->text = htmlspecialchars($r->text, ENT_NOQUOTES, 'UTF-8', false);
+				}
+			}
+
 		}
 
 		$return = array();
@@ -599,7 +616,10 @@ class PlgFabrik_ElementList extends PlgFabrik_Element
 	 */
 	public function renderListData($data, stdClass &$thisRow, $opts = array())
 	{
-		$params = $this->getParams();
+        $profiler = JProfiler::getInstance('Application');
+        JDEBUG ? $profiler->mark("renderListData: parent: start: {$this->element->name}") : null;
+
+        $params = $this->getParams();
 		$listModel = $this->getListModel();
 		$multiple = $this->isMultiple();
 		$mergeGroupRepeat = ($this->getGroup()->canRepeat() && $this->getListModel()->mergeJoinedData());
@@ -705,6 +725,8 @@ class PlgFabrik_ElementList extends PlgFabrik_Element
 			'sepChar' => ArrayHelper::getValue($opts, 'sepChar', ' ')
 		);
 
+        JDEBUG ? $profiler->mark("renderListData: parent: end: {$this->element->name}") : null;
+
 		return $layout->render((object) $displayData);
 	}
 
@@ -719,7 +741,13 @@ class PlgFabrik_ElementList extends PlgFabrik_Element
 	public function renderListData_csv($data, &$thisRow)
 	{
 		$this->renderWithHTML = false;
-		$d = $this->renderListData($data, $thisRow, array('sepChar' => "\n"));
+		$d = $this->renderListData(
+			$data,
+			$thisRow,
+			array(
+				'sepChar' => $this->getlistModel()->getParams()->get('csv_multi_join_split', ',')
+			)
+		);
 
 		if ($this->isJoin())
 		{
@@ -1082,5 +1110,18 @@ class PlgFabrik_ElementList extends PlgFabrik_Element
 		return ($key === false) ? $v : FArrayHelper::getValue($labels, $key, $defaultLabel);
 		*/
 		return $return;
+	}
+
+	/**
+	 * Internal element validation
+	 *
+	 * @param   array $data          Form data
+	 * @param   int   $repeatCounter Repeat group counter
+	 *
+	 * @return bool
+	 */
+	public function validate($data, $repeatCounter = 0)
+	{
+		return true;
 	}
 }

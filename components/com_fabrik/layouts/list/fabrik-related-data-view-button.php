@@ -7,8 +7,7 @@ defined('JPATH_BASE') or die;
 
 $d       = $displayData;
 $trigger = $d->popUp ? 'data-fabrik-view="list"' : '';
-$label   = '<span class="fabrik_related_data_count"> (' . $d->count . ') </span> ' ;
-//$label   = '(' . $d->count . ')</span> ' . $d->label;
+$label   = '<span class="fabrik_related_data_count">(' . $d->count . ')</span> ' . $d->label;
 $icon    = FabrikHelperHTML::icon('icon-list-view', $label);
 ?>
 
@@ -22,13 +21,13 @@ $icon    = FabrikHelperHTML::icon('icon-list-view', $label);
 
 	if ($d->showRelated) :
 		?>
-		<a class="related_data" <?php echo $trigger; ?> href="<?php echo $d->url; ?>" title="<?php echo $d->label; ?>"><?php echo $label; ?></a>
+		<a class="related_data" <?php echo $trigger; ?> href="<?php echo $d->url; ?>" title="<?php echo $d->label; ?>"><?php echo $icon; ?></a>
 		<?php
 	endif;
 
 	if ($d->showAddLink) :
 		?>
-		<?php echo $d->addLink; ?>
+		<div><?php echo $d->addLink; ?></div>
 		<?php
 	endif;
 else :?>

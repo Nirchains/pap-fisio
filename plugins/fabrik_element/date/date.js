@@ -11,12 +11,17 @@ define(['jquery', 'fab/element'], function (jQuery, FbElement) {
         /**
          * master date/time stored in this.cal (the js widget)
          * upon save we get a db formatted version of this date and put it into the date field
-         * this dramitcally simplifies storing dates (no longer have to take account of formatting rules and/or
+         * this dramitcally' simplifies storing dates (no longer have to take account of formatting rules and/or
          * translations on the server side, as the widget has already handled it for us
          */
         options: {
             'dateTimeFormat': '',
             'locale'        : 'en-GB',
+            'allowedDates'  : [],
+            'allowedClasses': [],
+            'hour24'        : true,
+            'showSeconds'   : false,
+            'timePickerLabel': 'Timepicker',
             'calendarSetup' : {
                 'eventName'   : 'click',
                 'ifFormat'    : '%Y/%m/%d',
@@ -30,8 +35,7 @@ define(['jquery', 'fab/element'], function (jQuery, FbElement) {
                 'step'        : 2,
                 'cache'       : false,
                 'showOthers'  : false,
-                'advanced'    : false,
-                'allowedDates': []
+                'advanced'    : false
             }
         },
 
@@ -47,6 +51,7 @@ define(['jquery', 'fab/element'], function (jQuery, FbElement) {
             this.buttonBgSelected = '#88dd33';
             this.startElement = element;
             this.setUpDone = false;
+            this.timePicker = false;
             this.convertAllowedDates();
             this.setUp();
         },
@@ -56,7 +61,19 @@ define(['jquery', 'fab/element'], function (jQuery, FbElement) {
          */
         convertAllowedDates: function () {
             for (var i = 0; i < this.options.allowedDates.length; i++) {
+                var parts = this.options.allowedDates[i].split('|');
+                if (parts.length > 1) {
+                    this.options.allowedClasses[i] = parts[1];
+                    this.options.allowedDates[i] = parts[0];
+                }
+                else {
+                    this.options.allowedClasses[i] = false;
+                }
                 this.options.allowedDates[i] = new Date(this.options.allowedDates[i]);
+                // apply the TZ offset, otherwise if (say) GMT -6, 2017-02-15 will become 2017-01-14 18:00:00
+	            this.options.allowedDates[i].setTime(
+		            this.options.allowedDates[i].getTime() + this.options.allowedDates[i].getTimezoneOffset()*60*1000
+                );
             }
         },
 
@@ -117,6 +134,11 @@ define(['jquery', 'fab/element'], function (jQuery, FbElement) {
                     // Fired when form failed after AJAX submit
                     this.afterAjaxValidation();
                 }.bind(this));
+
+                Fabrik.addEvent('fabrik.form.page.change.end', function(form, dir) {
+                    // Fired when multipage form changes page
+                    this.afterAjaxValidation();
+                }.bind(this));
             }
 
         },
@@ -125,7 +147,6 @@ define(['jquery', 'fab/element'], function (jQuery, FbElement) {
          * Once the element is attached to the form, observe the ajax trigger element
          */
         attachedToForm: function () {
-            this.parent();
             this.watchAjaxTrigger();
             this.parent();
         },
@@ -186,10 +207,16 @@ define(['jquery', 'fab/element'], function (jQuery, FbElement) {
                 for (var i = 0; i < allowed.length; i++) {
                     if (allowed[i].format('%Y%m%d') === date.format('%Y%m%d')) {
                         matched = true;
+                        break;
                     }
                 }
                 if (!matched) {
                     return true;
+                }
+                else {
+                    if (this.options.allowedClasses[i] !== false) {
+                        return this.options.allowedClasses[i];
+                    }
                 }
             }
 
@@ -263,6 +290,39 @@ define(['jquery', 'fab/element'], function (jQuery, FbElement) {
             this.update(this.getValue(), []);
         },
 
+        /**
+         * Called before an AJAX validation is triggered, in case an element wants to abort it,
+         * for example date element with time picker
+         */
+        shouldAjaxValidate: function () {
+            /*
+             * we need to run the basic 'blur' handling (usually run from the blur event handling in
+             * setup()), to get the field value into the cal, for the case where blurring out of a date
+             * field triggers an AJAX validation, and the validation blur event handling is running
+             * before the setup code.
+             */
+            var date_str = this.getDateField().value;
+
+            if (date_str !== '') {
+                var d;
+                if (this.options.advanced) {
+                    d = Date.parseExact(date_str, Date.normalizeFormat(this.options.calendarSetup.ifFormat));
+                } else {
+                    d = Date.parseDate(date_str, this.options.calendarSetup.ifFormat);
+                }
+                this.setTimeFromField(d);
+
+                // pass empty 'events' array so update() doesn't trigger any more event handling
+                this.update(d, []);
+            }
+
+            if (this.timePicker && this.timePicker.length > 0) {
+                return this.getTimeField() === this.timePicker[0] && !this.timeActive;
+            }
+
+            return true;
+        },
+
         makeCalendar: function () {
             if (this.cal) {
                 this.cal.show();
@@ -317,7 +377,7 @@ define(['jquery', 'fab/element'], function (jQuery, FbElement) {
             this.cal.weekNumbers = params.weekNumbers;
 
             if (params.multiple) {
-                cal.multiple = {};
+                this.cal.multiple = {};
                 for (i = params.multiple.length; --i >= 0;) {
                     var d = params.multiple[i];
                     var ds = d.print('%Y%m%d');
@@ -370,7 +430,7 @@ define(['jquery', 'fab/element'], function (jQuery, FbElement) {
                 this.getContainer().getElement('.timeButton').fireEvent('click');
             } else {
                 this.options.calendarSetup.inputField = e.target.id;
-                this.options.calendarSetup.button = this.element.id + '_img';
+                this.options.calendarSetup.button = this.element.id + '_cal_img';
                 //this.addEventToCalOpts();
                 this.cal.showAtElement(f, this.cal.params.align);
                 if (typeof(this.cal.wrapper) !== 'undefined') {
@@ -431,6 +491,51 @@ define(['jquery', 'fab/element'], function (jQuery, FbElement) {
         },
 
         /**
+         * Returns time in H:i:s from field
+         *
+         * @return  string
+         */
+        getTimeFromField: function () {
+            var timeStr = '';
+
+            if (this.options.showtime === true && this.timeElement) {
+                var d = new Date();
+                var format = '%H:%M:%S';
+                var time = this.timeElement.get('value').toUpperCase();
+                var afternoon = time.contains('PM') ? true : false;
+                time = time.replace('PM', '').replace('AM', '').replace(' ', '');
+
+                var t = time.split(':');
+                var h = t[0] ? t[0].toInt() : 0;
+                if (afternoon) {
+                    h += 12;
+                }
+
+                var m = t[1] ? t[1].toInt() : 0;
+
+                var s = 0;
+                if (t[2] && this.hasSeconds()) {
+                    s = t[2] ? t[2].toInt() : 0;
+                }
+                else
+                {
+                    format = '%H:%M';
+                }
+
+                d.setHours(h);
+                d.setMinutes(m);
+                d.setSeconds(s);
+
+                timeStr = d.format(format);
+            }
+            else {
+                timeStr = '00:00';
+            }
+
+            return timeStr;
+        },
+
+        /**
          * Set time from field
          * @param  date
          */
@@ -478,23 +583,38 @@ define(['jquery', 'fab/element'], function (jQuery, FbElement) {
                 if (this.timeButton) {
                     this.timeButton.removeEvents('click');
                     this.timeButton.addEvent('click', function (e) {
-                        e.stop();
+                        if (typeof e !== 'undefined') {
+                            e.stop();
+                        }
+                        if (!this.setUpDone) {
+                            if (this.timeElement) {
+                                var self = this;
+                                if (this.options.whichTimePicker === 'clock') {
+                                    this.timePicker = jQuery('#' + this.element.id + ' .timeField').clockpicker({
+                                        'default': this.getTimeFromField(),
+                                        'twelvehour': !this.options.hour24,
+                                        'padhours': this.options.hour24,
+                                        'meridiemsep': ' ',
+                                        'donetext': Joomla.JText._('JLIB_HTML_BEHAVIOR_CLOSE'),
+                                        'afterDone': jQuery.proxy(this.hideTime, this),
+                                    });
+                                }
+                                else {
+                                    this.timePicker = jQuery('#' + this.element.id + ' .timeField').wickedpicker({
+                                        'now': this.getTimeFromField(),
+                                        'timeSeparator': ':',
+                                        'twentyFour': this.options.hour24,
+                                        'showSeconds': this.options.showSeconds,
+                                        //'afterShow': jQuery.proxy(this.hideTime, this),
+                                        'afterShow': Fabrik.timePickerClose,
+                                        'title': this.options.timePickerLabel
+                                    });
+                                }
+                                this.setUpDone = true;
+                            }
+                        }
                         this.showTime();
                     }.bind(this));
-                    if (!this.setUpDone) {
-                        if (this.timeElement) {
-                            this.dropdown = this.makeDropDown();
-                            this.setActive();
-                            this.dropdown.getElement('a.close-time').addEvent('click', function (e) {
-                                e.stop();
-                                this.hideTime();
-                            }.bind(this));
-                            /*document.body.addEvent('click', function () {
-                             this.hideTime();
-                             }.bind());*/
-                            this.setUpDone = true;
-                        }
-                    }
                 }
             }
         },
@@ -539,11 +659,7 @@ define(['jquery', 'fab/element'], function (jQuery, FbElement) {
             var date;
 
             if (typeOf(val) === 'string') {
-                // $$$ hugh - if val is empty string, like from a clearForm(), the Date.parse() is
-                // going to return null, swhich will then blow up in a few lines.
-                date = Date.parse(val);
-
-                if (date === null) {
+                if (val === '') {
                     // Yes, but we still need to clear the fields! (e.g. from reset())
                     this._getSubElements().each(function (subEl) {
                         subEl.value = '';
@@ -564,6 +680,23 @@ define(['jquery', 'fab/element'], function (jQuery, FbElement) {
                     }
 
                     return;
+                }
+                else {
+                    /*
+                     * Even though always standard format, need to use 'advanced' handling to work round a bug in
+                     * the JoomlaFarsi implementation of the calendar JS which applies TZ offsets in parseDate()
+                     */
+                    if (this.options.advanced) {
+                        date = Date.parseExact(val, Date.normalizeFormat('%Y-%m-%d %H:%M:%S'));
+                    }
+                    else {
+                        /*
+                         * need to use parseDate() with a format string instead of just parse(), otherwise if advanced
+                         * formats is enabled, parse() will overridden and use the "culture" specific parsing, and if
+                         * language is en-GB, that will switch day and month round.
+                         */
+                        date = Date.parseDate(val, '%Y-%m-%d %H:%M');
+                    }
                 }
             } else {
                 date = val;
@@ -658,149 +791,15 @@ define(['jquery', 'fab/element'], function (jQuery, FbElement) {
         },
 
         /**
-         * Make the time picker
+         * Hide time picker
          */
-        makeDropDown: function () {
-            var h = null, i, padder;
-            var handle = new Element('div.draggable.modal-header', {
-                styles: {
-                    'height' : '20px',
-                    'curor'  : 'move',
-                    'padding': '2px;'
-                },
-                'id'  : this.startElement + '_handle'
-            })
-                .set('html', '<i class="icon-clock"></i> ' + this.options.timelabel + '<a href="#" class="close-time pull-right" ><i class="icon-cancel"></i></a>');
-            var d = new Element('div.fbDateTime.fabrikWindow', {
-                'styles': {
-                    'z-index': 999999,
-                    display  : 'none',
-                    width    : '300px',
-                    height   : '180px'
-                }
-            });
-
-            d.appendChild(handle);
-            padder = new Element('div.itemContentPadder');
-            padder.adopt(new Element('p').set('text', 'Hours'));
-            padder.adopt(this.hourButtons(0, 12));
-            padder.adopt(this.hourButtons(12, 24));
-            padder.adopt(new Element('p').set('text', 'Minutes'));
-            var d2 = new Element('div.btn-group', {
-                styles: {
-                    clear     : 'both',
-                    paddingTop: '5px'
-                }
-            });
-            for (i = 0; i < 12; i++) {
-                h = new Element('a.btn.fbdateTime-minute.btn-mini', {styles: {'width': '10px'}});
-                h.innerHTML = (i * 5);
-                d2.appendChild(h);
-
-                document.id(h).addEvent('click', function (e) {
-                    this.minute = this.formatMinute(e.target.innerHTML);
-                    this.stateTime();
-                    this.setActive();
-                }.bind(this));
-
-                h.addEvent('mouseover', function (e) {
-                    var h = e.target;
-                    if (this.minute !== this.formatMinute(h.innerHTML)) {
-                        e.target.addClass('btn-info');
-                    }
-                }.bind(this));
-
-                h.addEvent('mouseout', function (e) {
-                    var h = e.target;
-                    if (this.minute !== this.formatMinute(h.innerHTML)) {
-                        e.target.removeClass('btn-info');
-                    }
-                }.bind(this));
-            }
-
-            padder.appendChild(d2);
-            d.appendChild(padder);
-
-            document.addEvent('click', function (e) {
-                if (this.timeActive) {
-                    var t = e.target;
-                    if (t !== this.timeButton && t !== this.timeElement) {
-                        if (!t.within(this.dropdown)) {
-                            this.hideTime();
-                        }
-                    }
-                }
-            }.bind(this));
-
-            d.inject(document.body);
-            var mydrag = new Drag.Move(d);
-
-            var closeTime = handle.getElement('a.close');
-            if (typeOf(closeTime) !== 'null') {
-                closeTime.addEvent('click', function (e) {
-                    e.stop();
-                    this.hideTime();
-                }.bind(this));
-            }
-
-            return d;
-        },
-
-        hourButtons: function (start, end) {
-            var v = this.getValue(), h;
-            if (v === '') {
-                this.hour = 0;
-                this.minute = 0;
-            } else {
-                var date = Date.parse(v);
-                this.hour = date.get('hours');
-                this.minute = date.get('minutes');
-            }
-
-            var hrGroup = new Element('div.btn-group');
-            for (var i = start; i < end; i++) {
-                h = new Element('a.btn.btn-mini.fbdateTime-hour', {styles: {'width': '10px'}}).set('html', i);
-                hrGroup.appendChild(h);
-                document.id(h).addEvent('click', function (e) {
-                    this.hour = e.target.innerHTML;
-                    this.stateTime();
-                    this.setActive();
-                    e.target.addClass('btn-successs').removeClass('badge-info');
-                }.bind(this));
-                document.id(h).addEvent('mouseover', function (e) {
-                    if (this.hour !== e.target.innerHTML) {
-                        e.target.addClass('btn-info');
-                    }
-                }.bind(this));
-                document.id(h).addEvent('mouseout', function (e) {
-                    if (this.hour !== e.target.innerHTML) {
-                        e.target.removeClass('btn-info');
-                    }
-                }.bind(this));
-            }
-            return hrGroup;
-        },
-
-        toggleTime: function () {
-            if (this.dropdown.style.display === 'none') {
-                this.doShowTime();
-            } else {
-                this.hideTime();
-            }
-        },
-
-        doShowTime: function () {
-            this.dropdown.show();
-            this.timeActive = true;
-            Fabrik.fireEvent('fabrik.date.showtime', this);
-        },
-
-        hideTime: function () {
+        hideTime: function (el, picker) {
             this.timeActive = false;
-            this.dropdown.hide();
+            //jQuery(this.dropdown).hide();
             if (this.options.validations !== false) {
                 this.form.doElementValidation(this.element.id);
             }
+            this.fireEvents(['change']);
             Fabrik.fireEvent('fabrik.date.hidetime', this);
             Fabrik.fireEvent('fabrik.date.select', this);
             window.fireEvent('fabrik.date.select', this);
@@ -828,25 +827,8 @@ define(['jquery', 'fab/element'], function (jQuery, FbElement) {
         },
 
         showTime: function () {
-            this.dropdown.position({relativeTo: this.timeElement, 'position': 'topRight'});
-            this.toggleTime();
-            this.setActive();
-        },
-
-        setActive: function () {
-            var hours = this.dropdown.getElements('.fbdateTime-hour');
-            hours.removeClass('btn-success').removeClass('btn-info');
-
-            var mins = this.dropdown.getElements('.fbdateTime-minute');
-            mins.removeClass('btn-success').removeClass('btn-info');
-
-            if (typeOf(mins[this.minute / 5]) !== 'null') {
-                mins[this.minute / 5].addClass('btn-success');
-            }
-            var active = hours[this.hour.toInt()];
-            if (typeOf(active) !== 'null') {
-                active.addClass('btn-success');
-            }
+            this.timeActive = true;
+            jQuery(this.timeElement).trigger('click');
         },
 
         addEventToCalOpts: function () {
@@ -868,14 +850,14 @@ define(['jquery', 'fab/element'], function (jQuery, FbElement) {
             this.setUpDone = false;
             this.hour = 0;
             delete this.cal;
-            var button = this.element.getElement('img');
+            var button = this.element.getElement('button');
             if (button) {
-                button.id = this.element.id + '_cal_img';
+                button.id = this.element.id + '_cal_cal_img';
             }
             var datefield = this.element.getElement('input');
             datefield.id = this.element.id + '_cal';
             this.options.calendarSetup.inputField = datefield.id;
-            this.options.calendarSetup.button = this.element.id + '_img';
+            this.options.calendarSetup.button = datefield.id + '_img';
 
             this.makeCalendar();
             this.cal.hide();

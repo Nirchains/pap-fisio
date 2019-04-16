@@ -41,7 +41,7 @@ define(['jquery', 'fab/fileelement'], function (jQuery, FbFileElement) {
                             bar = jQuery('#' + file.id).find('.bar')[0];
                         self.uploader.trigger('UploadProgress', file);
                         self.uploader.trigger('FileUploaded', file, {
-                            response: JSON.encode(response)
+                            response: JSON.stringify(response)
                         });
 
                         jQuery(bar).replaceWith(newBar);
@@ -234,10 +234,29 @@ define(['jquery', 'fab/fileelement'], function (jQuery, FbFileElement) {
         },
 
         decloned: function (groupid) {
-            var i = jQuery('#form_' + this.form.id).find('input[name=fabrik_deletedimages[' + groupid + ']');
+            var i = jQuery('#form_' + this.form.id).find('input[name=fabrik_deletedimages[' + groupid + ']]');
             if (i.length > 0) {
                 this.makeDeletedImageField(groupid, this.options.value).inject(this.form.form);
             }
+            this.parent(groupid);
+        },
+
+        decreaseName: function (delIndex) {
+            var f = this.getOrigField();
+            if (typeOf(f) !== 'null') {
+                f.name = this._decreaseName(f.name, delIndex);
+                f.id = this._decreaseId(f.id, delIndex);
+            }
+            return this.parent(delIndex);
+        },
+
+        getOrigField: function () {
+            var p = this.element.getParent('.fabrikElement');
+            var f = p.getElement('input[name^=' + this.origId + '_orig]');
+            if (typeOf(f) === 'null') {
+                f = p.getElement('input[id^=' + this.origId + '_orig]');
+            }
+            return f;
         },
 
         /**
@@ -339,13 +358,20 @@ define(['jquery', 'fab/fileelement'], function (jQuery, FbFileElement) {
             this.pluploadContainer = c.find('.plupload_container');
             this.pluploadFallback = c.find('.plupload_fallback');
             this.droplist = c.find('.plupload_filelist');
+            var url = 'index.php?option=com_fabrik&format=raw&task=plugin.pluginAjax';
+            url += '&plugin=fileupload&' + this.options.ajaxToken + '=1';
+            url += '&method=ajax_upload&element_id=' + this.options.elid;
+
+            if (this.options.isAdmin) {
+                url = 'administrator/' + url;
+            }
 
             var plupopts = {
                 runtimes           : this.options.ajax_runtime,
                 browse_button      : elementId + '_browseButton',
                 container          : elementId + '_container',
                 drop_element       : elementId + '_dropList_container',
-                url                : 'index.php?option=com_fabrik&format=raw&task=plugin.pluginAjax&plugin=fileupload&method=ajax_upload&element_id=' + this.options.elid,
+                url                : url,
                 max_file_size      : this.options.max_file_size + 'kb',
                 unique_names       : false,
                 flash_swf_url      : this.options.ajax_flash_path,
@@ -501,7 +527,7 @@ define(['jquery', 'fab/fileelement'], function (jQuery, FbFileElement) {
                     'type' : 'hidden',
                     name   : name + '[crop][' + response.filepath + ']',
                     'id'   : 'coords_' + file.id,
-                    'value': JSON.encode(file.params)
+                    'value': JSON.stringify(file.params)
                 }).insertAfter(self.pluploadContainer);
 
 
@@ -538,10 +564,10 @@ define(['jquery', 'fab/fileelement'], function (jQuery, FbFileElement) {
         imageCells: function (file, title, a) {
             var del = this.deleteImgButton(), filename, status, progress, icon;
             if (Fabrik.bootstrapped) {
-                icon = jQuery(document.createElement('td')).addClass('span1 plupload_resize').append(a);
+                icon = jQuery(document.createElement('td')).addClass(this.options.spanNames[1] + ' plupload_resize').append(a);
                 progress = Fabrik.jLayouts['fabrik-progress-bar'];
-                status = jQuery(document.createElement('td')).addClass('span5 plupload_file_status').html(progress);
-                filename = jQuery(document.createElement('td')).addClass('span6 plupload_file_name').append(title);
+                status = jQuery(document.createElement('td')).addClass(this.options.spanNames[5] + ' plupload_file_status').html(progress);
+                filename = jQuery(document.createElement('td')).addClass(this.options.spanNames[6] + ' plupload_file_name').append(title);
 
                 return [filename, icon, status, del];
             } else {
@@ -608,12 +634,11 @@ define(['jquery', 'fab/fileelement'], function (jQuery, FbFileElement) {
 
                 var icon = Fabrik.jLayouts['fabrik-icon-delete'],
                     self = this;
-                return jQuery(document.createElement('td')).addClass('span1 plupload_file_action').append(
+                return jQuery(document.createElement('td')).addClass(this.options.spanNames[1] + ' plupload_file_action').append(
                     jQuery(document.createElement('a'))
                         .html(icon)
                         .attr({
-                            'href' : '#',
-                            'class': 'icon-delete'
+                            'href' : '#'
                         })
                         .on('click', function (e) {
                             e.stopPropagation();
@@ -671,10 +696,9 @@ define(['jquery', 'fab/fileelement'], function (jQuery, FbFileElement) {
             this.uploader.files = newFiles;
 
             // Send a request to delete the file from the server.
-            jQuery.ajax({
-                url : '',
-                data: {
-                    'option'       : 'com_fabrik',
+            var self = this;
+            var data = {
+                'option'       : 'com_fabrik',
                     'format'       : 'raw',
                     'task'         : 'plugin.pluginAjax',
                     'plugin'       : 'fileupload',
@@ -683,18 +707,29 @@ define(['jquery', 'fab/fileelement'], function (jQuery, FbFileElement) {
                     'file'         : f,
                     'recordid'     : id,
                     'repeatCounter': this.options.repeatCounter
+            }
+
+            data[this.options.ajaxToken] = 1;
+
+            jQuery.ajax({
+                url : '',
+                data: data
+            }).done(function (r) {
+                r = JSON.parse(r);
+                if (r.error === '') {
+                    Fabrik.trigger('fabrik.fileupload.delete.complete', self);
+                    var li = jQuery(e.target).closest('.plupload_delete');
+                    li.remove();
+
+                    // Remove hidden fields as well
+                    jQuery('#id_alreadyuploaded_' + self.options.id + '_' + id).remove();
+                    jQuery('#coords_alreadyuploaded_' + self.options.id + '_' + id).remove();
+
+                    if (jQuery(self.getContainer()).find('table tbody tr.plupload_delete').length === 0) {
+                        self.addDropArea();
+                    }
                 }
             });
-            var li = jQuery(e.target).closest('.plupload_delete');
-            li.remove();
-
-            // Remove hidden fields as well
-            jQuery('#id_alreadyuploaded_' + this.options.id + '_' + id).remove();
-            jQuery('#coords_alreadyuploaded_' + this.options.id + '_' + id).remove();
-
-            if (jQuery(this.getContainer()).find('table tbody tr.plupload_delete').length === 0) {
-                this.addDropArea();
-            }
         },
 
         /**
@@ -754,7 +789,7 @@ define(['jquery', 'fab/fileelement'], function (jQuery, FbFileElement) {
                         // Avoid circular reference in chrome when saving in ajax form
                         var i = image.img;
                         delete (image.img);
-                        f.val(JSON.encode(image));
+                        f.val(JSON.stringify(image));
                         image.img = i;
                     }
                 });
@@ -936,6 +971,7 @@ define(['jquery', 'fab/fileelement'], function (jQuery, FbFileElement) {
 
                 // New image
                 var img = Asset.image(uri, {
+                    crossOrigin: 'anonymous',
                     onLoad: function () {
 
                         var params = this.storeImageDimensions(filepath, jQuery(img), tmpParams);
@@ -1251,7 +1287,7 @@ define(['jquery', 'fab/fileelement'], function (jQuery, FbFileElement) {
             });
 
             ctx.drawImage(canvas[0], x, y, w, h, 0, 0, w, h);
-            f.val(target[0].toDataURL({quality: this.windowopts.quality}));
+            f.val(target[0].toDataURL('image/jpeg', this.windowopts.quality));
             target.remove();
         },
 

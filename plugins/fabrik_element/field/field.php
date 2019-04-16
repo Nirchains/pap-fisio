@@ -11,6 +11,7 @@
 // No direct access
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Helper\MediaHelper;
 use Joomla\Utilities\ArrayHelper;
 
 jimport('joomla.application.component.model');
@@ -36,7 +37,10 @@ class PlgFabrik_ElementField extends PlgFabrik_Element
 	 */
 	public function renderListData($data, stdClass &$thisRow, $opts = array())
 	{
-		$data = FabrikWorker::JSONtoData($data, true);
+        $profiler = JProfiler::getInstance('Application');
+        JDEBUG ? $profiler->mark("renderListData: {$this->element->plugin}: start: {$this->element->name}") : null;
+
+        $data = FabrikWorker::JSONtoData($data, true);
 		$params = $this->getParams();
 
 		foreach ($data as &$d)
@@ -160,6 +164,7 @@ class PlgFabrik_ElementField extends PlgFabrik_Element
 			if ($params->get('autocomplete', '0') === '3')
 			{
 				$bits['class'] .= ' fabrikGeocomplete';
+				$bits['autocomplete'] = 'off';
 			}
 		}
 
@@ -230,23 +235,48 @@ class PlgFabrik_ElementField extends PlgFabrik_Element
 			$w = new FabrikWorker;
 			$opts = $this->linkOpts();
 			$title = $params->get('link_title', '');
+			$attrs = $params->get('link_attributes', '');
 
-			if (FabrikWorker::isEmail($value) || JString::stristr($value, 'http'))
+			if (!empty($attrs))
 			{
+				$attrs = $w->parseMessageForPlaceHolder($attrs);
+				$attrs = explode(' ', $attrs);
+
+				foreach ($attrs as $attr)
+				{
+					list($k, $v) = explode('=', $attr);
+					$opts[$k] = trim($v, '"');
+				}
 			}
-			elseif (JString::stristr($value, 'www.'))
+			else
 			{
-				$value = 'http://' . $value;
+				$attrs = array();
 			}
 
-			if ($title !== '')
+			if ((new MediaHelper)->isImage($value))
 			{
-				$opts['title'] = strip_tags($w->parseMessageForPlaceHolder($title, $data));
+				$alt = empty($title) ? '' : 'alt="' . strip_tags($w->parseMessageForPlaceHolder($title, $data)) . '"';
+				$value = '<img src="' . $value . '" ' . $alt . ' ' . implode(' ', $attrs) . ' />';
 			}
+			else
+			{
+				if (FabrikWorker::isEmail($value) || JString::stristr($value, 'http'))
+				{
+				}
+				elseif (JString::stristr($value, 'www.'))
+				{
+					$value = 'http://' . $value;
+				}
 
-			$label = FArrayHelper::getValue($opts, 'title', '') !== '' ? $opts['title'] : $value;
+				if ($title !== '')
+				{
+					$opts['title'] = strip_tags($w->parseMessageForPlaceHolder($title, $data));
+				}
 
-			$value = FabrikHelperHTML::a($value, $label, $opts);
+				$label = FArrayHelper::getValue($opts, 'title', '') !== '' ? $opts['title'] : $value;
+
+				$value = FabrikHelperHTML::a($value, $label, $opts);
+			}
 		}
 	}
 
@@ -305,6 +335,7 @@ class PlgFabrik_ElementField extends PlgFabrik_Element
 			$opts->use_input_mask = true;
 			$opts->input_mask = $inputMask;
 			$opts->input_mask_definitions = $params->get('text_input_mask_definitions', '{}');
+			$opts->input_mask_autoclear = $params->get('text_input_mask_autoclear', '0') === '1';
 		}
 		else
 		{
@@ -315,7 +346,7 @@ class PlgFabrik_ElementField extends PlgFabrik_Element
 		$opts->geocomplete = $params->get('autocomplete', '0') === '3';
 
 		$config = JComponentHelper::getParams('com_fabrik');
-		$apiKey = $config->get('google_api_key', '');
+		$apiKey = trim($config->get('google_api_key', ''));
 		$opts->mapKey = empty($apiKey) ? false : $apiKey;
 
 		if ($this->getParams()->get('autocomplete', '0') == '2')
@@ -529,9 +560,9 @@ class PlgFabrik_ElementField extends PlgFabrik_Element
 		$url = 'index.php';
 		$this->lang->load('com_fabrik.plg.element.field', JPATH_ADMINISTRATOR);
 
-		if (!$this->canView())
+		if (!$this->getListModel()->canViewDetails() || !$this->canView())
 		{
-			$this->app->enqueueMessage(FText::_('PLG_ELEMENT_FIELD_NO_PERMISSION'));
+			$this->app->enqueueMessage(FText::_('JERROR_ALERTNOAUTHOR'));
 			$this->app->redirect($url);
 			exit;
 		}
@@ -652,13 +683,19 @@ class PlgFabrik_ElementField extends PlgFabrik_Element
 		 */
 
 		$elementId = $this->getId();
-		$src = COM_FABRIK_LIVESITE
-		. 'index.php?option=com_' . $this->package . '&amp;task=plugin.pluginAjax&amp;plugin=field&amp;method=ajax_renderQRCode&amp;'
-				. 'format=raw&amp;element_id=' . $elementId . '&amp;formid=' . $formId . '&amp;rowid=' . $rowId . '&amp;repeatcount=0';
+
+		// set format to 'pdf' if rendering pdf, so onAjax_renderQRCode() will automagically use "allow_pdf_local"
+		$format = $this->app->input->get('format', 'html') === 'pdf' ? 'pdf' : 'raw';
+		$src = COM_FABRIK_LIVESITE .
+			'index.php?option=com_' . $this->package .
+			'&amp;task=plugin.pluginAjax&amp;plugin=field&amp;method=ajax_renderQRCode' .
+			'&amp;format=' . $format . '&amp;element_id=' . $elementId . '&amp;formid=' . $formId .
+			'&amp;rowid=' . $rowId . '&amp;repeatcount=0';
 
 		$layout = $this->getLayout('qr');
 		$displayData = new stdClass;
 		$displayData->src = $src;
+		$displayData->data = $thisRow;
 
 		return $layout->render($displayData);
 	}

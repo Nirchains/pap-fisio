@@ -48,7 +48,10 @@ class PlgFabrik_ElementLink extends PlgFabrik_Element
 	 */
 	public function renderListData($data, stdClass &$thisRow, $opts = array())
 	{
-		$listModel = $this->getlistModel();
+        $profiler = JProfiler::getInstance('Application');
+        JDEBUG ? $profiler->mark("renderListData: {$this->element->plugin}: start: {$this->element->name}") : null;
+
+        $listModel = $this->getlistModel();
 		$params = $this->getParams();
 		$target = $params->get('link_target', '');
 		$smart_link = $params->get('link_smart_link', false);
@@ -105,7 +108,13 @@ class PlgFabrik_ElementLink extends PlgFabrik_Element
 
 		if (is_array($data))
 		{
-			if (count($data) == 1)
+			// for historical reasons ...
+			if (count($data) === 0)
+			{
+				$data['label'] = '';
+				$data['link'] = '';
+			}
+			else if (count($data) === 1)
 			{
 				$data['label'] = FArrayHelper::getValue($data, 'link');
 			}
@@ -336,10 +345,8 @@ class PlgFabrik_ElementLink extends PlgFabrik_Element
 		{
 			if ($params->get('use_bitly'))
 			{
-				require_once JPATH_SITE . '/components/com_fabrik/libs/bitly/bitly.php';
 				$login = $params->get('bitly_login');
-				$key = $params->get('bitly_apikey');
-				$bitly = new bitly($login, $key);
+				$apikey = $params->get('bitly_apikey');
 			}
 
 			foreach ($val as $key => &$v)
@@ -348,28 +355,15 @@ class PlgFabrik_ElementLink extends PlgFabrik_Element
 				{
 					if ($params->get('use_bitly'))
 					{
-						/* bitly will return an error if you try and shorten a shortened link,
-						 * and the class file we are using doesn't check for this
-						 */
-						if (!strstr($v['link'], 'bit.ly/') && $v['link'] !== '')
-						{
-							$v['link'] = (string) $bitly->shorten($v['link']);
-						}
+						$v['link'] = FabrikString::bitlify($v['link'], $login, $apikey, true);
 					}
 				}
 				else
 				{
-					if ($key == 'link')
-					{
-						$v = FabrikString::encodeurl($v);
-					}
 					// Not in repeat group
 					if ($key == 'link' && $params->get('use_bitly'))
 					{
-						if (!strstr($v, 'bit.ly/') && $v !== '')
-						{
-							$v = (string) $bitly->shorten($v);
-						}
+						$v = FabrikString::bitlify($v, $login, $apikey, true);
 					}
 				}
 			}

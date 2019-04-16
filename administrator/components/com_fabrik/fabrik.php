@@ -45,7 +45,8 @@ if (JString::strpos($cName, '.') != false)
 
 	if ($type == 'visualization')
 	{
-		require_once JPATH_COMPONENT . '/controllers/visualization.php';
+		//require_once JPATH_COMPONENT . '/controllers/visualization.php';
+		require_once COM_FABRIK_FRONTEND . '/controllers/visualization.php';
 	}
 
 	$path = JPATH_SITE . '/plugins/fabrik_' . $type . '/' . $name . '/controllers/' . $name . '.php';
@@ -77,7 +78,7 @@ $query->select('COUNT(extension_id)')->from('#__extensions')
 		->where('enabled = 1 AND folder = ' . $db->q('fabrik_element'));
 $db->setQuery($query);
 
-if (count($db->loadResult()) === 0)
+if ((int)$db->loadResult() === 0)
 {
 	$app->enqueueMessage(JText::_('COM_FABRIK_PUBLISH_AT_LEAST_ONE_ELEMENT_PLUGIN'), 'notice');
 }

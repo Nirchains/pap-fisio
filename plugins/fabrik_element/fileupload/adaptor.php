@@ -106,6 +106,16 @@ abstract class FabrikStorageAdaptor
 	public abstract function read($filepath);
 
 	/**
+	 * Stream a file
+	 *
+	 * @param   string  $filepath  File path
+	 * @param   int     $chunkSize  chunk size
+	 *
+	 * @return  bool  returns false if error
+	 */
+	public abstract function stream($filepath, $chunkSize = 1048576);
+
+	/**
 	 * Clean the file path
 	 *
 	 * @param   string  $path  Path to clean
@@ -128,10 +138,10 @@ abstract class FabrikStorageAdaptor
 	 * Delete a file
 	 *
 	 * @param   string  $filepath  File to delete
-	 *
+	 * @param   bool    $prependRoot  also test with root prepended
 	 * @return  void
 	 */
-	public abstract function delete($filepath);
+	public abstract function delete($filepath, $prependRoot = true);
 
 	/**
 	 * Moves an uploaded file to a destination folder
@@ -214,14 +224,32 @@ abstract class FabrikStorageAdaptor
 		}
 	}
 
-	/**
+	/**	 *
+
 	 * Get the complete folder path, including the server root
 	 *
 	 * @param   string  $filepath  The file path
-	 *
 	 * @return  string
 	 */
 	public abstract function getFullPath($filepath);
+
+	/**
+	 * Check for snooping
+	 *
+	 * @param   string   $filepath   The file path
+	 *
+	 * @return  boolean
+	 */
+	public abstract function checkPath($folder);
+
+	/**
+	 * Return the directory separator - can't use DIRECTORY_SEPARATOR by default, as s3 uses /
+	 *
+	 * @return string
+	 *
+	 * @since 3.8
+	 */
+	public abstract function getDS();
 
 	/**
 	 * Allows storage model to modify pathname just before it is rendered.  For instance,
