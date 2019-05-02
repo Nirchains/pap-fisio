@@ -1,4 +1,5 @@
 /BACKUPS/*
+/BACKUP-ENFERMERIAPAP/*
 /configuration.php
 /tmp/*
 /administrator/cache/*
