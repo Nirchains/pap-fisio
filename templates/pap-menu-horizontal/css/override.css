@@ -1,0 +1,266 @@
+body {
+    font-family: 'Open Sans', sans-serif;
+}
+
+.container-fluid {
+	/*max-width: 1680px;*/
+    margin: 0 auto;
+}
+
+body.site { padding-top: 5px; }
+
+#content {
+	padding-top: 10px;
+}
+
+h1,h2,h3,h4,h5,h6,.site-title {
+	font-family: "Open Sans Condensed", sans-serif;
+	letter-spacing: 1px;
+}
+
+h1 {
+	color: #DF4B7F;
+}
+
+a {
+	color: #DF4B7F;
+}
+
+.pt-0 {	padding-top: 0; }
+.pb-0 {	padding-bottom: 0; }
+
+.btn {
+	transition: all 0.3s ease-in;
+	background-image: none;
+}
+
+.btn:focus, .btn:hover {
+	transition: all 0.15s ease-in;
+	background-image: none;
+}
+
+.table .btn-group a.btn {
+	color: #DF4B7F;
+}
+
+.table .btn-group a.btn:hover, .table .btn-group a.btn:focus {
+	color: #66727D;
+	cursor: pointer;
+}
+.table-hover tbody tr:hover > td,
+.table-hover tbody tr:hover > th {
+	background-color: oldlace;
+}
+
+a {
+	transition: all 0.15s ease-in;
+}
+
+.site-title-bar {
+	background-color: #DF4B7F;
+	padding: 1px;
+}
+
+.site-title-bar h2 {
+	color: #ffffff;
+	text-transform: uppercase;
+	text-align: center;
+	line-height: 10px;
+}
+
+.breadcrumb {
+    margin: 0;
+    background-color: #66727D;
+}
+
+.breadcrumb > li {
+	text-shadow: none;
+	color: #ffffff;
+}
+
+.breadcrumb > li a {
+	color: #ffffff;
+}
+
+.breadcrumb > .active {
+	color: #FF9A00;
+	text-transform: uppercase;
+	font-size: 20px;
+}
+
+.breadcrumb li:first-child {
+	padding-left: 40px;
+}
+
+.nav-lateral {
+	border-right: 2px solid #DF4B7F;
+}
+
+.nav-lateral li {
+	background-color: oldlace;
+	margin-bottom: 0px;
+	/*background-image: url("../img/bk-menu-lat.gif");*/
+	background-repeat: no-repeat;
+	background-position: left 4px;
+	/*border-bottom: 2px solid #ddd;*/
+}
+
+.nav-lateral li a {
+	padding: 8px 10px 8px 20px;
+	display: block;
+	transition: all 0.3s ease;
+}
+
+.nav-lateral li a:hover,.nav-lateral li a:focus {
+	color: #FF9A00;
+	background-color: none !important;
+}
+
+.nav-lateral li.active ul.nav-child li a:hover, .nav-lateral li.active ul.nav-child li a:focus, .nav-lateral .nav-child a:focus, .nav-lateral .nav-child a:hover {
+	color: #FF9A00;
+	text-decoration: none;
+}
+
+.nav-lateral li.active {
+	background-color: #BE9D56;
+	background-image: url("../img/bk-menu-lat-activo2.gif");
+}
+
+.nav-lateral li.active a {
+	color: #ffffff;
+}
+
+.nav-lateral a {
+	color: #76960a;
+	font-size: 1.1em;
+}
+
+.nav-lateral li.active ul.nav-child li a {
+	color: #76960a;
+}
+
+.nav-lateral li a:hover {
+	background-color: transparent !important;
+}
+
+.nav-child li {
+	padding: 0px;
+	background-image: none;
+	margin: 0;
+}
+
+.nav-child li.active {
+	background-color: #EEEEEE;
+	background-image: none;
+}
+
+.nav-lateral .fa {
+	min-width: 20px;
+    text-align: center;
+}
+
+.nav-lateral .nav-child {
+    border-left: 5px solid #ddd;
+    margin-left: 11px;
+}
+
+.nav-lateral .nav-child a {
+	
+}
+
+.fabrikDataContainer .table th, .fabrikDataContainer .table td {
+	vertical-align: middle;
+}
+
+.fabrikDataContainer .table th {
+	text-transform: uppercase;
+	border-bottom: 2px solid #ddd;
+}
+
+.table {
+	width: inherit;
+}
+
+fieldset.leyenda {
+	border: 1px solid #ddd;
+    padding: 10px;
+    margin: auto;
+}
+
+fieldset.leyenda legend {
+    display: inherit;
+    width: auto;
+    padding: 0px 10px;
+    margin-bottom: auto;
+    font-size: 14px;
+    line-height: 14px;
+    color: inherit;
+    border: none;
+    border-bottom: 0px solid #e5e5e5;
+}
+
+.fabrikButtonsContainer.navbar .nav > li > a:focus {
+	outline: 2px solid transparent;
+}
+
+.fabrikButtonsContainer.navbar .nav > li > a:hover {
+	background-color: #e6e6e6;
+}
+
+.fabrikButtonsContainer.navbar .dropdown-menu > li > a:hover {
+	cursor: pointer;
+	background-color: #FF9A00;
+}
+
+table.estados td {
+    border: 1px solid #ccc;
+    font-size: 10px;
+    padding: 3px 10px;
+}
+
+fieldset.fabrikGroup, fieldset.radio.btn-group {
+	padding: 0;
+	margin: 0;
+	border: 0;
+}
+
+fieldset.fabrikGroup legend, fieldset.radio.btn-group legend {
+	display: block;
+	width: 100%;
+	padding: 0;
+	margin-bottom: 18px;
+	font-size: 19.5px;
+	line-height: 36px;
+	color: #333;
+	border: 0;
+	border-bottom: 1px solid #e5e5e5;
+}
+
+.nav-buttons {
+	margin-bottom: 0px;
+}
+
+.related_data:hover {
+	text-decoration: none;
+}
+
+/*Forms*/
+.form-horizontal .control-label {
+    color: #66727D;
+    font-weight: bold;
+    text-align: left;
+    border-bottom: 1px dotted #ddd;
+}
+.form-actions {
+    background-color: oldlace;
+    border-top-width: : 0px;
+}
+.fabrikTip.tip-small {
+    background-color: #DF4B7F;
+    color: #fff;
+    padding: 6px 15px;
+    font-size: 18px;
+    width: auto;
+    height: auto;
+    border-radius: 0px;
+}

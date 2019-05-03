@@ -1,0 +1,352 @@
+@CHARSET "ISO-8859-1";
+td.t_usuarios___diferencia 
+{
+	font-weight:bold;
+}
+
+/*********************GRUPOS **************************************/
+
+#list_2_com_fabrik_2 tr.validada1 > td.t_solicitudes___validada,  
+#list_2_com_fabrik_2 tr.validada1---1 > td.t_solicitudes___validada, 
+#list_2_com_fabrik_2 tr.validada1---1---1 > td.t_solicitudes___validada, 
+#list_2_com_fabrik_2 tr.validada1---1---1---1 > td.t_solicitudes___validada
+{
+	background-color:#f0ffe2 !important;
+}
+#list_2_com_fabrik_2 tr.balanceg-positivo
+{
+	background-color:#e3f4fc;
+}
+#list_2_com_fabrik_2 tr.balanceg-positivo:hover > td
+{
+	background-color:#CDE9FF !important;
+}
+
+#list_2_com_fabrik_2 tr.balanceg-negativo
+{
+	background-color:#f7d9d9;
+}
+#list_2_com_fabrik_2 tr.balanceg-negativo:hover > td
+{
+	background-color:#FFBBBB !important;
+}
+
+#list_2_com_fabrik_2 tr.creditos_asignados0-00, #list_2_com_fabrik_2 tr.creditos_asignados0-00:hover > td
+{
+	background-color:#fff !important;
+}
+/*******************SOLICITUDES*************************************/
+
+#list_3_com_fabrik_3 tr.validada1,
+#list_3_com_fabrik_3 tr.validada1---1, 
+#list_3_com_fabrik_3 tr.validada1---1---1, 
+#list_3_com_fabrik_3 tr.validada1---1---1---1 
+{
+	background-color:#f0ffe2 !important;
+}
+.abierta1
+{
+	background-color:#feffda !important;
+}
+/*
+.validada1:hover > td, .validada1:hover > th
+	{background-color:#C9EAA8 !important;
+	}
+.abierta1:hover > td, .abierta1:hover > th
+	{background-color:#f8f9a7 !important;
+	}	
+*/
+.validada1 th, .validada1 td, .abierta1 th, .abierta1 td
+{
+	border-bottom:1px solid #fff !important;
+}
+.balancepositivo
+{
+	background-color:#ffeaea;
+}
+.balancenegativo
+{
+	background-color:#f1fbff;
+}
+/********************************************************************/
+.chzn-container-single .chzn-single
+{
+	border: 1px solid #ccc;
+	background:#fff;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+    transition: border 0.2s linear 0s, box-shadow 0.2s linear 0s;
+}
+.chzn-results li.highlighted
+{
+    background-color: #C40722 !important;
+    background-image: none !important;
+    color: #fff;
+}
+#form-login-remember
+	{
+	display:none;
+}
+	
+.download-archive{
+	margin-left:10px;
+}
+.fabrikDataContainer{
+	margin-top:10px;
+}
+/*table.estados td{
+	padding: 3px 10px;
+	border:1px solid #ccc;
+	font-size:10px;
+}*/
+#list_5_com_fabrik_5 tr.bloqueado1
+{
+	color:#ccc;
+}
+.fabrik_groupheading.info > td
+{
+	background-color: #f5f5f5;
+    background-image: linear-gradient(to bottom, #fff, #e6e6e6);
+    background-repeat: repeat-x;
+	padding:8px;
+}
+/*********************************************************************/
+/* NUEVOS ESTILOS AÑADIDOS POR EAG*/
+.container-fluid
+{
+	padding:20px;
+}
+.footer
+{
+	padding:0px 10px;
+}
+
+div.contact dt
+{
+	display:none;
+}
+.dl-horizontal dd
+{
+	margin-left:0px;
+}
+.contact-form legend
+{
+	font-size:13px;
+	font-weight:bold;
+}
+.contact-form input, textarea, .uneditable-input
+{
+	width:80%;
+}
+#jform_contact_email_copy
+{
+	width:20px;
+}
+header.header
+{
+
+	background-image:url('../img/us.png');
+	background-repeat:no-repeat;
+	background-position:bottom right;
+	padding-bottom: 5px;
+	margin-bottom: 5px;
+}
+
+.header-logo
+{
+	min-width:340px;
+	color:#B60C25;
+	float:left;
+
+}
+.header-logo img
+{
+/*	float:left;
+	margin-right:25px;*/
+}
+.logotipo
+{
+	float:left;
+	margin-right:10px;
+	padding-right:10px;
+	height:auto;
+	border-right:1px solid #ccc;
+}
+.titulo
+{
+	float:left;
+}
+.site-title, .site-description
+{
+	font-family: "Open Sans Condensed", sans-serif;
+	text-align:left;
+ 	color: #952434;
+ 	font-size:15px;
+ 	letter-spacing:2px;
+}
+.site-title
+{
+	letter-spacing:2px;
+	font-family: "Open Sans Condensed", sans-serif;
+	font-size:20px;
+	color:#be9d56;
+	font-weight:normal;
+	line-height: 25px;
+    margin-top: 25px;
+}
+.brand
+{
+	color:rgb(182,12,37);
+}
+h1, h2, h3, h4, h5, h6
+{
+	font-weight:normal;
+}
+h1 {
+	font-size: 24px;
+	line-height: 26px;
+}
+h2 {
+	font-size: 22px;
+	line-height: 24px;
+}
+h3 {
+	font-size: 16px;
+	line-height: 18px;
+}
+h4 {
+	font-size: 14px;
+	line-height: 16px;
+}
+h5 {
+	font-size: 13px;
+	line-height: 15px;
+}
+h6 {
+	font-size: 12px;
+	line-height: 14px;
+}
+div.page-header{
+	text-align:center;
+}
+.btn
+{
+		margin:0px 3px;
+}
+.btn-primary
+{
+	background-color: #DF4B7F !important;
+	border-color:#999;
+	text-shadow:none;
+}
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary.active,
+.btn-primary.disabled,
+.btn-primary[disabled] {
+	transition: all 0.15s ease-in;
+	color: #333;
+	background-color: #F9BB11 !important;
+	border-color:#999;
+	/*background-color: #003bb3;*/
+}
+.btn-primary:active,
+.btn-primary.active {
+	background-color: #FFC114;
+}
+a:hover,
+a:focus {
+	color: #EBAC00;
+	text-decoration: underline;
+}
+
+.input-small {
+	width: 125px;
+}
+input[type="search"]
+{
+	height:16px !important;
+	line-height:16px !important;
+}
+.userdata-horizontal #form-login-username, 
+.userdata-horizontal #form-login-password,
+.userdata-horizontal #form-login-submit
+{
+	float:left;
+	margin:5px 5px;
+}
+.userdata-horizontal #form-login-submit button
+{
+	margin:0px;
+}
+.userdata-horizontal #form-login-actions
+{
+
+}
+.userdata-horizontal #form-login-actions div
+{
+	float:right;
+	font-size:10px;
+}
+.logout-button .btn
+{
+	float:right;
+}
+
+h4.alert-heading {color:#468847}
+.col-icono
+{
+
+	text-align:center;
+	margin-top:20px;
+	margin-bottom:20px;
+}
+div.col-icono a {color:#333;}
+div.col-icono a:hover {color:#A71026;text-decoration:none;}
+
+div.navegacion-formulario div.paso
+{
+	height:80px;
+	text-align:center;
+	vertical-align:middle;
+	background-color:#fff;
+	margin-top:20px;
+}
+div.activo
+{
+	color:#A71026 !important;
+}
+div.paso
+{
+	font-size:14px;
+	line-height:22px;
+	color:#333;
+}
+
+i.icon-question-sign {display:none}
+div.fabrikElement {	float:left;}
+span.tip {font-size:11px; font-style:italic;font-color:#666;}
+div.documentacion-entregar
+{
+	font-size:11px;
+}
+div.controls > span, .consejo
+{
+	margin-left:20px;
+	font-style:italic;
+	color:#666;
+	font-size:11px;
+}
+#list_6_com_fabrik_6 tr.estado4
+{
+	color:#666;
+	font-style:italic;
+}
+div.plg-fileupload > label
+{
+	/*display:none;*/
+}
+div.plg-fileupload > div
+{
+	margin-left:0px !important;
+}
