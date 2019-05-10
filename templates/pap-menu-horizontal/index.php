@@ -178,7 +178,7 @@ else
 			<div class="row-fluid">
 				<?php if ($position8ModuleCount) : ?>
 					<!-- Begin Sidebar -->
-					<div id="sidebar" class="span3">
+					<div id="sidebar" class="span2">
 						<div class="sidebar-nav">
 							<jdoc:include type="modules" name="position-8" style="xhtml" />
 						</div>
