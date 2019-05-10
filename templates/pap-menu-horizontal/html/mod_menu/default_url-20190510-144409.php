@@ -44,17 +44,21 @@ if ($item->menu_image)
 	{
 		$linktype .= '<span class="image-title">' . $item->title . '</span>';
 	}
-} elseif ($item->menu_image_css) {
-	$linktype = '<i class="'. $item->menu_image_css .'" data-toggle="tooltip" data-placement="right"  title="' . $item->title . '"></i> <span class="menuitem">' . $item->title . '</span>';
 }
 
 if ($item->browserNav == 1)
 {
 	$attributes['target'] = '_blank';
+	$attributes['rel'] = 'noopener noreferrer';
+
+	if ($item->anchor_rel == 'nofollow')
+	{
+		$attributes['rel'] .= ' nofollow';
+	}
 }
 elseif ($item->browserNav == 2)
 {
-	$options = 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes';
+	$options = 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,' . $params->get('window_open');
 
 	$attributes['onclick'] = "window.open(this.href, 'targetWindow', '" . $options . "'); return false;";
 }

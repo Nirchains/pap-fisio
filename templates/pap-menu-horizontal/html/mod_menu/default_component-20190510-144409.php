@@ -44,8 +44,6 @@ if ($item->menu_image)
 	{
 		$linktype .= '<span class="image-title">' . $item->title . '</span>';
 	}
-} elseif ($item->menu_image_css) {
-	$linktype = '<i class="'. $item->menu_image_css .'" data-toggle="tooltip" data-placement="right"  title="' . $item->title . '"></i> <span class="menuitem">' . $item->title . '</span>';
 }
 
 if ($item->browserNav == 1)
