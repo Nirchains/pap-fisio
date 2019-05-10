@@ -43,6 +43,8 @@ JHtml::_('bootstrap.framework');
 // Add template js
 JHtml::_('script', 'template.js', array('version' => 'auto', 'relative' => true));
 
+JHtml::_('script', 'template_add.js', array('version' => 'auto', 'relative' => true));
+
 // Add html5 shiv
 JHtml::_('script', 'jui/html5.js', array('version' => 'auto', 'relative' => true, 'conditional' => 'lt IE 9'));
 
@@ -98,11 +100,11 @@ if ($position7ModuleCount && $position8ModuleCount)
 }
 elseif ($position7ModuleCount && !$position8ModuleCount)
 {
-	$span = 'span9';
+	$span = 'span10';
 }
 elseif (!$position7ModuleCount && $position8ModuleCount)
 {
-	$span = 'span9';
+	$span = 'span10';
 }
 else
 {

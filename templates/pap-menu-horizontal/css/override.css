@@ -68,6 +68,7 @@ a {
 	line-height: 10px;
 }
 
+/*Miga de pan*/
 .breadcrumb {
     margin: 0;
     background-color: #66727D;
@@ -92,6 +93,7 @@ a {
 	padding-left: 40px;
 }
 
+/*Barra lateral*/
 .nav-lateral {
 	border-right: 2px solid #DF4B7F;
 }
@@ -168,6 +170,38 @@ a {
 	
 }
 
+.menuitem {
+
+}
+
+.sidebar-collapse {
+	width: 70px;
+	float: left;
+	position: fixed;
+}
+
+.sidebar-toggle {
+	background-color: #cccccc !important;
+    padding: 5px 19px;
+    text-align: right;
+}
+
+.sidebar-toggle i {
+	color: #ffffff;
+}
+
+.sidebar-toggle-expanded, .sidebar-toggle-collapsed {
+	cursor: pointer;
+}
+
+.content-sidebar {
+	margin-left: 85px;
+	transition: all 0.15s ease;
+	min-height: 400px;
+}
+
+
+/*Fabrik*/
 .fabrikDataContainer .table th, .fabrikDataContainer .table td {
 	vertical-align: middle;
 }

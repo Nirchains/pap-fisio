@@ -356,3 +356,9 @@ div.plg-fileupload > div
 {
 	margin-left:0px !important;
 }
+
+
+/*Estilos para inline edit*/
+.t_cursos___curso:hover, t_cursos___abierto:hover {
+	cursor: pointer;
+}
