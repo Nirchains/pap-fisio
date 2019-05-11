@@ -95,11 +95,12 @@ a {
 
 /*Barra lateral*/
 .nav-lateral {
-	border-right: 2px solid #DF4B7F;
+	/*border-right: 2px solid #DF4B7F;*/
 }
 
 .nav-lateral li {
-	background-color: oldlace;
+	/*background-color: oldlace;*/
+	background-color: #aaa;
 	margin-bottom: 0px;
 	/*background-image: url("../img/bk-menu-lat.gif");*/
 	background-repeat: no-repeat;
@@ -108,23 +109,23 @@ a {
 }
 
 .nav-lateral li a {
-	padding: 8px 10px 8px 20px;
+	padding: 8px 10px 8px 15px;
 	display: block;
 	transition: all 0.3s ease;
 }
 
 .nav-lateral li a:hover,.nav-lateral li a:focus {
-	color: #FF9A00;
+	color: #DF4B7F;
 	background-color: none !important;
 }
 
 .nav-lateral li.active ul.nav-child li a:hover, .nav-lateral li.active ul.nav-child li a:focus, .nav-lateral .nav-child a:focus, .nav-lateral .nav-child a:hover {
-	color: #FF9A00;
+	color: #DF4B7F;
 	text-decoration: none;
 }
 
 .nav-lateral li.active {
-	background-color: #BE9D56;
+	background-color: #DF4B7F;
 	background-image: url("../img/bk-menu-lat-activo2.gif");
 }
 
@@ -133,12 +134,12 @@ a {
 }
 
 .nav-lateral a {
-	color: #76960a;
+	color: #fff;
 	font-size: 1.1em;
 }
 
 .nav-lateral li.active ul.nav-child li a {
-	color: #76960a;
+	color: #fff;
 }
 
 .nav-lateral li a:hover {
@@ -154,16 +155,20 @@ a {
 .nav-child li.active {
 	background-color: #EEEEEE;
 	background-image: none;
-}
 
+}
+.nav-child li.active a
+{
+	color: #DF4B7F !important;
+}
 .nav-lateral .fa {
 	min-width: 20px;
     text-align: center;
 }
 
 .nav-lateral .nav-child {
-    border-left: 5px solid #ddd;
-    margin-left: 11px;
+    /*border-left: 5px solid #ddd;*/
+    margin-left: 3px;
 }
 
 .nav-lateral .nav-child a {
@@ -175,14 +180,14 @@ a {
 }
 
 .sidebar-collapse {
-	width: 70px;
+	width: 50px;
 	float: left;
 	position: fixed;
 }
 
 .sidebar-toggle {
-	background-color: #cccccc !important;
-    padding: 5px 19px;
+	background-color: #66727D !important;
+    padding: 5px 13px;
     text-align: right;
 }
 
@@ -195,7 +200,7 @@ a {
 }
 
 .content-sidebar {
-	margin-left: 85px;
+	margin-left: 60px;
 	transition: all 0.15s ease;
 	min-height: 400px;
 }
