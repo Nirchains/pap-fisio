@@ -20,8 +20,8 @@ if ($tagId = $params->get('tag_id', ''))
 ?>
 <ul class="nav menu<?php echo $class_sfx; ?> mod-list"<?php echo $id; ?>>
 <li class="sidebar-toggle">
-<span class="sidebar-toggle-expanded"><i class="fa fa-chevron-circle-left fa-2x"></i></span>
-<span class="sidebar-toggle-collapsed hidden"><i class="fa fa-chevron-circle-right fa-2x"></i></span>
+<span class="sidebar-toggle-expanded"><i class="fa fa-chevron-circle-left"></i></span>
+<span class="sidebar-toggle-collapsed hidden"><i class="fa fa-chevron-circle-right"></i></span>
 </li>
 <?php foreach ($list as $i => &$item)
 {

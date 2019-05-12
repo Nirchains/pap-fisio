@@ -104,8 +104,8 @@ td.t_usuarios___diferencia
 }
 .fabrik_groupheading.info > td
 {
-	background-color: #f5f5f5;
-    background-image: linear-gradient(to bottom, #fff, #e6e6e6);
+	background-color: #eee !important;
+    /*background-image: linear-gradient(to bottom, #fff, #e6e6e6);*/
     background-repeat: repeat-x;
 	padding:8px;
 }
@@ -113,7 +113,7 @@ td.t_usuarios___diferencia
 /* NUEVOS ESTILOS AÑADIDOS POR EAG*/
 .container-fluid
 {
-	padding:20px 0px;
+	padding:1px 0px;
 }
 .footer
 {
@@ -302,7 +302,7 @@ h4.alert-heading {color:#468847}
 	margin-bottom:20px;
 }
 div.col-icono a {color:#333;}
-div.col-icono a:hover {color:#A71026;text-decoration:none;}
+div.col-icono a:hover {color:#DF4B7F;text-decoration:none;}
 
 div.navegacion-formulario div.paso
 {
@@ -314,7 +314,7 @@ div.navegacion-formulario div.paso
 }
 div.activo
 {
-	color:#A71026 !important;
+	color:#DF4B7F !important;
 }
 div.paso
 {

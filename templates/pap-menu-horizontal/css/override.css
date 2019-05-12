@@ -84,9 +84,9 @@ a {
 }
 
 .breadcrumb > .active {
-	color: #FF9A00;
+	color: #fff;
 	text-transform: uppercase;
-	font-size: 20px;
+	font-size: 15px;
 }
 
 .breadcrumb li:first-child {
@@ -198,7 +198,10 @@ a {
 .sidebar-toggle-expanded, .sidebar-toggle-collapsed {
 	cursor: pointer;
 }
-
+.sidebar-toggle-expanded i, .sidebar-toggle-collapsed i
+{
+	font-size: 23px;
+}
 .content-sidebar {
 	margin-left: 60px;
 	transition: all 0.15s ease;

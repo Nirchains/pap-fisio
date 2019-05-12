@@ -14,6 +14,7 @@ defined('_JEXEC') or die('Restricted access');
 
 ?>
 <div class="fabrikButtonsContainer row-fluid">
+
 <ul class="nav nav-pills  pull-left">
 
 <?php if ($this->showAdd) :?>
@@ -118,7 +119,6 @@ if ($this->emptyLink) :?>
 <?php
 endif;
 ?>
-</ul>
 <?php if (array_key_exists('all', $this->filters) || $this->filter_action != 'onchange') {
 ?>
 <ul class="nav pull-right">
@@ -142,4 +142,6 @@ endif;
 <?php
 }
 ?>
+</ul>
+
 </div>

@@ -904,9 +904,9 @@ input[type="color"],
 	font-size: 13px;
 	line-height: 18px;
 	color: #555;
-	-webkit-border-radius: 3px;
-	-moz-border-radius: 3px;
-	border-radius: 3px;
+	-webkit-border-radius: 0px;
+	-moz-border-radius: 0px;
+	border-radius: 0px;
 	vertical-align: middle;
 }
 input,
@@ -1527,9 +1527,9 @@ input.search-query {
 	padding-left: 14px;
 	padding-left: 4px \9;
 	margin-bottom: 0;
-	-webkit-border-radius: 15px;
-	-moz-border-radius: 15px;
-	border-radius: 15px;
+	-webkit-border-radius: 0px;
+	-moz-border-radius: 0px;
+	border-radius: 0px;
 }
 .form-search .input-append .search-query,
 .form-search .input-prepend .search-query {
