@@ -3,7 +3,7 @@ body {
 }
 
 .container-fluid {
-	/*max-width: 1680px;*/
+	max-width: 1920px;
     margin: 0 auto;
 }
 
@@ -84,9 +84,9 @@ a {
 }
 
 .breadcrumb > .active {
-	color: #fff;
+	color: #fab700;
 	text-transform: uppercase;
-	font-size: 15px;
+	font-size: 20px;
 }
 
 .breadcrumb li:first-child {
@@ -95,12 +95,12 @@ a {
 
 /*Barra lateral*/
 .nav-lateral {
-	/*border-right: 2px solid #DF4B7F;*/
+	padding-bottom: 4px;
+	background-color: oldlace;
 }
 
 .nav-lateral li {
-	/*background-color: oldlace;*/
-	background-color: #aaa;
+	background-color: oldlace;
 	margin-bottom: 0px;
 	/*background-image: url("../img/bk-menu-lat.gif");*/
 	background-repeat: no-repeat;
@@ -125,8 +125,9 @@ a {
 }
 
 .nav-lateral li.active {
-	background-color: #DF4B7F;
+	background-color: #BE9D56;
 	background-image: url("../img/bk-menu-lat-activo2.gif");
+	background-position: -5px center;
 }
 
 .nav-lateral li.active a {
@@ -134,12 +135,12 @@ a {
 }
 
 .nav-lateral a {
-	color: #fff;
+	color: #66727D;
 	font-size: 1.1em;
 }
 
 .nav-lateral li.active ul.nav-child li a {
-	color: #fff;
+	color: #66727D;
 }
 
 .nav-lateral li a:hover {
@@ -150,29 +151,36 @@ a {
 	padding: 0px;
 	background-image: none;
 	margin: 0;
+	padding-left: 22px;
+}
+
+.nav-child li a {
+	border-left: 5px solid #ddd;
 }
 
 .nav-child li.active {
-	background-color: #EEEEEE;
 	background-image: none;
+	background-color: oldlace;
+	background-image: url("../img/bk-menu-lat-activo2.gif");
+	background-repeat: no-repeat;
+	background-position: -5px center;
+}
+
+.nav-child li.active a {
+	background-color: #EEEEEE;
 
 }
-.nav-child li.active a
-{
-	color: #DF4B7F !important;
-}
+
 .nav-lateral .fa {
 	min-width: 20px;
     text-align: center;
 }
 
 .nav-lateral .nav-child {
-    /*border-left: 5px solid #ddd;*/
-    margin-left: 3px;
 }
 
 .nav-lateral .nav-child a {
-	
+	padding-left: 5px;
 }
 
 .menuitem {
@@ -180,14 +188,14 @@ a {
 }
 
 .sidebar-collapse {
-	width: 50px;
+	width: 65px;
 	float: left;
 	position: fixed;
 }
 
 .sidebar-toggle {
-	background-color: #66727D !important;
-    padding: 5px 13px;
+	background-color: #cccccc !important;
+    padding: 6px 13px;
     text-align: right;
 }
 
@@ -203,9 +211,13 @@ a {
 	font-size: 23px;
 }
 .content-sidebar {
-	margin-left: 60px;
+	margin-left: 85px;
 	transition: all 0.15s ease;
-	min-height: 400px;
+	min-height: 600px;
+}
+
+.dbreadcrumbs-collapse {
+	margin-left: 60px;
 }
 
 
@@ -251,7 +263,7 @@ fieldset.leyenda legend {
 
 .fabrikButtonsContainer.navbar .dropdown-menu > li > a:hover {
 	cursor: pointer;
-	background-color: #FF9A00;
+	background-color: #DF4B7F;
 }
 
 table.estados td {
@@ -305,4 +317,18 @@ fieldset.fabrikGroup legend, fieldset.radio.btn-group legend {
     width: auto;
     height: auto;
     border-radius: 0px;
+}
+
+/*Botón volver arriba*/
+.back-top {
+    position: fixed;
+    bottom: 20px;
+    right: 30px;
+    transition: all 0.3s ease-in;
+}
+#back-top {
+	display: none;
+}
+#back-top:hover {
+	text-decoration: none;
 }

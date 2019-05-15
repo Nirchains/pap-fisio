@@ -18,6 +18,14 @@ jQuery(function($) {
 			Cookies.set("sidebar", "expanded");
 			toggleSidebar();	
 		})
+
+		.scroll(function() {
+			if ($(document).scrollTop()<=300) {
+				$("#back-top").hide("fast");
+			} else {
+				$("#back-top").show("fast");
+			}
+		})
 		
 		function toggleSidebar() {
 			if (Cookies.get("sidebar")=="collapse") {
@@ -28,6 +36,7 @@ jQuery(function($) {
 				$(".menuitem").addClass("hidden");
 				$("#content").removeClass("span10");
 				$("#content").addClass("content-sidebar");
+				$(".dbreadcrumbs").addClass("dbreadcrumbs-collapse");
 			} else if (Cookies.get("sidebar")=="expanded") {
 				$("#sidebar").removeClass("sidebar-collapse");
 				$("#sidebar").addClass("span2");
@@ -36,6 +45,7 @@ jQuery(function($) {
 				$(".menuitem").removeClass("hidden");
 				$("#content").addClass("span10");
 				$("#content").removeClass("content-sidebar");
+				$(".dbreadcrumbs").removeClass("dbreadcrumbs-collapse");
 			}
 		}
 });

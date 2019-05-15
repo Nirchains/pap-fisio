@@ -113,7 +113,7 @@ td.t_usuarios___diferencia
 /* NUEVOS ESTILOS AÑADIDOS POR EAG*/
 .container-fluid
 {
-	padding:1px 0px;
+	padding:20px;
 }
 .footer
 {
@@ -314,7 +314,7 @@ div.navegacion-formulario div.paso
 }
 div.activo
 {
-	color:#DF4B7F !important;
+	color:#A71026 !important;
 }
 div.paso
 {

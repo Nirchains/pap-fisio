@@ -213,8 +213,9 @@ else
 		<div class="container<?php echo ($params->get('fluidContainer') ? '-fluid' : ''); ?>">
 			<hr />
 			<jdoc:include type="modules" name="footer" style="none" />
-			<p class="pull-right">
+			<p class="pull-right back-top">
 				<a href="#top" id="back-top">
+					<i class="fa fa-chevron-circle-up"></i>
 					<?php echo JText::_('TPL_PROTOSTAR_BACKTOTOP'); ?>
 				</a>
 			</p>
