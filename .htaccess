@@ -85,4 +85,4 @@ order allow,deny
 allow from 127.0.0.1
 allow from all
 
-#ErrorDocument 403 http://admisiondoctorado.us.es/
+php_value memory_limit 64M
