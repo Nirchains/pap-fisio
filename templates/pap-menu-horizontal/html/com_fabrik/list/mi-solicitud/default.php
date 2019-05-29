@@ -38,15 +38,20 @@ endif;
 
 if(empty($this->rows[0])){ 
 	?>
-		
-		<div class="span12 col-icono row-fluid">
-	    <p>A&uacute;n no tienes hecha tu solicitud. <br/>Haz clic en <b>Realizar solicitud</b> para comenzar. <br/><br/></p>
-		<a class="btn" style="padding:12px;" href="mi-solicitud/form/3/" alt="Realizar solicitud">
-		<i class="fa fa-file-text-o fa-3x"></i>
-		<h3>Realizar solicitud >></h3>
-		
+	<div class="row">
+		<div class="span12 text-center">
+	    <h3>A&uacute;n no tienes hecha tu solicitud. </h3>
+	    <h3>Haz clic en <a href="mi-solicitud/form/3/" alt="Realizar solicitud"><b>"Realizar solicitud"</b></a> para comenzar. <br/><br/></h3>
+		</div>
+	</div>
+	<div class="row">
+		<div class="span12">
+			<a class="btn span12" href="mi-solicitud/form/3/" alt="Realizar solicitud">
+			<i class=" fa fa-file-alt fa-3x"></i>
+			<h3>Realizar solicitud <i class="fa fa-arrow-right"></i></h3>
 		</a>
 		</div>
+	</div>
 <?php 
 }
 else

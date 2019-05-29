@@ -108,7 +108,7 @@ elseif (!$position7ModuleCount && $position8ModuleCount)
 }
 else
 {
-	$span = 'span12';
+	$span = '';
 }
 
 // Logo file or site title param

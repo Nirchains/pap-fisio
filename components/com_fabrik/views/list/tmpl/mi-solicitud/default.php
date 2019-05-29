@@ -38,7 +38,7 @@ endif;
 
 if(empty($this->rows[0])){ 
 	?>
-		
+	<div class="row">
 		<div class="span12 col-icono row-fluid">
 	    <p>A&uacute;n no tienes hecha tu solicitud. <br/>Haz clic en <b>Realizar solicitud</b> para comenzar. <br/><br/></p>
 		<a class="btn" style="padding:12px;" href="mi-solicitud/form/3/" alt="Realizar solicitud">
@@ -47,6 +47,7 @@ if(empty($this->rows[0])){
 		
 		</a>
 		</div>
+	</div>
 <?php 
 }
 else
