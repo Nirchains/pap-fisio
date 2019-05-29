@@ -182,7 +182,7 @@ a {
 
 }
 
-.nav-lateral .fa {
+.nav-lateral .fa, .nav-lateral .fas, .nav-lateral .far {
 	min-width: 20px;
     text-align: center;
 }
