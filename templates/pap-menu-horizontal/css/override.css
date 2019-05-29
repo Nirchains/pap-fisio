@@ -119,7 +119,7 @@ a {
 	/*border-bottom: 2px solid #ddd;*/
 }
 
-.nav-lateral li a {
+.nav-lateral li a, .nav-lateral li span.separator {
 	padding: 8px 10px 8px 15px;
 	display: block;
 	transition: all 0.3s ease;
@@ -141,11 +141,11 @@ a {
 	background-position: -5px center;
 }
 
-.nav-lateral li.active a {
+.nav-lateral li.active a, .nav-lateral li.active span.separator  {
 	color: #ffffff;
 }
 
-.nav-lateral a {
+.nav-lateral a, .nav-lateral li span.separator {
 	color: #66727D;
 	font-size: 1.1em;
 }
@@ -165,7 +165,7 @@ a {
 	padding-left: 22px;
 }
 
-.nav-child li a {
+.nav-child li a, .nav-child li span.separator {
 	border-left: 5px solid #ddd;
 }
 
@@ -190,7 +190,7 @@ a {
 .nav-lateral .nav-child {
 }
 
-.nav-lateral .nav-child a {
+.nav-lateral .nav-child a, .nav-lateral .nav-child span.separator {
 	padding-left: 5px;
 }
 

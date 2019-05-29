@@ -19,7 +19,8 @@ if ($item->menu_image)
 	if ($item->menu_image_css)
 	{
 		$image_attributes['class'] = $item->menu_image_css;
-		$linktype = JHtml::_('image', $item->menu_image, $item->title, $image_attributes);
+		//$linktype = JHtml::_('image', $item->menu_image, $item->title, $image_attributes);
+		$linktype = '<i class="'. $item->menu_image_css .'" data-toggle="tooltip" data-placement="right"  title="' . $item->title . '"></i> <span class="menuitem">' . $item->title . '</span>';
 	}
 	else
 	{
@@ -31,6 +32,28 @@ if ($item->menu_image)
 		$linktype .= '<span class="image-title">' . $item->title . '</span>';
 	}
 }
+
+
+if ($item->menu_image)
+{
+	if ($item->menu_image_css)
+	{
+		$image_attributes['class'] = $item->menu_image_css;
+		$linktype = JHtml::_('image', $item->menu_image, $item->title, $image_attributes);
+	}
+	else
+	{
+		$linktype = JHtml::_('image', $item->menu_image, $item->title);
+	}
+
+	if ($item->params->get('menu_text', 1))
+	{
+		$linktype .= '<span class="image-title">' . $item->title . '</span>';
+	}
+} elseif ($item->menu_image_css) {
+	$linktype = '<i class="'. $item->menu_image_css .'" data-toggle="tooltip" data-placement="right"  title="' . $item->title . '"></i> <span class="menuitem">' . $item->title . '</span>';
+}
+
 
 ?>
 <span class="separator <?php echo $anchor_css; ?>"<?php echo $title; ?>><?php echo $linktype; ?></span>
