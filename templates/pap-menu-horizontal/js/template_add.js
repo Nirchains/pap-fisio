@@ -8,6 +8,23 @@ jQuery(function($) {
 	$('[data-toggle="tooltip"]').tooltip(); 
 	toggleSidebar();
 
+	$(window)
+		.resize(function() {
+			var windowsize = $(window).width();
+			if (windowsize > 1024 || windowsize < 768) {
+				if (Cookies.get("sidebar")!="expanded") {
+					Cookies.set("sidebar", "expanded");
+					toggleSidebar();
+				}
+			} else {
+				if (Cookies.get("sidebar")!="collapse") {
+					Cookies.set("sidebar", "collapse");
+					toggleSidebar();
+				}
+			}
+
+		})
+
 	$(document)
 		.on('click', ".sidebar-toggle-expanded", function() {
 			Cookies.set("sidebar", "collapse");
@@ -30,20 +47,24 @@ jQuery(function($) {
 		function toggleSidebar() {
 			if (Cookies.get("sidebar")=="collapse") {
 				$("#sidebar").addClass("sidebar-collapse");
+				$("#sidebar").addClass("span1");
 				$("#sidebar").removeClass("span2");
 				$(".sidebar-toggle-collapsed").removeClass("hidden");
 				$(".sidebar-toggle-expanded").addClass("hidden");
 				$(".menuitem").addClass("hidden");
 				$("#content").removeClass("span10");
+				$("#content").addClass("span11");
 				$("#content").addClass("content-sidebar");
 				$(".dbreadcrumbs").addClass("dbreadcrumbs-collapse");
 			} else if (Cookies.get("sidebar")=="expanded") {
 				$("#sidebar").removeClass("sidebar-collapse");
+				$("#sidebar").removeClass("span1");
 				$("#sidebar").addClass("span2");
 				$(".sidebar-toggle-expanded").removeClass("hidden");
 				$(".sidebar-toggle-collapsed").addClass("hidden");
 				$(".menuitem").removeClass("hidden");
 				$("#content").addClass("span10");
+				$("#content").removeClass("span11");
 				$("#content").removeClass("content-sidebar");
 				$(".dbreadcrumbs").removeClass("dbreadcrumbs-collapse");
 			}

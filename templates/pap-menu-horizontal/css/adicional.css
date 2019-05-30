@@ -362,6 +362,11 @@ div.plg-fileupload > div
 .t_asignaturas___cuatrimestre:hover,
 .t_asignaturas___asignatura:hover,
 .t_asignaturas___coordinador:hover,
-.t_asignaturas___tipo:hover {
-	cursor: crosshair;
+.t_asignaturas___tipo:hover,
+.t_grupos___grupo:hover, 
+.t_grupos___unidad_docente:hover,
+.t_grupos___grupo_grande:hover,
+.t_grupos___horario:hover,
+.t_grupos___creditos:hover {
+	cursor: pointer;
 }

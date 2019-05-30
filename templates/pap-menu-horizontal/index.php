@@ -58,12 +58,9 @@ JHtml::_('stylesheet', 'fontawesome-5.8.min.css', array('version' => 'auto', 're
 // Use of Google Font
 if ($this->params->get('googleFont'))
 {
-	JHtml::_('stylesheet', 'https://fonts.googleapis.com/css?family=' . $this->params->get('googleFontName'));
-	$this->addStyleDeclaration("
-	h1, h2, h3, h4, h5, h6, .site-title {
-		font-family: '" . str_replace('+', ' ', $this->params->get('googleFontName')) . "', sans-serif;
-	}");
+	JHtml::_('stylesheet', 'https://fonts.googleapis.com/css?family=' . $this->params->get('googleFontName') . ':300,300italic,regular,italic,600,600italic,700,700italic,800,800italic&amp;subset=latin,latin-ext');
 }
+JHtml::_('stylesheet', 'https://fonts.googleapis.com/css?family=Raleway:100,100italic,200,200italic,300,300italic,regular,italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic&amp;subset=latin');
 
 // Template color
 if ($this->params->get('templateColor'))
