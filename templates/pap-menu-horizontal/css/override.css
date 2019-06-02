@@ -364,6 +364,16 @@ div.fabrikElement .input-medium {
 	margin-bottom: 5px;
 }
 
+.modal .modal-header  {
+	background-color: #DF4B7F;
+	color: #ffffff;
+	text-align: center;
+}
+
+div.modal {
+	border: 3px solid rgba(255,255,255,0.5);
+}
+
 @media (min-width: 768px) and (max-width: 1024px) {
 	.nav-lateral li a, .nav-lateral li span.separator{
 		    padding: 8px 5px 8px 5px;

@@ -367,6 +367,14 @@ div.plg-fileupload > div
 .t_grupos___unidad_docente:hover,
 .t_grupos___grupo_grande:hover,
 .t_grupos___horario:hover,
-.t_grupos___creditos:hover {
+.t_grupos___creditos:hover,
+.t_seminarios___seminario:hover, 
+.t_seminarios___unidad_docente:hover,
+.t_seminarios___horario:hover,
+.t_seminarios___creditos:hover,
+.t_tutelas___tutela:hover, 
+.t_tutelas___unidad_docente:hover,
+.t_tutelas___horario:hover,
+.t_tutelas___creditos:hover {
 	cursor: pointer;
 }

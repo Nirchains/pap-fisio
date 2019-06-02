@@ -17,7 +17,7 @@ defined('_JEXEC') or die('Restricted access');
 
 <?php if (array_key_exists('all', $this->filters) || $this->filter_action != 'onchange') {
 ?>
-<ul class="nav pull-right">
+<ul class="nav pull-left">
 	<li>
 	<div <?php echo $this->filter_action != 'onchange' ? 'class="input-append"' : ''; ?>>
 	<?php if (array_key_exists('all', $this->filters)) {
