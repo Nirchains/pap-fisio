@@ -1,0 +1,83 @@
+<?php
+//ACTUALIZAMOS LA TABLA DE PROFESORES
+echo "<br>-------------ACTUALIZANDO TABLA DE PROFESORES..............<br>";
+
+$sql_profesores = "select id, userid, usuario, prelacion, encargo, tfg, tfm, practicas, cont_idi,
+practicum, capacidad, asignacion, diferencia, balance
+from t_usuarios";
+$stmt_profesores = $con->prepare($sql_profesores);
+$stmt_profesores->execute();
+
+$result_profesores = $stmt_profesores->get_result();
+
+while ($row = $result_profesores->fetch_assoc()) {
+	$userid = $row["id"];
+	$encargo = (float)$row["encargo"];
+	$tfg = (float)$row["tfg"];
+	$tfm = (float)$row["tfm"];
+	$practicas = (float)$row["practicas"];
+	$cont_idi = (float)$row["cont_idi"];
+	$practicum = (float)$row["practicum"];
+
+  	//recalculamos la capacidad
+	$capacidad = $encargo -$tfg - $tfm - $practicas - $cont_idi - $practicum;
+
+  	//Calculamos la asignacion
+	$sql_asignacion = "select (sum(sg.creditos_asignados) + sum(ss.creditos_asignados) + sum(st.creditos_asignados)) as sum 
+	from t_solicitudes  s
+	left join t_solicitudes_grupos sg on s.id = sg.parent_id 
+	left join t_solicitudes_seminarios ss on s.id = ss.parent_id
+	left join t_solicitudes_tutelas st on s.id=st.parent_id
+	where
+	s.validada = 1
+	and s.usuario = ?";
+
+	$stmt_asignacion = $con->prepare($sql_asignacion);
+	$stmt_asignacion->bind_param('i',$userid);
+	$stmt_asignacion->execute();
+
+	$result_asignacion = $stmt_asignacion->get_result();
+
+	if ($result_asignacion->num_rows > 0) {
+		$row = $result_asignacion->fetch_assoc();
+    //multiplicamos por 10 para obtener el número de horas
+		$asignacion = $row["sum"]*10;
+	} else {
+		$asignacion = 0;
+	}
+	$stmt_asignacion->close();
+
+  	//recalculamos la diferencia
+	$diferencia = $capacidad - $asignacion;
+
+  	//recalculamos el balance
+	if ($diferencia>0) {
+		$balance = "positivo";
+	} else if ($diferencia<0) {
+		$balance = "negativo";
+	} else {
+		$balance = "cero";
+	} 
+
+  	//Actualizamos la tabla de usuarios
+	$query_update_usuarios = "UPDATE t_usuarios 
+	SET capacidad = ?,
+	asignacion = ?,
+	diferencia = ?,
+	balance = ?
+	WHERE id = ?";
+
+	$stmt_update_usuarios = $con->prepare($query_update_usuarios);
+	$stmt_update_usuarios->bind_param('dddsi',$capacidad,$asignacion,$diferencia,$balance,$userid);
+	$stmt_update_usuarios->execute();
+  	//print_r($stmt_update_usuarios);
+	if ($stmt_update_usuarios->affected_rows) {
+		echo "<br>Usuario ".$userid." actualizado.";	
+	}
+
+	$stmt_update_usuarios->close(); 
+}
+$stmt_profesores->close();
+
+echo "<br>..............TABLA DE PROFESORES ACTUALIZADA-------------";
+?>
