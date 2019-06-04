@@ -23,17 +23,29 @@ while ($row = $result_profesores->fetch_assoc()) {
 	$capacidad = $encargo -$tfg - $tfm - $practicas - $cont_idi - $practicum;
 
   	//Calculamos la asignacion
-	$sql_asignacion = "select (sum(sg.creditos_asignados) + sum(ss.creditos_asignados) + sum(st.creditos_asignados)) as sum 
-	from t_solicitudes  s
-	left join t_solicitudes_grupos sg on s.id = sg.parent_id 
-	left join t_solicitudes_seminarios ss on s.id = ss.parent_id
-	left join t_solicitudes_tutelas st on s.id=st.parent_id
-	where
-	s.validada = 1
-	and s.usuario = ?";
+	$sql_asignacion = "select sum(s.sum) as sum from (
+						select (sum(sg.creditos_asignados)) as sum 
+							from t_solicitudes  s
+							inner join t_solicitudes_grupos sg on s.id = sg.parent_id 
+							where
+							s.validada = 1
+							and s.usuario = ?
+						union select (sum(ss.creditos_asignados)) as sum 
+							from t_solicitudes  s
+							inner join t_solicitudes_seminarios ss on s.id = ss.parent_id
+							where
+							s.validada = 1
+							and s.usuario = ?
+						union select (sum(st.creditos_asignados)) as sum 
+							from t_solicitudes  s
+							inner join t_solicitudes_tutelas st on s.id = st.parent_id
+							where
+							s.validada = 1
+							and s.usuario = ?
+						) s";
 
 	$stmt_asignacion = $con->prepare($sql_asignacion);
-	$stmt_asignacion->bind_param('i',$userid);
+	$stmt_asignacion->bind_param('iii',$userid,$userid,$userid);
 	$stmt_asignacion->execute();
 
 	$result_asignacion = $stmt_asignacion->get_result();
