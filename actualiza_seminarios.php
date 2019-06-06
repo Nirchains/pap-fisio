@@ -1,7 +1,6 @@
 <tr class="fabrik_row actualiza-seminarios"><td><b>Actualizando seminarios</b></td></tr>
 <?php
-//ACTUALIZAMOS LA TABLA DE SEMINARIOS
-echo "<br><br><br>-------------ACTUALIZANDO TABLA DE SEMINARIOS..............<br>";
+
 $sql_grupos = "select id as seminario from t_seminarios";
 $stmt_grupos = $con->prepare($sql_grupos);
 $stmt_grupos->execute();

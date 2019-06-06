@@ -1,6 +1,6 @@
 <tr class="fabrik_row actualiza-grupos"><td><b>Actualizando grupos</b></td></tr>
 <?php
-//ACTUALIZAMOS LA TABLA DE GRUPOS
+
 
 $sql_grupos = "select id as grupo from t_grupos";
 $stmt_grupos = $con->prepare($sql_grupos);

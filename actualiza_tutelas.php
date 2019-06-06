@@ -1,6 +1,5 @@
 <tr class="fabrik_row actualiza-tutelas"><td><b>Actualizando tutelas</b></td></tr>
 <?php
-//ACTUALIZAMOS LA TABLA DE GRUPOS
 
 $sql_grupos = "select id as tutela from t_tutelas";
 $stmt_grupos = $con->prepare($sql_grupos);
