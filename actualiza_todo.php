@@ -1,3 +1,5 @@
+
+<table id="actualizar-todo" class="actualiza-todo table table-bordered table-condensed">
 <?php
 
 // Saves the start time and memory usage.
@@ -63,3 +65,4 @@ if(in_array(12, $usergroups)) {
 $con->close();  
 
 ?>
+</table>

@@ -1,6 +1,6 @@
+<tr class="fabrik_row actualiza-profesores"><td><b>Actualizando profesores</b></td></tr>
 <?php
 //ACTUALIZAMOS LA TABLA DE PROFESORES
-echo "<br>-------------ACTUALIZANDO TABLA DE PROFESORES..............<br>";
 
 $sql_profesores = "select id, userid, usuario, prelacion, encargo, tfg, tfm, practicas, cont_idi,
 practicum, capacidad, asignacion, diferencia, balance
@@ -84,12 +84,11 @@ while ($row = $result_profesores->fetch_assoc()) {
 	$stmt_update_usuarios->execute();
   	//print_r($stmt_update_usuarios);
 	if ($stmt_update_usuarios->affected_rows) {
-		echo "<br>Usuario ".$userid." actualizado.";	
+		echo "<tr class='fabrik_row'><td>Profesor <a href='administrar/profesores/details/5/".$userid.">' ".$userid."</a> actualizado. </td></tr>";	
 	}
 
 	$stmt_update_usuarios->close(); 
 }
 $stmt_profesores->close();
-
-echo "<br>..............TABLA DE PROFESORES ACTUALIZADA-------------";
 ?>
+<tr class="fabrik_row actualiza-profesores"><td><b>Profesores actualizados</b></td></tr>

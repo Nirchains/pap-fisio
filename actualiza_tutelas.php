@@ -1,6 +1,7 @@
+<tr class="fabrik_row actualiza-tutelas"><td><b>Actualizando tutelas</b></td></tr>
 <?php
 //ACTUALIZAMOS LA TABLA DE GRUPOS
-echo "<br><br><br>-------------ACTUALIZANDO TABLA DE GRUPOS..............<br>";
+
 $sql_grupos = "select id as tutela from t_tutelas";
 $stmt_grupos = $con->prepare($sql_grupos);
 $stmt_grupos->execute();
@@ -56,7 +57,7 @@ while ($row = $result_grupos->fetch_assoc()) {
 	$stmt_update_grupos->execute();
   	//print_r($stmt_update_usuarios);
 	if ($stmt_update_grupos->affected_rows) {
-		echo "<br>Tutela ".$grupo." actualizado.";	
+	    echo "<tr class='fabrik_row'><td>Tutela ".$grupo." actualizada.</td></tr>";	
 	}
 
 	$stmt_update_grupos->close();
@@ -66,5 +67,5 @@ while ($row = $result_grupos->fetch_assoc()) {
 
 $stmt_grupos->close();
 
-echo "<br>..............TABLA DE TUTELAS ACTUALIZADA-------------";
 ?>
+<tr class="fabrik_row actualiza-tutelas"><td><b>Tutelas actualizadas</b></td></tr>
