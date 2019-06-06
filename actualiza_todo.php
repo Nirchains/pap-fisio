@@ -27,10 +27,10 @@ require_once JPATH_BASE . '/includes/framework.php';
 JDEBUG ? JProfiler::getInstance('Application')->setStart($startTime, $startMem)->mark('afterLoad') : null;
 
 // Instantiate the application.
-$app = JFactory::getApplication('site');
+//$app = JFactory::getApplication('site');
 
 // Execute the application.
-$app->execute();
+//$app->execute();
 
 
 
