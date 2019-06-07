@@ -378,6 +378,10 @@ td.repeat-merge ul.fabrikRepeatData li, td.repeat-reduce ul.fabrikRepeatData li 
 	border-bottom-width: 0px;
 }
 
+.fabrikRepeatData > li {
+	padding: 5px !important;
+}
+
 @media (min-width: 768px) and (max-width: 1024px) {
 	.nav-lateral li a, .nav-lateral li span.separator{
 		    padding: 8px 5px 8px 5px;
