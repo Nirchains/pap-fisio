@@ -1,3 +1,5 @@
+
+<table id="actualizar-todo" class="actualiza-todo table table-bordered table-condensed">
 <?php
 
 // Saves the start time and memory usage.
@@ -27,10 +29,10 @@ require_once JPATH_BASE . '/includes/framework.php';
 JDEBUG ? JProfiler::getInstance('Application')->setStart($startTime, $startMem)->mark('afterLoad') : null;
 
 // Instantiate the application.
-$app = JFactory::getApplication('site');
+//$app = JFactory::getApplication('site');
 
 // Execute the application.
-$app->execute();
+//$app->execute();
 
 
 
@@ -64,3 +66,4 @@ if(in_array(12, $usergroups)) {
 $con->close();  
 
 ?>
+</table>

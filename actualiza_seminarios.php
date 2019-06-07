@@ -1,6 +1,6 @@
+<tr class="fabrik_row actualiza-seminarios"><td><b>Actualizando seminarios</b></td></tr>
 <?php
-//ACTUALIZAMOS LA TABLA DE SEMINARIOS
-echo "<br><br><br>-------------ACTUALIZANDO TABLA DE SEMINARIOS..............<br>";
+
 $sql_grupos = "select id as seminario from t_seminarios";
 $stmt_grupos = $con->prepare($sql_grupos);
 $stmt_grupos->execute();
@@ -51,7 +51,7 @@ while ($row = $result_grupos->fetch_assoc()) {
 	$stmt_update_grupos->execute();
   	//print_r($stmt_update_usuarios);
 	if ($stmt_update_grupos->affected_rows) {
-		echo "<br>Grupo ".$grupo." actualizado.";	
+		echo "<tr class='fabrik_row'><td>Seminario ".$grupo." actualizado.</td></tr>";	
 	}
 
 	$stmt_update_grupos->close();
@@ -60,5 +60,5 @@ while ($row = $result_grupos->fetch_assoc()) {
 
 $stmt_grupos->close();
 
-echo "<br>..............TABLA DE SEMINARIOS ACTUALIZADA-------------";
 ?>
+<tr class="fabrik_row actualiza-seminarios"><td><b>Seminarios actualizados</b></td></tr>
