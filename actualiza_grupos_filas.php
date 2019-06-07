@@ -1,6 +1,5 @@
 <?php
-//ACTUALIZAMOS LA TABLA DE GRUPOS (CAMPO FILA)
-echo "<br><br><br>-------------ACTUALIZANDO TABLA DE GRUPOS (CAMPO FILA)..............<br>";
+<tr class="fabrik_row actualiza-grupos"><td><b>Actualizando campo fila de la tabla grupos</b></td></tr>
 
 $sql_grupos = "select id as grupo from t_grupos where grupo_grande = 0";
 $stmt_grupos = $con->prepare($sql_grupos);
@@ -38,7 +37,7 @@ while ($row = $result_grupos->fetch_assoc()) {
   $stmt_update_grupos->execute();
     //print_r($stmt_update_usuarios);
   if ($stmt_update_grupos->affected_rows) {
-    echo "<br>Grupo ".$grupo." actualizado."; 
+    echo "<tr class='fabrik_row'><td>Grupo ".$grupo." actualizado.</td></tr>";
   }
 
   $stmt_update_grupos->close();
@@ -47,5 +46,5 @@ while ($row = $result_grupos->fetch_assoc()) {
 
 $stmt_grupos->close();
 
-echo "<br>..............TABLA DE GRUPOS ACTUALIZADA (CAMPO FILA)-------------";
+<tr class="fabrik_row actualiza-grupos"><td><b>Campo filas de la tabla grupos actualizado</b></td></tr>
 ?>
