@@ -380,6 +380,11 @@ td.repeat-merge ul.fabrikRepeatData li, td.repeat-reduce ul.fabrikRepeatData li 
 
 .fabrikRepeatData > li {
 	padding: 5px !important;
+	min-height: 25px;
+}
+
+.fabrikRepeatData > li i{
+	margin-top: -3px;
 }
 
 @media (min-width: 768px) and (max-width: 1024px) {
