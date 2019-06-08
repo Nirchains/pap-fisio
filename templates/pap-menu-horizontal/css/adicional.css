@@ -5,61 +5,50 @@ td.t_usuarios___diferencia
 }
 
 /*********************GRUPOS **************************************/
-
-#list_2_com_fabrik_2 tr.validada1 > td.t_solicitudes___validada,  
-#list_2_com_fabrik_2 tr.validada1---1 > td.t_solicitudes___validada, 
-#list_2_com_fabrik_2 tr.validada1---1---1 > td.t_solicitudes___validada, 
-#list_2_com_fabrik_2 tr.validada1---1---1---1 > td.t_solicitudes___validada
-{
-	background-color:#f0ffe2 !important;
-}
-#list_2_com_fabrik_2 tr.balanceg-positivo
+table.estados td.b-negativo,
+#list_2_com_fabrik_2 tr.balanceg-positivo .t_grupos___creditos,
+#list_2_com_fabrik_2 tr.balanceg-positivo .t_grupos___creditos_asignados,
+#list_2_com_fabrik_2 tr.balanceg-positivo .t_grupos___diferencia,
+#list_9_com_fabrik_9 tr.balanceg-positivo .t_seminarios___creditos,
+#list_9_com_fabrik_9 tr.balanceg-positivo .t_seminarios___creditos_asignados,
+#list_9_com_fabrik_9 tr.balanceg-positivo .t_seminarios___diferencia
 {
 	background-color:#e3f4fc;
 }
-#list_2_com_fabrik_2 tr.balanceg-positivo:hover > td
-{
-	background-color:#CDE9FF !important;
-}
 
-#list_2_com_fabrik_2 tr.balanceg-negativo
+table.estados td.b-positivo,
+#list_2_com_fabrik_2 tr.balanceg-negativo .t_grupos___creditos, 
+#list_2_com_fabrik_2 tr.balanceg-negativo .t_grupos___creditos_asignados,
+#list_2_com_fabrik_2 tr.balanceg-negativo .t_grupos___diferencia,
+#list_9_com_fabrik_9 tr.balanceg-negativo .t_seminarios___creditos, 
+#list_9_com_fabrik_9 tr.balanceg-negativo .t_seminarios___creditos_asignados,
+#list_9_com_fabrik_9 tr.balanceg-negativo .t_seminarios___diferencia
 {
 	background-color:#f7d9d9;
 }
-#list_2_com_fabrik_2 tr.balanceg-negativo:hover > td
-{
-	background-color:#FFBBBB !important;
+
+.tdgrey, .grupo_grande {
+	background-color: #efefef;
+}
+.grupo_pequeno {
+	background-color: #ffffff;
 }
 
-#list_2_com_fabrik_2 tr.creditos_asignados0-00, #list_2_com_fabrik_2 tr.creditos_asignados0-00:hover > td
-{
-	background-color:#fff !important;
-}
 /*******************SOLICITUDES*************************************/
 
-#list_3_com_fabrik_3 tr.validada1,
-#list_3_com_fabrik_3 tr.validada1---1, 
-#list_3_com_fabrik_3 tr.validada1---1---1, 
-#list_3_com_fabrik_3 tr.validada1---1---1---1 
+#list_3_com_fabrik_3 .validada1 .t_solicitudes___id, 
+#list_3_com_fabrik_3 .validada1 .t_solicitudes___validada, 
+#list_3_com_fabrik_3 .validada1 .t_solicitudes___abierta
 {
 	background-color:#f0ffe2 !important;
 }
-.abierta1
+#list_3_com_fabrik_3 .abierta1 .t_solicitudes___id, 
+#list_3_com_fabrik_3 .abierta1 .t_solicitudes___abierta, 
+#list_3_com_fabrik_3 .abierta1 .t_solicitudes___validada
 {
 	background-color:#feffda !important;
 }
-/*
-.validada1:hover > td, .validada1:hover > th
-	{background-color:#C9EAA8 !important;
-	}
-.abierta1:hover > td, .abierta1:hover > th
-	{background-color:#f8f9a7 !important;
-	}	
-*/
-.validada1 th, .validada1 td, .abierta1 th, .abierta1 td
-{
-	border-bottom:1px solid #fff !important;
-}
+
 .balancepositivo
 {
 	background-color:#ffeaea;

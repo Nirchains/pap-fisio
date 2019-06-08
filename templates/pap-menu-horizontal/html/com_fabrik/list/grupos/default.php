@@ -54,7 +54,17 @@ endif;
 $headingsHtml = $this->loadTemplate('headings');
 echo $this->loadTemplate('tabs');
 ?>
-
+<fieldset class="leyenda">
+<legend>Leyenda</legend>
+	<table class="estados">
+		<tbody>
+			<tr>
+				<td class="grupo_grande">Grupo grande</td>
+				<td class="grupo_pequeno">Grupo pequeño</td>
+			</tr>
+		</tbody>
+	</table>
+</fieldset>
 <div class="fabrikDataContainer">
 
 <?php foreach ($this->pluginBeforeList as $c) :

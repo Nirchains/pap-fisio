@@ -59,8 +59,6 @@ echo $this->loadTemplate('tabs');
 	<table class="estados">
 		<tbody>
 			<tr>
-				<td class="grupo_grande">Grupo grande</td>
-				<td class="grupo_pequeno">Grupo pequeño</td>
 				<td class="b-positivo">Faltan horas</td>
 				<td class="b-negativo">Sobran horas </td>
 			</tr>

@@ -258,6 +258,10 @@ a {
 	width: inherit;
 }
 
+.table th span {
+	white-space: pre-line;
+}
+
 fieldset.leyenda {
 	border: 1px solid #ddd;
     padding: 10px;
@@ -333,6 +337,7 @@ fieldset.fabrikGroup legend, fieldset.radio.btn-group legend {
 
 .fabrik_groupheading a {
 	color: #ffffff;
+	text-transform: uppercase;
 }
 
 .fabrik_groupheading a:hover, .fabrik_groupheading a:focus {

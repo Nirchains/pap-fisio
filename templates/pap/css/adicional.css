@@ -17,24 +17,12 @@ td.t_usuarios___diferencia
 {
 	background-color:#e3f4fc;
 }
-#list_2_com_fabrik_2 tr.balanceg-positivo:hover > td
-{
-	background-color:#CDE9FF !important;
-}
 
 #list_2_com_fabrik_2 tr.balanceg-negativo
 {
 	background-color:#f7d9d9;
 }
-#list_2_com_fabrik_2 tr.balanceg-negativo:hover > td
-{
-	background-color:#FFBBBB !important;
-}
 
-#list_2_com_fabrik_2 tr.creditos_asignados0-00, #list_2_com_fabrik_2 tr.creditos_asignados0-00:hover > td
-{
-	background-color:#fff !important;
-}
 /*******************SOLICITUDES*************************************/
 
 #list_3_com_fabrik_3 tr.validada1,
@@ -48,12 +36,6 @@ td.t_usuarios___diferencia
 {
 	background-color:#feffc4 !important;
 }
-.validada1:hover > td, .validada1:hover > th
-	{background-color:#C9EAA8 !important;
-	}
-.abierta1:hover > td, .abierta1:hover > th
-	{background-color:#f8f9a7 !important;
-	}	
 .validada1 th, .validada1 td, .abierta1 th, .abierta1 td
 {
 	border-bottom:1px solid #fff !important;

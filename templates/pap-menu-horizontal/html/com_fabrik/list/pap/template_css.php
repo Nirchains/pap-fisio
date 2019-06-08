@@ -13,14 +13,6 @@ $c = $_REQUEST['c'];
 $buttonCount = (int) $_REQUEST['buttoncount'];
 $buttonTotal = $buttonCount === 0 ? '100%' : 30 * $buttonCount ."px";
 echo "
-table.estados td.b-positivo
-{
-	background-color:#ffeaea;
-}
-table.estados td.b-negativo
-{
-	background-color:#f1fbff;
-}
 .fabrikDataContainer {
 	clear:both;
 	/*
