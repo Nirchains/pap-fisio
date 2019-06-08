@@ -26,6 +26,13 @@ a {
 	color: #DF4B7F;
 }
 
+.letra-gr p {
+	font-size: 1.2em;
+    letter-spacing: 1px;
+    line-height: 2em;
+    text-align: justify;
+}
+
 .pt-0 {	padding-top: 0; }
 .pb-0 {	padding-bottom: 0; }
 
@@ -311,6 +318,25 @@ fieldset.fabrikGroup legend, fieldset.radio.btn-group legend {
 }
 
 .related_data:hover {
+	text-decoration: none;
+}
+
+.fabrik_groupheading.info > td
+{
+	background-color: #66727D !important;
+    background-repeat: repeat-x;
+	padding:8px;
+}
+.fabrik_groupheading {
+	
+}
+
+.fabrik_groupheading a {
+	color: #ffffff;
+}
+
+.fabrik_groupheading a:hover, .fabrik_groupheading a:focus {
+	color: #fefefe;
 	text-decoration: none;
 }
 

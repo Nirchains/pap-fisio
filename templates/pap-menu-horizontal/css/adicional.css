@@ -102,13 +102,7 @@ td.t_usuarios___diferencia
 {
 	color:#ccc;
 }
-.fabrik_groupheading.info > td
-{
-	background-color: #eee !important;
-    /*background-image: linear-gradient(to bottom, #fff, #e6e6e6);*/
-    background-repeat: repeat-x;
-	padding:8px;
-}
+
 /*********************************************************************/
 /* NUEVOS ESTILOS AÑADIDOS POR EAG*/
 .container-fluid
@@ -355,7 +349,11 @@ div.plg-fileupload > div
 }
 
 /*Estilos para inline edit*/
-.t_cursos___curso:hover, .t_cursos___abierto:hover, .t_categorias___categoria:hover, .t_titulaciones___titulacion:hover,
+.t_cursos___curso:hover, .t_cursos___abierto:hover, 
+.t_categorias___nivel:hover,
+.t_categorias___categoria:hover,
+.t_categorias___codigo:hover,
+.t_titulaciones___titulacion:hover,
 .t_asignaturas___codigo:hover,
 .t_asignaturas___denominacion:hover,
 .t_asignaturas___curso:hover,
@@ -375,6 +373,7 @@ div.plg-fileupload > div
 .t_tutelas___tutela:hover, 
 .t_tutelas___unidad_docente:hover,
 .t_tutelas___horario:hover,
-.t_tutelas___creditos:hover {
+.t_tutelas___creditos:hover,
+.t_tutelas___servicio:hover {
 	cursor: pointer;
 }
