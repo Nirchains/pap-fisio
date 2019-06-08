@@ -405,12 +405,22 @@ div.modal {
 	border: 3px solid rgba(255,255,255,0.5);
 }
 
-td.repeat-merge ul.fabrikRepeatData li, td.repeat-reduce ul.fabrikRepeatData li {
-	border-bottom-width: 0px;
+td ul.fabrikRepeatData li{
+	
+}
+
+td.t_solicitudes_grupos___creditos_asignados,
+td.t_solicitudes_tutelas___creditos_asignados, 
+td.t_solicitudes_seminarios___creditos_asignados {
+	padding: 5 !important;
 }
 
 .fabrikRepeatData > li {
-	padding: 5px !important;
+	border-bottom-width: 0px !important;
+}
+
+.fabrikRepeatData > li {
+	padding: 5px 0 !important;
 	min-height: 25px;
 }
 

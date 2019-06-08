@@ -5,13 +5,18 @@ td.t_usuarios___diferencia
 }
 
 /*********************GRUPOS **************************************/
+list_8_com_fabrik_8
+
 table.estados td.b-negativo,
 #list_2_com_fabrik_2 tr.balanceg-positivo .t_grupos___creditos,
 #list_2_com_fabrik_2 tr.balanceg-positivo .t_grupos___creditos_asignados,
 #list_2_com_fabrik_2 tr.balanceg-positivo .t_grupos___diferencia,
 #list_9_com_fabrik_9 tr.balanceg-positivo .t_seminarios___creditos,
 #list_9_com_fabrik_9 tr.balanceg-positivo .t_seminarios___creditos_asignados,
-#list_9_com_fabrik_9 tr.balanceg-positivo .t_seminarios___diferencia
+#list_9_com_fabrik_9 tr.balanceg-positivo .t_seminarios___diferencia,
+#list_8_com_fabrik_8 tr.balanceg-positivo .t_tutelas___creditos,
+#list_8_com_fabrik_8 tr.balanceg-positivo .t_tutelas___creditos_asignados,
+#list_8_com_fabrik_8 tr.balanceg-positivo .t_tutelas___diferencia
 {
 	background-color:#e3f4fc;
 }
@@ -22,7 +27,10 @@ table.estados td.b-positivo,
 #list_2_com_fabrik_2 tr.balanceg-negativo .t_grupos___diferencia,
 #list_9_com_fabrik_9 tr.balanceg-negativo .t_seminarios___creditos, 
 #list_9_com_fabrik_9 tr.balanceg-negativo .t_seminarios___creditos_asignados,
-#list_9_com_fabrik_9 tr.balanceg-negativo .t_seminarios___diferencia
+#list_9_com_fabrik_9 tr.balanceg-negativo .t_seminarios___diferencia,
+#list_8_com_fabrik_8 tr.balanceg-negativo .t_tutelas___creditos, 
+#list_8_com_fabrik_8 tr.balanceg-negativo .t_tutelas___creditos_asignados,
+#list_8_com_fabrik_8 tr.balanceg-negativo .t_tutelas___diferencia
 {
 	background-color:#f7d9d9;
 }
