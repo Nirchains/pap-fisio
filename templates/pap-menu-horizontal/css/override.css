@@ -19,11 +19,11 @@ h1,h2,h3,h4,h5,h6,.site-title {
 }
 
 h1 {
-	color: #DF4B7F;
+	color: #01A7B7;
 }
 
 a {
-	color: #DF4B7F;
+	color: #01A7B7;
 }
 
 .letra-gr p {
@@ -47,7 +47,7 @@ a {
 }
 
 .table .btn-group a.btn {
-	color: #DF4B7F;
+	color: #01A7B7;
 }
 
 .table .btn-group a.btn:hover, .table .btn-group a.btn:focus {
@@ -64,7 +64,7 @@ a {
 }
 
 .site-title-bar {
-	background-color: #DF4B7F;
+	background-color: #01A7B7;
 	padding: 1px;
 }
 
@@ -133,12 +133,12 @@ a {
 }
 
 .nav-lateral li a:hover,.nav-lateral li a:focus {
-	color: #DF4B7F;
+	color: #01A7B7;
 	background-color: none !important;
 }
 
 .nav-lateral li.active ul.nav-child li a:hover, .nav-lateral li.active ul.nav-child li a:focus, .nav-lateral .nav-child a:focus, .nav-lateral .nav-child a:hover {
-	color: #DF4B7F;
+	color: #01A7B7;
 	text-decoration: none;
 }
 
@@ -290,7 +290,7 @@ fieldset.leyenda legend {
 
 .fabrikButtonsContainer.navbar .dropdown-menu > li > a:hover {
 	cursor: pointer;
-	background-color: #DF4B7F;
+	background-color: #01A7B7;
 }
 
 table.estados td {
@@ -357,7 +357,7 @@ fieldset.fabrikGroup legend, fieldset.radio.btn-group legend {
     border-top-width: : 0px;
 }
 .fabrikTip.tip-small {
-    background-color: #DF4B7F;
+    background-color: #01A7B7;
     color: #fff;
     padding: 6px 15px;
     font-size: 18px;
@@ -396,7 +396,7 @@ div.fabrikElement .input-medium {
 }
 
 .modal .modal-header  {
-	background-color: #DF4B7F;
+	background-color: #01A7B7;
 	color: #ffffff;
 	text-align: center;
 }
