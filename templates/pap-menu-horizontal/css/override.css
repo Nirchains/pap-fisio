@@ -391,6 +391,10 @@ div.fabrikElement .input-medium {
 	width: 99%;
 }
 
+.chzn-container {
+    max-width: 500px;
+}
+
 .fabrikGroup.form-horizontal .control-group {
 	margin-bottom: 5px;
 }
