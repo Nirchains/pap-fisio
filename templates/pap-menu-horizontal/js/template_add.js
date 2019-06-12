@@ -43,6 +43,10 @@ jQuery(function($) {
 				$("#back-top").show("fast");
 			}
 		})
+
+		.on('change', 'input.decimal', function() {
+			$(this).val($(this).val().replace(/,/g, '.'));
+		})
 		
 		function toggleSidebar() {
 			if (Cookies.get("sidebar")=="collapse") {
@@ -69,4 +73,5 @@ jQuery(function($) {
 				$(".dbreadcrumbs").removeClass("dbreadcrumbs-collapse");
 			}
 		}
+
 });
