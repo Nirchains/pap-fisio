@@ -8102,7 +8102,12 @@ class PlgFabrik_Element extends FabrikPlugin
 					foreach (array_keys($v) as $x)
 					{
 						$origVal = FArrayHelper::getValue($origData, $x);
-						$d[$elKey][$x] = $elementModel->getLabelForValue($v[$x], $origVal, true);
+						//PFG
+						try {
+							$d[$elKey][$x] = $elementModel->getLabelForValue($v[$x], $origVal, true);
+						} catch (Exception $e) {
+
+						}
 					}
 				}
 				else

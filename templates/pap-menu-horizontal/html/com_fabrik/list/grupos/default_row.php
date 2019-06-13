@@ -14,12 +14,12 @@ defined('_JEXEC') or die('Restricted access');
 ?>
 <tr id="<?php echo $this->_row->id;?>" class="<?php echo $this->_row->class;?>">
 	<?php 
-	$heading_grupo_grande = "t_grupos___grupo_grande";
+	$heading_tipo_grupo = "t_grupos___tipo_grupo";
 	foreach ($this->headings as $heading => $label) {
 		$style = empty($this->cellClass[$heading]['style']) ? '' : 'style="'.$this->cellClass[$heading]['style'].'"';
 		
-		$grupo_grande = strip_tags( (string)($this->_row->data->$heading_grupo_grande));
-		if (empty($grupo_grande) && (strpos($heading, "___unidad_docente") || strpos($heading, "___grupo")) ) {
+		$tipo_grupo = strip_tags( (string)($this->_row->data->$heading_tipo_grupo));
+		if ($tipo_grupo=="TEORIA" && (strpos($heading, "___grupo") || strpos($heading, "___tipo_grupo")) ) {
 			$tdclass = "tdgrey ";
 		} else {
 			$tdclass = "";
