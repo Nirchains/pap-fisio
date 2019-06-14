@@ -391,8 +391,23 @@ div.fabrikElement .input-medium {
 	width: 99%;
 }
 
-.chzn-container {
-    max-width: 500px;
+.repeatGroupTable {
+	width: 100%;
+}
+
+.fabrikRepeatGroup___t_solicitudes_grupos___asignaturas .chzn-container, 
+.fabrikRepeatGroup___t_solicitudes_grupos___grupos .chzn-container,
+.fabrikRepeatGroup___t_solicitudes_seminarios___asignaturas .chzn-container,
+.fabrikRepeatGroup___t_solicitudes_seminarios___seminarios .chzn-container {
+	width: 100% !important;
+}
+
+.fabrikRepeatGroup___t_solicitudes_grupos___grupos, .fabrikRepeatGroup___t_solicitudes_seminarios___seminarios {
+	width: 60%;
+}
+
+.fabrikRepeatGroup___t_solicitudes_grupos___asignaturas, .fabrikRepeatGroup___t_solicitudes_seminarios___asignaturas {
+	width: 35%;
 }
 
 .fabrikGroup.form-horizontal .control-group {
