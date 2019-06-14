@@ -1,6 +1,12 @@
 <tr class="fabrik_row actualiza-grupos"><td><b>Actualizando grupos</b></td></tr>
 <?php
 
+//borramos las solicitudes_grupo sin padre
+$sql = "delete from t_solicitudes_grupos where parent_id not in (select id from t_solicitudes)";
+$stmt_delete_grupos = $con->prepare($sql);
+$stmt_delete_grupos->execute();
+$stmt_delete_grupos->close();
+
 
 $sql_grupos = "select id as grupo from t_grupos";
 $stmt_grupos = $con->prepare($sql_grupos);

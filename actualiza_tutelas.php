@@ -1,6 +1,14 @@
 <tr class="fabrik_row actualiza-tutelas"><td><b>Actualizando tutelas</b></td></tr>
 <?php
 
+
+//borramos las solicitudes_tutelas sin padre
+$sql = "delete from t_solicitudes_tutelas where parent_id not in (select id from t_solicitudes)";
+$stmt_delete_grupos = $con->prepare($sql);
+$stmt_delete_grupos->execute();
+$stmt_delete_grupos->close();
+
+
 $sql_grupos = "select id as tutela from t_tutelas";
 $stmt_grupos = $con->prepare($sql_grupos);
 $stmt_grupos->execute();

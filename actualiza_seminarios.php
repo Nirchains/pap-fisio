@@ -1,6 +1,13 @@
 <tr class="fabrik_row actualiza-seminarios"><td><b>Actualizando seminarios</b></td></tr>
 <?php
 
+//borramos las solicitudes_seminarios sin padre
+$sql = "delete from t_solicitudes_seminarios where parent_id not in (select id from t_solicitudes)";
+$stmt_delete_grupos = $con->prepare($sql);
+$stmt_delete_grupos->execute();
+$stmt_delete_grupos->close();
+
+
 $sql_grupos = "select id as seminario from t_seminarios";
 $stmt_grupos = $con->prepare($sql_grupos);
 $stmt_grupos->execute();

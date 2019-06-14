@@ -24,7 +24,7 @@ if(in_array(12, $usergroups)) {
 	require_once JPATH_BASE . '/actualiza_profesores.php';
 	require_once JPATH_BASE . '/actualiza_grupos.php';
 	require_once JPATH_BASE . '/actualiza_seminarios.php';
-	require_once JPATH_BASE . '/actualiza_tutelas.php';
+//	require_once JPATH_BASE . '/actualiza_tutelas.php';
 }
 
 
