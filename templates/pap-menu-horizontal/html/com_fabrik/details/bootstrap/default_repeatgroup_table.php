@@ -14,7 +14,7 @@ defined('_JEXEC') or die('Restricted access');
 
 $group = $this->group;
 ?>
-<table class="table table-striped repeatGroupTable">
+<table class="table repeatGroupTable">
 	<thead>
 		<tr>
 	<?php
