@@ -22,6 +22,21 @@ if ($this->tablePicker != '') : ?>
 	<div style="text-align:right"><?php echo FText::_('COM_FABRIK_LIST') ?>: <?php echo $this->tablePicker; ?></div>
 <?php
 endif;
+?>
+<div class="header-logo">
+<div class="pull-left">
+	<a class="brand" href="/">
+		<img src="/images/logo-us.jpg" alt="Plan de Asignación del Profesorado - Curso 2019"> 
+	</a>
+</div>
+<div class="pull-right">
+<?php
+	$active = JFactory::getApplication()->getMenu()->getActive();
+	echo "<h2>". $active->title . "</h2>";
+?>
+</div>
+</div>
+<?php
 
 if ($this->params->get('show_page_heading')) :
 	echo '<h1>' . $this->params->get('page_heading') . '</h1>';
