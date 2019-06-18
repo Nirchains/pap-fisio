@@ -54,6 +54,10 @@ endif;
 $headingsHtml = $this->loadTemplate('headings');
 echo $this->loadTemplate('tabs');
 ?>
+<?php
+	$active = JFactory::getApplication()->getMenu()->getActive();
+	if ($active->id == 139) {
+?>
 <fieldset class="leyenda">
 <legend>Leyenda</legend>
 	<table class="estados">
@@ -67,6 +71,24 @@ echo $this->loadTemplate('tabs');
 		</tbody>
 	</table>
 </fieldset>
+<?php
+} else {
+?>
+<fieldset class="leyenda">
+<legend>Leyenda</legend>
+	<table class="estados">
+		<tbody>
+			<tr>
+				<td class="b-positivo">Faltan horas</td>
+				<td class="b-negativo">Sobran horas </td>
+			</tr>
+		</tbody>
+	</table>
+</fieldset>
+<?php
+}
+?>
+
 <div class="fabrikDataContainer">
 
 <?php foreach ($this->pluginBeforeList as $c) :
@@ -116,6 +138,7 @@ endforeach;
 					</td>
 				</tr>
 			<?php
+			$GLOBALS['id_asignatura'] = -1;
 			foreach ($group as $this->_row) :
 				echo $this->loadTemplate('row');
 		 	endforeach

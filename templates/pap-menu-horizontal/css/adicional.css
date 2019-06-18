@@ -55,11 +55,14 @@ table.estados td.b-positivo,
 	background-color:#feffda !important;
 }
 
-.balancepositivo
+
+#list_5_com_fabrik_5 .balancepositivo .t_usuarios___diferencia,
+#list_5_com_fabrik_5 .balancepositivo .t_usuarios___nombre
 {
 	background-color:#ffeaea;
 }
-.balancenegativo
+#list_5_com_fabrik_5 .balancenegativo .t_usuarios___diferencia,
+#list_5_com_fabrik_5 .balancenegativo .t_usuarios___nombre
 {
 	background-color:#f1fbff;
 }

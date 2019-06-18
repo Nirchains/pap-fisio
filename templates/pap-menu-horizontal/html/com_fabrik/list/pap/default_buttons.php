@@ -59,8 +59,37 @@ if ($this->canGroupBy) :
 	$displayData->icon = FabrikHelperHTML::icon('icon-list-view');
 	$displayData->label = FText::_('COM_FABRIK_GROUP_BY');
 	$displayData->links = array();
+	$group_exclude_headings = array(
+		"t_grupos___tipo_grupo",
+		"t_grupos___creditos",
+		"t_grupos___creditos_asignados",
+		"t_grupos___diferencia",
+		"t_solicitudes_grupos___creditos_asignados",
+		"t_solicitudes___usuario",
+		"t_solicitudes___validada"
+		);
+	$group_include_headings = array(
+		"t_asignaturas___curso" => "Curso",
+		"t_asignaturas___cuatrimestre" => "Cuatrimestre",
+		"t_asignaturas___titulacion" => "Titulaci&oacute;n"
+		);
+
+	
+	$heading_data_url = "t_grupos___grupo";
+	$base_url = array_keys($this->groupByHeadings) [0];
+	
+	foreach ($group_include_headings as $key => $v) {
+		$url_group = str_replace("group_by=0", "group_by=".$key, $base_url);
+		$o = new stdClass;
+		$o->label = strip_tags($v);
+		$o->group_by = $key;
+		$this->groupByHeadings[$url_group] = $o;
+	}
+
 	foreach ($this->groupByHeadings as $url => $obj) :
-		$displayData->links[] = '<a data-groupby="' . $obj->group_by . '" href="' . $url . '">' . $obj->label . '</a>';
+		if (!in_array($obj->group_by, $group_exclude_headings)) {
+			$displayData->links[] = '<a data-groupby="' . $obj->group_by . '" href="' . $url . '">' . $obj->label . '</a>';
+		}
 	endforeach;
 
 	$layout = $this->getModel()->getLayout('fabrik-nav-dropdown');

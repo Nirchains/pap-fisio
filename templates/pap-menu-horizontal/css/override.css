@@ -59,6 +59,10 @@ a {
 	background-color: oldlace;
 }
 
+.info-titulacion td  {
+	background-color: oldlace !important;
+}
+
 a {
 	transition: all 0.15s ease-in;
 }
