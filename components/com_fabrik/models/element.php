@@ -8103,11 +8103,11 @@ class PlgFabrik_Element extends FabrikPlugin
 					{
 						$origVal = FArrayHelper::getValue($origData, $x);
 						//PFG
-						try {
-							$d[$elKey][$x] = $elementModel->getLabelForValue($v[$x], $origVal, true);
-						} catch (Exception $e) {
+						//try {
+							//$d[$elKey][$x] = $elementModel->getLabelForValue($v[$x], $origVal, true);
+						//} catch (Exception $e) {
 
-						}
+						//}
 					}
 				}
 				else
