@@ -56,7 +56,7 @@ echo $this->loadTemplate('tabs');
 ?>
 <?php
 	$active = JFactory::getApplication()->getMenu()->getActive();
-	if ($active->id == 139) {
+	if ($active->id == 147) {
 ?>
 <fieldset class="leyenda">
 <legend>Leyenda</legend>
