@@ -345,32 +345,48 @@ div.plg-fileupload > div
 	margin-left:0px !important;
 }
 
+#listform_5_com_fabrik_5 tbody .t_usuarios___orden {
+	font-size:0;
+	text-align: center;
+}
+
+#listform_5_com_fabrik_5 tbody .t_usuarios___orden:hover {
+	cursor: move;
+}
+
+#listform_5_com_fabrik_5 tbody .t_usuarios___orden:before {
+	font-family: "Font Awesome 5 Free";
+   	content: "\f0b2";
+   	display: inline-block;
+   	padding-right: 3px;
+   	vertical-align: middle;
+   	font-weight: 900;
+   	font-size: 15px;
+   	color: #666666;
+}
+
 /*Estilos para inline edit*/
-.t_cursos___curso:hover, .t_cursos___abierto:hover, 
-.t_categorias___nivel:hover,
-.t_categorias___categoria:hover,
-.t_categorias___codigo:hover,
-.t_titulaciones___titulacion:hover,
-.t_asignaturas___codigo:hover,
-.t_asignaturas___denominacion:hover,
-.t_asignaturas___curso:hover,
-.t_asignaturas___cuatrimestre:hover,
-.t_asignaturas___asignatura:hover,
-.t_asignaturas___coordinador:hover,
-.t_asignaturas___tipo_grupo:hover,
-.t_grupos___grupo:hover, 
-.t_grupos___tipo_grupo:hover,
-.t_grupos___grupo_grande:hover,
-.t_grupos___horario:hover,
-.t_grupos___creditos:hover,
-.t_seminarios___seminario:hover, 
-.t_seminarios___tipo_grupo:hover,
-.t_seminarios___horario:hover,
-.t_seminarios___creditos:hover,
-.t_tutelas___tutela:hover, 
-.t_tutelas___unidad_docente:hover,
-.t_tutelas___horario:hover,
-.t_tutelas___creditos:hover,
-.t_tutelas___servicio:hover {
+#list_7_com_fabrik_7 .t_cursos___curso:hover, .t_cursos___abierto:hover, 
+#list_7_com_fabrik_7 .t_categorias___nivel:hover,
+#list_7_com_fabrik_7 .t_categorias___categoria:hover,
+#list_7_com_fabrik_7 .t_categorias___codigo:hover,
+#listform_4_com_fabrik_4 .t_titulaciones___titulacion:hover,
+#listform_1_com_fabrik_1 .t_asignaturas___codigo:hover,
+#listform_1_com_fabrik_1 .t_asignaturas___denominacion:hover,
+#listform_1_com_fabrik_1 .t_asignaturas___curso:hover,
+#listform_1_com_fabrik_1 .t_asignaturas___cuatrimestre:hover,
+#listform_1_com_fabrik_1 .t_asignaturas___asignatura:hover,
+#listform_1_com_fabrik_1 .t_asignaturas___coordinador:hover,
+#listform_1_com_fabrik_1 .t_asignaturas___tipo_grupo:hover,
+#listform_15_com_fabrik_15 .t_grupos___grupo:hover, 
+#listform_15_com_fabrik_15 .t_grupos___tipo_grupo:hover,
+#listform_15_com_fabrik_15 .t_grupos___grupo_grande:hover,
+#listform_15_com_fabrik_15 .t_grupos___horario:hover,
+#listform_15_com_fabrik_15 .t_grupos___creditos:hover,
+#listform_13_com_fabrik_13 .t_seminarios___seminario:hover, 
+#listform_13_com_fabrik_13 .t_seminarios___tipo_grupo:hover,
+#listform_13_com_fabrik_13 .t_seminarios___horario:hover,
+#listform_13_com_fabrik_13 .t_seminarios___creditos:hover,
+ {
 	cursor: pointer;
 }
