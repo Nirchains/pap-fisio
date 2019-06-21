@@ -260,6 +260,7 @@ a {
 
 .table {
 	width: inherit;
+	min-width: 60%;
 }
 
 .table th span {
@@ -348,6 +349,18 @@ fieldset.fabrikGroup legend, fieldset.radio.btn-group legend {
 	color: #fefefe;
 	text-decoration: none;
 }
+
+/*Search filters*/
+.search-filters .lbl {
+	color: #66727D;
+    text-align: left;
+    border-bottom: 1px dotted #ccc;
+}
+
+.search-filters input, .search-filters select {
+	width: 100%;
+}
+
 
 /*Forms*/
 .form-horizontal .control-label {
