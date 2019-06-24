@@ -1,5 +1,6 @@
-<tr class="fabrik_row actualiza-profesores"><td><b>Actualizando profesores</b></td></tr>
 <?php
+echo "<tr class='fabrik_row actualiza-profesores'><td><b>Actualizando profesores</b></td></tr>";
+
 
 $sql_profesores = "select id, userid, nombre, usuario, prelacion, encargo, tfg, tfm, practicas, cont_idi,
 practicum, capacidad, asignacion, diferencia, balance
@@ -82,6 +83,7 @@ while ($row = $result_profesores->fetch_assoc()) {
 	$stmt_update_usuarios = $con->prepare($query_update_usuarios);
 	$stmt_update_usuarios->bind_param('dddsi',$capacidad,$asignacion,$diferencia,$balance,$userid);
 	$stmt_update_usuarios->execute();
+	
   	//print_r($stmt_update_usuarios);
 	if ($stmt_update_usuarios->affected_rows) {
 		echo "<tr class='fabrik_row'><td>Profesor <a href='profesores/details/5/".$userid."'> ".$nombre."</a> actualizado. </td></tr>";	
@@ -90,5 +92,5 @@ while ($row = $result_profesores->fetch_assoc()) {
 	$stmt_update_usuarios->close(); 
 }
 $stmt_profesores->close();
+echo "<tr class='fabrik_row actualiza-profesores'><td><b>Profesores actualizados</b></td></tr>"
 ?>
-<tr class="fabrik_row actualiza-profesores"><td><b>Profesores actualizados</b></td></tr>

@@ -1,5 +1,5 @@
-<tr class="fabrik_row actualiza-grupos"><td><b>Actualizando grupos</b></td></tr>
 <?php
+echo "<tr class='fabrik_row actualiza-grupos'><td><b>Actualizando grupos</b></td></tr>";
 
 //borramos las solicitudes_grupo sin padre
 $sql = "delete from t_solicitudes_grupos where parent_id not in (select id from t_solicitudes)";
@@ -58,6 +58,7 @@ while ($row = $result_grupos->fetch_assoc()) {
 	$stmt_update_grupos = $con->prepare($update_query);
 	$stmt_update_grupos->bind_param('ddsi',$creditos_asignados,$diferencia,$balance,$grupo);
 	$stmt_update_grupos->execute();
+
   	//print_r($stmt_update_usuarios);
 	if ($stmt_update_grupos->affected_rows) {
 		echo "<tr class='fabrik_row'><td>Grupo ".$grupo." actualizado.</td></tr>";	
@@ -69,6 +70,5 @@ while ($row = $result_grupos->fetch_assoc()) {
 } 
 
 $stmt_grupos->close();
-
+echo "<tr class='fabrik_row actualiza-grupos'><td><b>Grupos actualizados</b></td></tr>";
 ?>
-<tr class="fabrik_row actualiza-grupos"><td><b>Grupos actualizados</b></td></tr>

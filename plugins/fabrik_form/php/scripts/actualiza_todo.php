@@ -1,6 +1,6 @@
-
-<table id="actualizar-todo" class="actualiza-todo table table-bordered table-condensed">
 <?php
+ echo "<table id='actualizar-todo' class='actualiza-todo table table-bordered table-condensed'>";
+
 
 //Incrementamos el tiempo de ejecución máximo
 set_time_limit(300);
@@ -30,6 +30,5 @@ if(in_array(12, $usergroups)) {
 
 
 $con->close();  
-
+echo "</table>";
 ?>
-</table>

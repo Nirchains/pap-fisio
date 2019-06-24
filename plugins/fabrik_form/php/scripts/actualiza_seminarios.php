@@ -1,5 +1,5 @@
-<tr class="fabrik_row actualiza-seminarios"><td><b>Actualizando seminarios</b></td></tr>
 <?php
+echo "<tr class='fabrik_row actualiza-seminarios'><td><b>Actualizando seminarios</b></td></tr>";
 
 //borramos las solicitudes_seminarios sin padre
 $sql = "delete from t_solicitudes_seminarios where parent_id not in (select id from t_solicitudes)";
@@ -66,6 +66,5 @@ while ($row = $result_grupos->fetch_assoc()) {
 } 
 
 $stmt_grupos->close();
-
+echo "<tr class='fabrik_row actualiza-seminarios'><td><b>Seminarios actualizados</b></td></tr>";
 ?>
-<tr class="fabrik_row actualiza-seminarios"><td><b>Seminarios actualizados</b></td></tr>
