@@ -31,8 +31,8 @@ while ($row = $result_grupos->fetch_assoc()) {
 
 	if ($result_creditos_asignados->num_rows > 0) {
 		$row = $result_creditos_asignados->fetch_assoc();
-		$creditos_asignados = (float)($row["sum"]);
-		$diferencia = (float)($creditos_asignados - $row["creditos"]);
+		$creditos_asignados = round((float)($row["sum"]), 2);
+		$diferencia = round((float)($creditos_asignados - $row["creditos"]), 2); 
 	} else {
 		$creditos_asignados = 0;
 		$diferencia = 0;

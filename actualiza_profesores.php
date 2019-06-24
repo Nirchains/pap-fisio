@@ -53,14 +53,14 @@ while ($row = $result_profesores->fetch_assoc()) {
 	if ($result_asignacion->num_rows > 0) {
 		$row = $result_asignacion->fetch_assoc();
     //multiplicamos por 10 para obtener el número de horas
-		$asignacion = $row["sum"]*10;
+		$asignacion =  round((float)($row["sum"]*10), 2);
 	} else {
 		$asignacion = 0;
 	}
 	$stmt_asignacion->close();
 
   	//recalculamos la diferencia
-	$diferencia = $capacidad - $asignacion;
+	$diferencia = round((float)($capacidad - $asignacion), 2) ;
 
   	//recalculamos el balance
 	if ($diferencia>0) {
