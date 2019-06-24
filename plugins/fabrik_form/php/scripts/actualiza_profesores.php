@@ -25,19 +25,19 @@ while ($row = $result_profesores->fetch_assoc()) {
 
   	//Calculamos la asignacion
 	$sql_asignacion = "select sum(s.sum) as sum from (
-						select (sum(sg.creditos_asignados)) as sum 
+						select (sum(sg.creditos_asignados)) as sum, 'sg' as grupo
 							from t_solicitudes  s
 							inner join t_solicitudes_grupos sg on s.id = sg.parent_id 
 							where
 							s.validada = 1
 							and s.usuario = ?
-						union select (sum(ss.creditos_asignados)) as sum 
+						union select (sum(ss.creditos_asignados)) as sum, 'ss' as grupo
 							from t_solicitudes  s
 							inner join t_solicitudes_seminarios ss on s.id = ss.parent_id
 							where
 							s.validada = 1
 							and s.usuario = ?
-						union select (sum(st.creditos_asignados)) as sum 
+						union select (sum(st.creditos_asignados)) as sum, 'st' as grupo
 							from t_solicitudes  s
 							inner join t_solicitudes_tutelas st on s.id = st.parent_id
 							where
