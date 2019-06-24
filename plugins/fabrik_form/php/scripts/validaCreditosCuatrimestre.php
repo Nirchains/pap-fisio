@@ -4,8 +4,12 @@
 defined('_JEXEC') or die('Restricted access');
 
 
-$user   = JFactory::getUser();
-$userid = $user->get('id');
+//$user   = JFactory::getUser();
+//$userid = $user->get('id');
+
+$usuarios = $formModel->getElementData('t_solicitudes___usuario');
+$userid = $usuarios[0];
+
 
 //Recogemos los datos de conexión a la BD
 $app= JFactory::getApplication();
@@ -131,6 +135,7 @@ if($total_1q > $capacidadmax)
     $formModel->errors['t_solicitudes_grupos___creditos_asignados'][] = 'Revise los créditos';
     //echo "El numero de horas del primer cuatrimestre supera el ".$factormax*100 ."% de la capacidad.";
     return false;
+    //exit;
 }
 if($total_2q > $capacidadmax)
 {
@@ -138,4 +143,6 @@ if($total_2q > $capacidadmax)
     $formModel->errors['t_solicitudes_grupos___creditos_asignados'][] = 'Revise los créditos';
     //echo "El numero de horas del segundo cuatrimestre supera el ".$factormax*100 ."% de la capacidad.";
     return false;
+    //exit;
 }
+//exit;
