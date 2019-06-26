@@ -10,7 +10,7 @@ defined('_JEXEC') or die('Restricted access');
 $usuarios = $formModel->getElementData('t_solicitudes___usuario');
 $userid = $usuarios[0];
 
-
+/*echo "<br>Usuario:". $userid ."<br>";*/
 //Recogemos los datos de conexión a la BD
 $app= JFactory::getApplication();
 $host = $app->getCfg('host');
@@ -25,7 +25,7 @@ if (mysqli_connect_errno()) {
 }
 
 //COGEMOS LA CAPACIDAD DEL USUARIO 
-$sql_usuario = "select capacidad from t_usuarios where userid = ". $userid;
+$sql_usuario = "select capacidad from t_usuarios where id = ". $userid;
 
 $result = $con->query($sql_usuario);
 
@@ -135,7 +135,7 @@ if($total_1q > $capacidadmax)
     $formModel->errors['t_solicitudes_grupos___creditos_asignados'][] = 'Revise los créditos';
     //echo "El numero de horas del primer cuatrimestre supera el ".$factormax*100 ."% de la capacidad.";
     return false;
-    //exit;
+
 }
 if($total_2q > $capacidadmax)
 {
@@ -143,6 +143,6 @@ if($total_2q > $capacidadmax)
     $formModel->errors['t_solicitudes_grupos___creditos_asignados'][] = 'Revise los créditos';
     //echo "El numero de horas del segundo cuatrimestre supera el ".$factormax*100 ."% de la capacidad.";
     return false;
-    //exit;
+    
 }
 //exit;
