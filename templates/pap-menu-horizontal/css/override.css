@@ -68,12 +68,12 @@ a {
 }
 
 .site-title-bar {
-	background-color: #01A7B7;
+	background-color: #01A7B7 !important;
 	padding: 1px;
 }
 
 .site-title-bar h2 {
-	color: #ffffff;
+	color: #ffffff !important;
 	text-transform: uppercase;
 	text-align: center;
 	line-height: 10px;
@@ -341,12 +341,12 @@ fieldset.fabrikGroup legend, fieldset.radio.btn-group legend {
 }
 
 .fabrik_groupheading a {
-	color: #ffffff;
+	color: #ffffff !important;
 	text-transform: uppercase;
 }
 
 .fabrik_groupheading a:hover, .fabrik_groupheading a:focus {
-	color: #fefefe;
+	color: #fefefe !important;
 	text-decoration: none;
 }
 

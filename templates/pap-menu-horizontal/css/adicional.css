@@ -16,7 +16,7 @@ table.estados td.b-negativo,
 #list_8_com_fabrik_8 tr.balanceg-positivo .t_tutelas___creditos_asignados,
 #list_8_com_fabrik_8 tr.balanceg-positivo .t_tutelas___diferencia
 {
-	background-color:#e3f4fc;
+	background-color:#e3f4fc !important;
 }
 
 table.estados td.b-positivo,
@@ -30,14 +30,14 @@ table.estados td.b-positivo,
 #list_8_com_fabrik_8 tr.balanceg-negativo .t_tutelas___creditos_asignados,
 #list_8_com_fabrik_8 tr.balanceg-negativo .t_tutelas___diferencia
 {
-	background-color:#f7d9d9;
+	background-color:#f7d9d9 !important;
 }
 
 .tdgrey, .grupo_grande {
-	background-color: #efefef;
+	background-color: #efefef !important;
 }
 .grupo_pequeno {
-	background-color: #ffffff;
+	background-color: #ffffff !important;
 }
 
 /*******************SOLICITUDES*************************************/
@@ -64,7 +64,7 @@ table.estados td.b-positivo,
 #list_5_com_fabrik_5 .balancenegativo .t_usuarios___diferencia,
 #list_5_com_fabrik_5 .balancenegativo .t_usuarios___nombre
 {
-	background-color:#f1fbff;
+	background-color:#f1fbff !important;
 }
 /********************************************************************/
 .chzn-container-single .chzn-single

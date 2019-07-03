@@ -130,6 +130,7 @@ else
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<jdoc:include type="head" />
+	<link rel="stylesheet" type="text/css" href="/templates/pap-menu-horizontal/css/print.css" media="print" />
 </head>
 <body class="site <?php echo $option
 	. ' view-' . $view

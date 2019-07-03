@@ -1,0 +1,24 @@
+body {-webkit-print-color-adjust: exact;}
+
+#sidebar, .fabrikButtonsContainer, .header-search, ul.breadcrumb li:not(:last-child),
+.fabrikFilterContainer, .footer,
+.fabrikDataContainer tfoot {
+	display: none;
+}
+
+.site-title-bar h2 {
+	font-size: 20px;
+}
+
+.breadcrumb .active span {
+	color: #fab700 !important;
+}
+
+.fabrik_groupheading a span, .fabrik_groupheading a i {
+	color: #ffffff !important;
+}
+
+.header-logo {
+    float: none;
+    text-align: center;
+}
