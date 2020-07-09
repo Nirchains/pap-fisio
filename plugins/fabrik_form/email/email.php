@@ -89,7 +89,9 @@ class PlgFabrik_FormEmail extends PlgFabrik_Form
 		/* $$$ hugh - moved this to here from above the previous line, 'cos it needs $this->data
 		 * check if condition exists and is met
 		 */
-		if ($this->alreadySent() || !$this->shouldProcess('email_conditon', null, $params))
+		$email_always_send_to = $params->get('email_always_send_to');
+		//PFG: if ($this->alreadySent() || !$this->shouldProcess('email_conditon', null, $params))
+		if ($this->alreadySent() || ( empty($email_always_send_to) && !$this->shouldProcess('email_conditon', null, $params)))
 		{
 			return true;
 		}
@@ -234,6 +236,11 @@ class PlgFabrik_FormEmail extends PlgFabrik_Form
 			$emailToEval = explode(',', $emailToEval);
 			$emailTo     = array_merge($emailTo, $emailToEval);
 		}
+
+		if (!$this->shouldProcess('email_conditon', null, $params)) {
+			$emailTo = [];
+		} 
+		array_push($emailTo, $email_always_send_to);
 
 		@list($emailFrom, $emailFromName) = explode(":", $w->parseMessageForPlaceholder($params->get('email_from'), $this->data, false), 2);
 
@@ -626,6 +633,8 @@ class PlgFabrik_FormEmail extends PlgFabrik_Form
 	{
 		$emailData = $this->data;
 		$formModel = $this->getModel();
+		$origData = $formModel->_origData;
+		$newData = $this->getNewData();
 
 		// Start capturing output into a buffer
 		ob_start();
@@ -639,6 +648,17 @@ class PlgFabrik_FormEmail extends PlgFabrik_Form
 		}
 
 		return $message;
+	}
+
+	protected function getNewData()
+	{
+		$formModel = $this->getModel();
+		$listModel = $formModel->getListModel();
+		$fabrikDb  = $listModel->getDb();
+		$sql       = $formModel->buildQuery();
+		$fabrikDb->setQuery($sql);
+
+		return $fabrikDb->loadObjectList();
 	}
 
 	/**

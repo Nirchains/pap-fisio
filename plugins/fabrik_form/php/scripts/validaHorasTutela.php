@@ -59,5 +59,8 @@ if($total_horas_practicas > $horasmax)
     $formModel->getForm()->error = "<b>Demasiadas horas de tutela acad&eacute;mica</b>.<br>Ha elegido ". $total_horas_practicas ." horas de un total m&aacute;ximo de ".$horasmax. " horas. Le sobran ". ($total_horas_practicas-$horasmax) ." horas.";
     $formModel->errors['t_solicitudes_grupos___creditos_asignados'][] = 'Revise los créditos';
     //echo "El numero de horas del primer cuatrimestre supera el ".$factormax*100 ."% de la capacidad.";
+    $con->close();
     return false;
 }
+
+$con->close();

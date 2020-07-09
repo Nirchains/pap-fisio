@@ -59,7 +59,7 @@ function tryForLabel($formModel, $key, $raw, $info)
 	return array($label, $thisRaw, $show);
 }
 ?>
-<table>
+<table border="1">
 <?php
 foreach ($this->emailData as $key => $val)
 {

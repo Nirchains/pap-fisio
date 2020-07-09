@@ -15,7 +15,7 @@ defined('_JEXEC') or die('Restricted access');
 <?php
 //Obtenemos la página actual
 $active = JFactory::getApplication()->getMenu()->getActive();
-if ($active->id == 147) {
+if ($active->id == 147 || $active->id == 150) {
 	$table = "t_grupos";
 } elseif ($active->id == 140) {
 	$table = "t_seminarios";
@@ -109,7 +109,7 @@ if ($GLOBALS['id_asignatura'] != $id_asignatura_siguiente && $id_asignatura_sigu
 ?>
 
 <?php
-	if ($active->id == 147) {
+	if ($active->id == 147 || $active->id == 150) {
 ?>
 <tr id="<?php echo $this->_row->id;?>" class="<?php echo $this->_row->class;?>">
 	<?php 

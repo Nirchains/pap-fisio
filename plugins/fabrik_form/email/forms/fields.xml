@@ -107,6 +107,19 @@
 				label="PLG_FABRIK_FORM_EMAIL_MESSAGE_TEXT_LABEL"
 				repeat="true" />
 
+			<field name="email_always_send_to"
+			       type="listfields"
+			       repeat="true"
+			       mode="gui"
+			       at="true"
+			       rows="1"
+			       valueformat="tableelement"
+			       usestep="true"
+			       addbrackets="true"
+			       class="span5"
+			       description="PLG_FABRIK_EMAIL_ALWAYS_SEND_TO_DESC"
+			       label="PLG_FABRIK_EMAIL_ALWAYS_SEND_TO"/>
+
 			<field name="email_conditon"
 				type="fabrikeditor"
 				mode="php"

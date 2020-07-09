@@ -134,6 +134,7 @@ if($total_1q > $capacidadmax)
     $formModel->getForm()->error = "<b>El numero de horas del primer cuatrimestre supera el ".$factormax*100 ."% de sus ".$capacidad." horas de capacidad docente.</b> <br> Horas m&aacute;ximas permitidas por cuatrimestre: ".$capacidadmax." hrs.<br> Horas totales elegidas: ".$total_1q." hrs<br>Le sobran ".($total_1q-$capacidadmax) ." horas del primer cuatrimestre.";
     $formModel->errors['t_solicitudes_grupos___creditos_asignados'][] = 'Revise los créditos';
     //echo "El numero de horas del primer cuatrimestre supera el ".$factormax*100 ."% de la capacidad.";
+    $con->close();
     return false;
 
 }
@@ -142,7 +143,10 @@ if($total_2q > $capacidadmax)
     $formModel->getForm()->error = "<b>El numero de horas del segundo cuatrimestre supera el ".$factormax*100 ."% de sus ".$capacidad." horas de capacidad docente.</b> <br> Horas m&aacute;ximas permitidas por cuatrimestre: ".$capacidadmax." hrs.<br> Horas totales elegidas: ".$total_2q." hrs<br>Le sobran ".($total_2q-$capacidadmax) ." horas del segundo cuatrimestre.";
     $formModel->errors['t_solicitudes_grupos___creditos_asignados'][] = 'Revise los créditos';
     //echo "El numero de horas del segundo cuatrimestre supera el ".$factormax*100 ."% de la capacidad.";
+    $con->close();
     return false;
     
 }
+
+$con->close();
 //exit;
