@@ -18,7 +18,7 @@ $active = JFactory::getApplication()->getMenu()->getActive();
 
 if ($active->id == 147 || $active->id == 148) {
 	$table = "t_grupos";
-} elseif ($active->id == 140) {
+} elseif ($active->id == 140 || $active->id == 141) {
 	$table = "t_seminarios";
 } else {
 	$table = "t_tutelas";
