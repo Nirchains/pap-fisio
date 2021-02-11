@@ -2,7 +2,7 @@
 /**
  * @package     Joomla.Plugin
  * @subpackage  Fabrik.form.email
- * @copyright   Copyright (C) 2005-2016  Media A-Team, Inc. - All rights reserved.
+ * @copyright   Copyright (C) 2005-2020  Media A-Team, Inc. - All rights reserved.
  * @license     GNU/GPL http://www.gnu.org/copyleft/gpl.html
  */
 
@@ -89,9 +89,7 @@ class PlgFabrik_FormEmail extends PlgFabrik_Form
 		/* $$$ hugh - moved this to here from above the previous line, 'cos it needs $this->data
 		 * check if condition exists and is met
 		 */
-		$email_always_send_to = $params->get('email_always_send_to');
-		//PFG: if ($this->alreadySent() || !$this->shouldProcess('email_conditon', null, $params))
-		if ($this->alreadySent() || ( empty($email_always_send_to) && !$this->shouldProcess('email_conditon', null, $params)))
+		if ($this->alreadySent() || !$this->shouldProcess('email_conditon', null, $params))
 		{
 			return true;
 		}
@@ -237,11 +235,6 @@ class PlgFabrik_FormEmail extends PlgFabrik_Form
 			$emailTo     = array_merge($emailTo, $emailToEval);
 		}
 
-		if (!$this->shouldProcess('email_conditon', null, $params)) {
-			$emailTo = [];
-		} 
-		array_push($emailTo, $email_always_send_to);
-
 		@list($emailFrom, $emailFromName) = explode(":", $w->parseMessageForPlaceholder($params->get('email_from'), $this->data, false), 2);
 
 		if (empty($emailFrom))
@@ -267,7 +260,7 @@ class PlgFabrik_FormEmail extends PlgFabrik_Form
 			$returnPathName = null;
 		}
 		// End changes
-		$subject = $params->get('email_subject');
+		$subject = FText::_($params->get('email_subject'));
 
 		if ($subject == '')
 		{
@@ -633,8 +626,6 @@ class PlgFabrik_FormEmail extends PlgFabrik_Form
 	{
 		$emailData = $this->data;
 		$formModel = $this->getModel();
-		$origData = $formModel->_origData;
-		$newData = $this->getNewData();
 
 		// Start capturing output into a buffer
 		ob_start();
@@ -648,17 +639,6 @@ class PlgFabrik_FormEmail extends PlgFabrik_Form
 		}
 
 		return $message;
-	}
-
-	protected function getNewData()
-	{
-		$formModel = $this->getModel();
-		$listModel = $formModel->getListModel();
-		$fabrikDb  = $listModel->getDb();
-		$sql       = $formModel->buildQuery();
-		$fabrikDb->setQuery($sql);
-
-		return $fabrikDb->loadObjectList();
 	}
 
 	/**

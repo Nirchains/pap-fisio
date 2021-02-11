@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright 	Copyright (c) 2009-2019 Ryan Demmer. All rights reserved
+ * @copyright 	Copyright (c) 2009-2020 Ryan Demmer. All rights reserved
  * @license   	GNU/GPL 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * JCE is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
@@ -22,8 +22,8 @@ class WFLinkSearchExtension extends WFSearchExtension
         parent::__construct();
 
         $request = WFRequest::getInstance();
-        $request->setRequest(array($this, 'doSearch'));
 
+        $request->setRequest(array($this, 'doSearch'));
         $request->setRequest(array($this, 'getAreas'));
 
         $wf = WFEditorPlugin::getInstance();
@@ -31,15 +31,29 @@ class WFLinkSearchExtension extends WFSearchExtension
         // get plugins
         $plugins = $wf->getParam('search.link.plugins', array());
 
+        $default = array('categories', 'contacts', 'content', 'newsfeeds', 'weblinks', 'tags');
+
         // use tested defaults
-        if (empty($plugins)) {
-            $plugins = array('categories', 'contacts', 'content', 'newsfeeds', 'weblinks', 'tags');
-        }
+        $plugins = empty($plugins) ? $default : $plugins;
 
         foreach ($plugins as $plugin) {
-            if (JPluginHelper::isEnabled('search', $plugin)) {
-                JPluginHelper::importPlugin('search', $plugin);
+            // plugin must be enabled
+            if (!JPluginHelper::isEnabled('search', $plugin)) {
+                continue;
+            }
 
+            // create component name from plugin - special case for "contacts"
+            if (in_array($plugin, $default)) {
+                $component = ($plugin == 'contacts') ? 'com_contact' : 'com_' . $plugin;
+
+                // check for associated component
+                if (!JComponentHelper::isEnabled($component)) {
+                    continue;
+                }
+            }
+
+            // check plugin imports correctly - plugin may have a db entry, but is missing files
+            if (JPluginHelper::importPlugin('search', $plugin)) {
                 $this->enabled[] = $plugin;
             }
         }
@@ -116,9 +130,35 @@ class WFLinkSearchExtension extends WFSearchExtension
 
         $view = $this->getView(array('name' => 'search', 'layout' => 'search'));
 
-        $view->assign('searchareas', self::getAreas());
-        $view->assign('lists', $lists);
+        $view->searchareas = self::getAreas();
+        $view->lists = $lists;
+        
         $view->display();
+    }
+
+    private static function getSearchAreaFromUrl($url)
+    {
+        $query = parse_url($url, PHP_URL_QUERY);
+
+        if (empty($query)) {
+            return "";
+        }
+
+        parse_str($query, $values);
+
+        if (!array_key_exists('option', $values)) {
+            return "";
+        }
+
+        $language = JFactory::getLanguage();
+
+        $option = $values['option'];
+        
+        // load system language file
+        $language->load($option.'.sys', JPATH_ADMINISTRATOR);
+        $language->load($option, JPATH_ADMINISTRATOR);
+
+        return JText::_($option);
     }
 
     /**
@@ -192,6 +232,8 @@ class WFLinkSearchExtension extends WFSearchExtension
             $searchphrase = 'exact';
         }
 
+        $searchphrase = $app->input->post->getWord('searchphrase', $searchphrase);
+
         // get passed through ordering
         $ordering = $app->input->post->getWord('ordering', $ordering);
 
@@ -219,8 +261,20 @@ class WFLinkSearchExtension extends WFSearchExtension
         // get first 10
         $rows = array_slice($rows, 0, $limit);
 
+        $areas = array();
+
         for ($i = 0, $count = count($rows); $i < $count; ++$i) {
             $row = &$rows[$i];
+
+            if (empty($row->href) || empty($row->text)) {
+                continue;
+            }
+
+            $area = self::getSearchAreaFromUrl($row->href);
+
+            if (!isset($areas[$area])) {
+                $areas[$area] = array();
+            }
 
             $result = new StdClass;
 
@@ -239,7 +293,7 @@ class WFLinkSearchExtension extends WFSearchExtension
             $row->text = SearchHelper::prepareSearchContent($row->text, $needle);
 
             // remove base url
-            if (strpos($row->href, JURI::base(true)) !== false) {
+            if (JURI::base(true) && strpos($row->href, JURI::base(true)) !== false) {
                 $row->href = substr_replace($row->href, '', 0, strlen(JURI::base(true)) + 1);
             }
 
@@ -268,7 +322,11 @@ class WFLinkSearchExtension extends WFSearchExtension
                 $result->anchors = $row->anchors;
             }
 
-            $results[] = $result;
+            $areas[$area][] = $result;
+        }
+
+        if (!empty($areas)) {
+            $results[] = $areas;
         }
 
         return $results;

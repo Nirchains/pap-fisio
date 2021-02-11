@@ -4,7 +4,7 @@ defined('JPATH_PLATFORM') or die;
 
 JFormHelper::loadFieldClass('list');
 
-class JFormFieldFilesystem extends JFormField
+class JFormFieldFilesystem extends JFormFieldList
 {
     /**
      * The form field type.
@@ -67,7 +67,7 @@ class JFormFieldFilesystem extends JFormField
         $html .= '<div class="controls-row">';
 
         $html .= '<div class="control-group">';
-        $html .= JHtml::_('select.genericlist', $options, $this->name . '[name]', 'data-toggle="filesystem-options"', 'value', 'text', $value['name']);
+        $html .= JHtml::_('select.genericlist', $options, $this->name . '[name]', 'data-toggle="filesystem-options" class="custom-select"', 'value', 'text', $value['name']);
         $html .= '</div>';
 
         $html .= '<div class="filesystem-options clearfix">';
@@ -82,12 +82,12 @@ class JFormFieldFilesystem extends JFormField
                 // bind data to form
                 $form->bind($data);
                 
-                $html .= '<div class="well well-small card card-body" data-toggle-target="filesystem-options-' . $plugin->name . '">';
+                $html .= '<div class="well well-small p-2 bg-light" data-toggle-target="filesystem-options-' . $plugin->name . '">';
 
                 $fields = $form->getFieldset('filesystem.' . $plugin->name);
 
                 foreach ($fields as $field) {
-                     $html .= $field->renderField();
+                    $html .= $field->renderField(array('description' => $field->description));
                 }
 
                 $html .= '</div>';
@@ -129,12 +129,12 @@ class JFormFieldFilesystem extends JFormField
     {
         $fieldname = preg_replace('/[^a-zA-Z0-9_\-]/', '_', $this->fieldname);
 
-        $options = array();
+        $options = parent::getOptions();
 
-        $options[] = array(
+        /*$options[] = array(
             'value' => '',
             'text' => JText::_('WF_OPTION_NOT_SET'),
-        );
+        );*/
 
         $plugins = $this->getPlugins();
 

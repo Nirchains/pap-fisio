@@ -4,7 +4,7 @@
  *
  * @package     Joomla
  * @subpackage  Fabrik
- * @copyright   Copyright (C) 2005-2016  Media A-Team, Inc. - All rights reserved.
+ * @copyright   Copyright (C) 2005-2020  Media A-Team, Inc. - All rights reserved.
  * @license     GNU/GPL http://www.gnu.org/copyleft/gpl.html
  */
 
@@ -487,7 +487,7 @@ class FabrikFEModelForm extends FabModelForm
 		$data = $this->getData();
 		$ret = 0;
 
-		if ($listModel->canViewDetails(ArrayHelper::toObject($data)))
+		if ($listModel->canViewDetails(FArrayHelper::toObject($data)))
 		{
 			$ret = 1;
 		}

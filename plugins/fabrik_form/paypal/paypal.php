@@ -4,7 +4,7 @@
  *
  * @package     Joomla.Plugin
  * @subpackage  Fabrik.form.paypal
- * @copyright   Copyright (C) 2005-2016  Media A-Team, Inc. - All rights reserved.
+ * @copyright   Copyright (C) 2005-2020  Media A-Team, Inc. - All rights reserved.
  * @license     GNU/GPL http://www.gnu.org/copyleft/gpl.html
  */
 
@@ -371,7 +371,7 @@ class PlgFabrik_FormPaypal extends PlgFabrik_Form
 
         if ($testMode == 1 && !empty($paypal_return_url))
         {
-            if (preg_match('#^http:\/\/#', $paypal_return_url))
+            if (preg_match('#^(http|https):\/\/#', $paypal_return_url))
             {
                 $opts['return'] = $paypal_return_url;
             }
@@ -394,7 +394,7 @@ class PlgFabrik_FormPaypal extends PlgFabrik_Form
         }
         elseif (!empty($paypal_return_url))
         {
-            if (preg_match('#^http:\/\/#', $paypal_return_url))
+            if (preg_match('#^(http|https):\/\/#', $paypal_return_url))
             {
                 $opts['return'] = $paypal_return_url;
             }

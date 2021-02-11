@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright     Copyright (c) 2009-2019 Ryan Demmer. All rights reserved
+ * @copyright     Copyright (c) 2009-2020 Ryan Demmer. All rights reserved
  * @license       GNU/GPL 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * JCE is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
@@ -117,23 +117,37 @@ class WFApplication extends JObject
         return 0;
     }
 
-    private function getProfileVars($plugin = '')
+    private function getProfileVars()
     {
         $app = JFactory::getApplication();
         $user = JFactory::getUser();
         $option = $this->getComponentOption();
 
+        $settings = array(
+            'option' => $option,
+            'area'   => 2,
+            'device' => 'desktop',
+            'groups' => array()
+        );
+
+        // find the component if this is called from within the JCE component
         if ($option == 'com_jce') {
             $context = $app->input->getInt('context');
 
             if ($context) {
                 $component = $this->getComponent($context);
-                $option = isset($component->element) ? $component->element : $component->option;
+                $settings['option'] = $component->element;
+            }
+
+            $profile_id = $app->input->getInt('profile_id');
+
+            if ($profile_id) {
+                $settings['profile_id'] = $profile_id;
             }
         }
 
-        // get the Joomla! area (admin or site)
-        $area = $app->isClient('administrator') ? 2 : 1;
+        // get the Joomla! area, default to "site"
+        $settings['area'] = $app->getClientId() === 0 ? 1 : 2;
 
         if (!class_exists('Wf_Mobile_Detect')) {
             // load mobile detect class
@@ -142,27 +156,18 @@ class WFApplication extends JObject
 
         $mobile = new Wf_Mobile_Detect();
 
-        // desktop - default
-        $device = 'desktop';
-
         // phone
         if ($mobile->isMobile()) {
-            $device = 'phone';
+            $settings['device'] = 'phone';
         }
 
         if ($mobile->isTablet()) {
-            $device = 'tablet';
+            $settings['device'] = 'tablet';
         }
 
-        $groups = $user->getAuthorisedGroups();
+        $settings['groups'] = $user->getAuthorisedGroups();
 
-        return array(
-            'option' => $option,
-            'area' => $area,
-            'device' => $device,
-            'groups' => $groups,
-            'plugin' => $plugin,
-        );
+        return $settings;
     }
 
     private function isCorePlugin($plugin)
@@ -181,9 +186,14 @@ class WFApplication extends JObject
         }
 
         // get the profile variables for the current context
-        $options = $this->getProfileVars($plugin);
+        $options = $this->getProfileVars();
+
+        if (isset($options['profile_id'])) {
+            $id = (int) $options['profile_id'];
+        }
+
         // create a signature to store
-        $signature = serialize($options);
+        $signature = md5(serialize($options));
 
         if (!isset(self::$profile[$signature])) {
             $db = JFactory::getDBO();
@@ -200,12 +210,15 @@ class WFApplication extends JObject
             $db->setQuery($query);
             $profiles = $db->loadObjectList();
 
-            if ($id && !empty($profiles)) {
-                // assign profile
-                self::$profile[$signature] = (object) $profiles[0];
+            // nothing found...
+            if (empty($profiles)) {
+                return null;
+            }
 
+            // select and return a specific profile by id
+            if ($id) {
                 // return
-                return self::$profile[$signature];
+                return (object) $profiles[0];
             }
 
             foreach ($profiles as $item) {
@@ -226,8 +239,10 @@ class WFApplication extends JObject
                 }
 
                 // check component
-                if ($options['option'] !== 'com_jce' && $item->components && in_array($options['option'], explode(',', $item->components)) === false) {
-                    continue;
+                if (!empty($item->components)) {
+                    if (in_array($options['option'], explode(',', $item->components)) === false) {
+                        continue;
+                    }
                 }
 
                 // set device default as 'desktop,tablet,mobile'
@@ -245,7 +260,8 @@ class WFApplication extends JObject
                     continue;
                 }
 
-                if ($options['plugin'] && in_array($options['plugin'], explode(',', $item->plugins)) === false) {
+                // check against passed in plugin value
+                if ($plugin && in_array($plugin, explode(',', $item->plugins)) === false) {
                     continue;
                 }
 
@@ -320,21 +336,26 @@ class WFApplication extends JObject
         }
 
         // get plugin name
-        $plugin = $app->input->getCmd('plugin');
+        $plugin = $app->input->getCmd('plugin', '');
 
-        // optional caller, eg: Link
-        $caller = '';
-
-        // get name and caller from plugin name
-        if (strpos($plugin, '.') !== false) {
-            list($plugin, $caller) = explode('.', $plugin);
-
-            if ($caller) {
-                $options['caller'] = $caller;
-            }
+        // reset the plugin value if this is not called from within the JCE component
+        if ($app->input->getCmd('option') !== 'com_jce') {
+            $plugin = '';
         }
 
         if ($plugin) {
+            // optional caller, eg: Link
+            $caller = '';
+            
+            // get name and caller from plugin name
+            if (strpos($plugin, '.') !== false) {
+                list($plugin, $caller) = explode('.', $plugin);
+
+                if ($caller) {
+                    $options['caller'] = $caller;
+                }
+            }
+
             $options['plugin'] = $plugin;
         }
 
@@ -423,14 +444,14 @@ class WFApplication extends JObject
                 $value = $fallback;
 
                 // if fallback is empty, revert to system default if it is non-empty
-                if ($fallback === '' && $default !== '') {
+                if ($fallback == '' && $default != '') {
                     $value = $default;
 
                     // reset $default to prevent clearing
                     $default = '';
                 }
             // parameter is set, but is empty, but fallback is not (inherited values)
-            } else if ($fallback !== '') {
+            } else if ($fallback != '') {
                 $value = $fallback;
             }
         }

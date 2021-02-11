@@ -4,7 +4,7 @@
  *
  * @package     Joomla.Plugin
  * @subpackage  Fabrik.element.date
- * @copyright   Copyright (C) 2005-2016  Media A-Team, Inc. - All rights reserved.
+ * @copyright   Copyright (C) 2005-2020  Media A-Team, Inc. - All rights reserved.
  * @license     GNU/GPL http://www.gnu.org/copyleft/gpl.html
  */
 
@@ -841,6 +841,14 @@ class PlgFabrik_ElementJdate extends PlgFabrik_ElementList
 		$element      = $this->getElement();
 		$id           = $this->getHTMLId($repeatCounter);
 		$opts         = $this->getElementJSOptions($repeatCounter);
+
+		// if read only, convert back to local display time
+		if (!$this->isEditable())
+		{
+			$localDate = $this->displayDate($opts->value);
+			$opts->value = $localDate->toSql(true);
+		}
+
 		$opts->hidden = (bool) $this->getElement()->hidden;
 
 		// Used uniquely in reset();

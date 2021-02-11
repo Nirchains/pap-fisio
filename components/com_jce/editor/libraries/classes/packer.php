@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright     Copyright (c) 2009-2019 Ryan Demmer. All rights reserved
+ * @copyright     Copyright (c) 2009-2020 Ryan Demmer. All rights reserved
  * @license       GNU/GPL 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * JCE is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
@@ -12,7 +12,7 @@ defined('JPATH_PLATFORM') or die;
 
 class WFPacker extends JObject
 {
-    const IMPORT_RX = '#@import([^;]+);#i';
+    const IMPORT_RX = '#@import.*?(?:\(([^\)]+)\);|(?:[\'"]([^\'"]+)[\'"]);)#i'; // match @import url('...'); or @import '...'; or @import "...";
 
     protected $files = array();
     protected $type = 'javascript';
@@ -98,14 +98,24 @@ class WFPacker extends JObject
         return $encoding;
     }
 
+    private function getEtag($hash)
+    {
+        if (strpos($hash, '"') !== 0) {
+            $hash = '"' . $hash . '"';
+        }
+
+        return $hash;
+    }
+
     /**
      * Pack and output content based on type.
      *
      * @param bool|true  $minify
+     * @param bool|true $cache
      * @param bool|false $gzip
-     *                           Contains some code from libraries/joomla/cache/controller/page.php - Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved
+     * Contains some code from libraries/joomla/cache/controller/page.php - Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved
      */
-    public function pack($minify = true, $gzip = false)
+    public function pack($minify = true, $cache_validation = true, $gzip = false)
     {
         $type = $this->getType();
 
@@ -127,11 +137,6 @@ class WFPacker extends JObject
         header('Cache-Control: max-age=0,no-cache');
 
         $files = $this->getFiles();
-
-        $encoding = self::getEncoding();
-
-        $zlib = function_exists('ini_get') && extension_loaded('zlib') && ini_get('zlib.output_compression');
-        $gzip = $gzip && !empty($encoding) && !$zlib && function_exists('gzencode');
 
         $content = $this->getContentStart();
 
@@ -157,26 +162,36 @@ class WFPacker extends JObject
         // trim content
         $content = trim($content);
 
-        // get content hash
-        $hash = md5(implode(' ', array_map('basename', $files)) . $content);
+        // force browser caching using an E-tag
+        if ($cache_validation) {
+            // get content hash
+            $hash = md5(implode(' ', array_map('basename', $files)) . $content);
+            // create E-tag
+            $etag = $this->getEtag($hash);
+            // set etag header
+            header('ETag: ' . $etag);
+            
+            // check for sent etag against hash
+            if (!headers_sent() && isset($_SERVER['HTTP_IF_NONE_MATCH'])) {
+                $_etag = stripslashes($_SERVER['HTTP_IF_NONE_MATCH']);
 
-        // check for sent etag against hash
-        if (!headers_sent() && isset($_SERVER['HTTP_IF_NONE_MATCH'])) {
-            $etag = stripslashes($_SERVER['HTTP_IF_NONE_MATCH']);
-
-            if ($etag && $etag === $hash) {
-                header('HTTP/1.x 304 Not Modified', true);
-                exit(ob_get_clean());
+                if ($_etag && $_etag === $etag) {
+                    header('HTTP/1.x 304 Not Modified', true);
+                    exit(ob_get_clean());
+                }
             }
         }
 
-        // set etag header
-        header('ETag: ' . $hash);
-
         // Generate GZIP'd content
         if ($gzip) {
-            header('Content-Encoding: ' . $encoding);
-            $content = gzencode($content, 4, FORCE_GZIP);
+            $encoding = self::getEncoding();
+            
+            $zlib = function_exists('ini_get') && extension_loaded('zlib') && ini_get('zlib.output_compression');
+
+            if (!empty($encoding) && !$zlib && function_exists('gzencode')) {
+                header('Content-Encoding: ' . $encoding);
+                $content = gzencode($content, 4, FORCE_GZIP);
+            }
         }
 
         // stream to client
@@ -282,8 +297,6 @@ class WFPacker extends JObject
 
     protected function compileLess($string, $path)
     {
-        require_once __DIR__ . '/vendor/lessphp/lessc.inc.php';
-
         $less = new lessc();
         // add file directory
         $less->addImportDir($path);

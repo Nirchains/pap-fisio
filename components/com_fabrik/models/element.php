@@ -4,7 +4,7 @@
  *
  * @package     Joomla
  * @subpackage  Fabrik
- * @copyright   Copyright (C) 2005-2016  Media A-Team, Inc. - All rights reserved.
+ * @copyright   Copyright (C) 2005-2020  Media A-Team, Inc. - All rights reserved.
  * @license     GNU/GPL http://www.gnu.org/copyleft/gpl.html
  */
 
@@ -1035,7 +1035,16 @@ class PlgFabrik_Element extends FabrikPlugin
 			$pluginManager = FabrikWorker::getPluginManager();
 			if (in_array(false, $pluginManager->runPlugins('onElementCanView', $formModel, 'form', $this)))
 			{
-				$this->access->view = false;
+				$this->access->$key = false;
+			}
+		}
+		else if ($this->access->$key && $view == 'list')
+		{
+			$listModel = $this->getListModel();
+			$pluginManager = FabrikWorker::getPluginManager();
+			if (in_array(false, $pluginManager->runPlugins('onElementCanViewList', $listModel, 'list', $this)))
+			{
+				$this->access->$key = false;
 			}
 		}
 
@@ -1379,6 +1388,7 @@ class PlgFabrik_Element extends FabrikPlugin
 				{
 					FabrikHelperHTML::debug($default, 'element eval default:' . $element->label);
 					$default = stripslashes($default);
+					FabrikWorker::clearEval();
 					$default = @eval($default);
 					FabrikWorker::logEval($default, 'Caught exception on eval of ' . $element->name . ': %s');
 
@@ -1623,12 +1633,13 @@ class PlgFabrik_Element extends FabrikPlugin
 	 * Should the element be tipped?
 	 *
 	 * @param   string $mode Form/list render context
+	 * @param   array  $data data array
 	 *
 	 * @since    3.0.6
 	 *
 	 * @return  bool
 	 */
-	private function isTipped($mode = 'form')
+	private function isTipped($mode = 'form', $data = array())
 	{
 		$formModel = $this->getFormModel();
 
@@ -1639,7 +1650,7 @@ class PlgFabrik_Element extends FabrikPlugin
 
 		$params = $this->getParams();
 
-		if ($params->get('rollover', '') === '')
+		if (empty($this->getTipText($data)))
 		{
 			return false;
 		}
@@ -1698,7 +1709,7 @@ class PlgFabrik_Element extends FabrikPlugin
 		$displayData->view       = $this->app->input->get('view', 'form');
 		$displayData->tip        = $this->tipHtml($model->data);
 		$displayData->tipText    = $this->tipTextAndValidations('form', $model->data);
-		$displayData->rollOver   = $this->isTipped();
+		$displayData->rollOver   = $this->isTipped('form', $model->data);
 		$displayData->isEditable = $this->isEditable();
 		$displayData->tipOpts    = $this->tipOpts();
 
@@ -1837,7 +1848,7 @@ class PlgFabrik_Element extends FabrikPlugin
 			$displayData             = new stdClass;
 			$displayData->tipTitle   = $title;
 			$displayData->tipText    = $txt;
-			$displayData->rollOver   = $this->isTipped();
+			$displayData->rollOver   = $this->isTipped('form', $data);
 			$displayData->isEditable = $this->isEditable();
 			$displayData->tipOpts    = $this->tipOpts();
 
@@ -1891,12 +1902,12 @@ class PlgFabrik_Element extends FabrikPlugin
 		$lines = array();
 		$tmpl  = $this->getFormModel()->getTmpl();
 
-		if (($mode === 'list' || !$this->validator->hasValidations()) && !$this->isTipped($mode))
+		if (($mode === 'list' || !$this->validator->hasValidations()) && !$this->isTipped($mode, $data))
 		{
 			return '';
 		}
 
-		if ($this->isTipped($mode))
+		if ($this->isTipped($mode, $data))
 		{
 			$lines[] = '<li>' . FabrikHelperHTML::image('question-sign', 'form', $tmpl) . ' ' . $this->getTipText($data) . '</li>';
 		}
@@ -3540,7 +3551,7 @@ class PlgFabrik_Element extends FabrikPlugin
 		{
 			$return[] = '<span class="fabrikFilterRangeLabel">' . FText::_('COM_FABRIK_BETWEEN') . '</span>';
 			$return[] = JHTML::_('select.genericlist', $rows, $v . '[0]', $attributes, 'value', 'text', $def0, $element->name . '_filter_range_0');
-			//$return[] = '<br />';
+			$return[] = '<br />';
 			$return[] = '<span class="fabrikFilterRangeLabel">' . FText::_('COM_FABRIK_AND') . '</span>';
 			$return[] = JHTML::_('select.genericlist', $rows, $v . '[1]', $attributes, 'value', 'text', $def1, $element->name . '_filter_range_1');
 		}
@@ -3911,7 +3922,7 @@ class PlgFabrik_Element extends FabrikPlugin
 		if ($pop !== '')
 		{
 			$w    = new FabrikWorker;
-			$data = empty($data) ? $this->getFormModel()->getData() : $data;
+			//$data = empty($data) ? $this->getFormModel()->getData() : $data;
 			$pop  = $w->parseMessageForPlaceHolder($pop, $data, false);
 
 			$key = md5($pop) . '-' . md5(serialize($data));
@@ -4349,7 +4360,7 @@ class PlgFabrik_Element extends FabrikPlugin
 		$qsFilter = $this->app->input->get($name, array(), 'array');
 		$qsValues = FArrayHelper::getValue($qsFilter, 'value', array());
 
-		if (count($qsValues) > 1)
+		if (is_array($qsValues) && count($qsValues) > 1)
 		{
 			$type = $type === 'hidden' ? 'range-hidden' : 'range';
 		}
@@ -5599,6 +5610,7 @@ class PlgFabrik_Element extends FabrikPlugin
 
 					if (!empty($custom_calc_php))
 					{
+						FabrikWorker::clearEval();
 						$o->value = @eval((string) stripslashes($custom_calc_php));
 						FabrikWorker::logEval($custom_calc_php, 'Caught exception on eval of ' . $name . ': %s');
 					}
@@ -6188,10 +6200,27 @@ class PlgFabrik_Element extends FabrikPlugin
 
         $params    = $this->getParams();
 		$listModel = $this->getListModel();
-		$data      = FabrikWorker::JSONtoData($data, true);
+
+		if (!ArrayHelper::getValue($opts, 'json', false))
+		{
+			$data = FabrikWorker::JSONtoData($data, true);
+		}
+		else
+		{
+			$data = (array) $data;
+		}
 
 		foreach ($data as $i => &$d)
 		{
+			/**
+			 * At this point we should have scalar data, but if something (like a textarea) had JSON as its value,
+			 * it will have gotten decoded by the JSONtoData, so if not scalar, re-encode it.
+			 */
+			if (!is_scalar($d))
+			{
+				$d = json_encode($d);
+			}
+
 			if ($params->get('icon_folder') == '1' && ArrayHelper::getValue($opts, 'icon', 1))
 			{
 				// $$$ rob was returning here but that stopped us being able to use links and icons together
@@ -6794,8 +6823,27 @@ class PlgFabrik_Element extends FabrikPlugin
 	{
 		// Needed for ajax update (since we are calling this method via dispatcher element is not set)
 		$input = $this->app->input;
+		$o         = new stdClass;
+		$formModel = $this->getFormModel();
 		$this->setId($input->getInt('element_id'));
 		$this->loadMeForAjax();
+
+		// Check for request forgeries
+		if ($formModel->spoofCheck() && !JSession::checkToken('request'))
+		{
+			$o->error = FText::_('JERROR_ALERTNOAUTHOR');
+			echo json_encode($o);
+
+			return;
+		}
+
+		if (!$this->canUse()) {
+			$o->error = FText::_('JERROR_ALERTNOAUTHOR');
+			echo json_encode($o);
+
+			return;
+		}
+
 		$cache  = FabrikWorker::getCache();
 		$search = $input->get('value', '', 'string');
 		// uh oh, can't serialize PDO db objects so no can cache, as J! serializes the args
@@ -8102,12 +8150,7 @@ class PlgFabrik_Element extends FabrikPlugin
 					foreach (array_keys($v) as $x)
 					{
 						$origVal = FArrayHelper::getValue($origData, $x);
-						//PFG
-						//try {
-							//$d[$elKey][$x] = $elementModel->getLabelForValue($v[$x], $origVal, true);
-						//} catch (Exception $e) {
-
-						//}
+						$d[$elKey][$x] = $elementModel->getLabelForValue($v[$x], $origVal, true);
 					}
 				}
 				else

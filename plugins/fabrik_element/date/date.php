@@ -4,7 +4,7 @@
  *
  * @package     Joomla.Plugin
  * @subpackage  Fabrik.element.date
- * @copyright   Copyright (C) 2005-2016  Media A-Team, Inc. - All rights reserved.
+ * @copyright   Copyright (C) 2005-2020  Media A-Team, Inc. - All rights reserved.
  * @license     GNU/GPL http://www.gnu.org/copyleft/gpl.html
  */
 
@@ -285,7 +285,7 @@ class PlgFabrik_ElementDate extends PlgFabrik_ElementList
 			$localDate = $this->displayDate($gmt);
 
 			// Get the formatted time
-			$time = ($params->get('date_showtime', 0)) ? $localDate->format($timeFormat, true) : '';
+			$time = ((bool) $element->hidden || $params->get('date_showtime', 0)) ? $localDate->format($timeFormat, true) : '';
 
 			// Formatted date
 			$date = $localDate->format($format, true);
@@ -297,7 +297,7 @@ class PlgFabrik_ElementDate extends PlgFabrik_ElementList
 		}
 
 		// Build HTML widget
-		if ($params->get('date_showtime', 0))
+		if ($params->get('date_showtime', 0) || (bool) $element->hidden)
 		{
 			// Can't have names as simply [] as json only picks up the last one
 			$timeElName = $name . '[time]';
@@ -321,7 +321,7 @@ class PlgFabrik_ElementDate extends PlgFabrik_ElementList
 		$str[] = '<div class="fabrikSubElementContainer" id="' . $id . '">';
 		$str[] = $this->calendar($date, $name, $id . '_cal', $format, $calOpts, $repeatCounter);
 
-		if ($params->get('date_showtime', 0))
+		if ($params->get('date_showtime', 0) || (bool) $element->hidden)
 		{
 			$this->timeButton($timeElName, $time, $str);
 		}
@@ -417,6 +417,12 @@ class PlgFabrik_ElementDate extends PlgFabrik_ElementList
 	{
 		// if formatting for plugins (getProcessData), TZ has already been dealt with
 		if ($view == 'email')
+		{
+			return false;
+		}
+
+		// if AJAX validating, TZ is set
+		if (FabrikWorker::inAJAXValidation())
 		{
 			return false;
 		}
@@ -680,9 +686,9 @@ class PlgFabrik_ElementDate extends PlgFabrik_ElementList
 			if ($time !== '')
 			{
 				$bits = explode(':', $time);
-				$h    = FArrayHelper::getValue($bits, 0, 0);
-				$m    = FArrayHelper::getValue($bits, 1, 0);
-				$s    = FArrayHelper::getValue($bits, 2, 0);
+				$h    = (int)FArrayHelper::getValue($bits, 0, 0);
+				$m    = (int)FArrayHelper::getValue($bits, 1, 0);
+				$s    = (int)FArrayHelper::getValue($bits, 2, 0);
 				$d->setTime($h, $m, $s);
 			}
 
@@ -888,7 +894,7 @@ class PlgFabrik_ElementDate extends PlgFabrik_ElementList
 		$opts->timePickerLabel = FText::_('PLG_ELEMENT_DATE_TIMEPICKER', true);
 		$opts->typing         = (bool) $params->get('date_allow_typing_in_field', true);
 		$opts->timedisplay    = $params->get('date_timedisplay', 1);
-		$opts->dateTimeFormat = $this->getTimeFormat();
+		$opts->dateTimeFormat = FabDate::dateFormatToStrftimeFormat($this->getTimeFormat());
 		$opts->showSeconds    = $opts->whichTimePicker === 'clock' ? false : $params->get('date_show_seconds', '1') === '1';
 		$opts->hour24         = $params->get('date_24hour', '1') === '1';
 		$opts->allowedDates   = $this->getAllowedPHPDates();
@@ -1109,8 +1115,7 @@ class PlgFabrik_ElementDate extends PlgFabrik_ElementList
 		// in some corner cases, date will be db name quoted, like in CSV export after an advanced search!
 		$value = trim($value, "'");
 
-		//if ($input->get('task') == 'form.process' || ($app->isAdmin() && $input->get('task') == 'process'))
-		if (FabrikWorker::inFormProcess())
+		if (FabrikWorker::inFormProcess() || FabrikWorker::inAJAXValidation())
 		{
 			// Don't mess with posted value - can cause double offsets - instead do in _indStoareDBFormat();
 			return $value;
@@ -2859,6 +2864,10 @@ class PlgFabrik_ElementDate extends PlgFabrik_ElementList
 					$timeFormat = 'g:i A';
 				}
 			}
+		}
+		else if ((bool) $this->getElement()->hidden)
+		{
+			$timeFormat = 'H:i:s';
 		}
 
 		return $timeFormat;

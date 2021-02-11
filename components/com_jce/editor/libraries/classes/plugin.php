@@ -1,8 +1,8 @@
 <?php
 
 /**
- * @copyright 	Copyright (c) 2009-2019 Ryan Demmer. All rights reserved
- * @license   	GNU/GPL 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ * @copyright     Copyright (c) 2009-2020 Ryan Demmer. All rights reserved
+ * @license       GNU/GPL 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * JCE is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
  * is derivative of works licensed under the GNU General Public License or
@@ -21,6 +21,9 @@ class WFEditorPlugin extends JObject
     // array of alerts
     private $_alerts = array();
 
+    // plugin name
+    protected $name = '';
+
     /**
      * Constructor activating the default information of the class.
      */
@@ -29,25 +32,23 @@ class WFEditorPlugin extends JObject
         // Call parent
         parent::__construct();
 
-        // get plugin name
-        $plugin = JFactory::getApplication()->input->getCmd('plugin');
+        // get plugin name from url, fallback to default name if set
+        $name = JFactory::getApplication()->input->getCmd('plugin', $this->get('name'));
 
         // get name and caller from plugin name
-        if (strpos($plugin, '.') !== false) {
-            $parts = explode('.', $plugin);
-            $plugin = $parts[0];
-            $caller = $parts[1];
+        if (strpos($name, '.') !== false) {
+            list($name, $caller) = explode('.', $name);
             // store caller
-            if ($caller !== $plugin) {
+            if ($caller !== $name) {
                 $this->set('caller', $caller);
             }
         }
 
-        // set plugin name
-        $this->set('name', $plugin);
+        // re-set the "name" value
+        $this->set('name', $name);
 
         if (!array_key_exists('base_path', $config)) {
-            $config['base_path'] = WF_EDITOR_PLUGINS . '/' . $plugin;
+            $config['base_path'] = WF_EDITOR_PLUGINS . '/' . $name;
         }
 
         if (!defined('WF_EDITOR_PLUGIN')) {
@@ -55,7 +56,7 @@ class WFEditorPlugin extends JObject
         }
 
         if (!array_key_exists('view_path', $config)) {
-            $config['view_path'] = WF_EDITOR_PLUGIN;
+            $config['view_path'] = $config['base_path'];
         }
 
         if (!array_key_exists('layout', $config)) {
@@ -63,7 +64,7 @@ class WFEditorPlugin extends JObject
         }
 
         if (!array_key_exists('template_path', $config)) {
-            $config['template_path'] = WF_EDITOR_PLUGIN . '/tmpl';
+            $config['template_path'] = $config['base_path'] . '/tmpl';
         }
 
         $this->setProperties($config);
@@ -73,11 +74,11 @@ class WFEditorPlugin extends JObject
      * Returns a reference to a editor object.
      *
      * This method must be invoked as:
-     * 		<pre>  $browser =JCE::getInstance();</pre>
+     *         <pre>  $browser =JCE::getInstance();</pre>
      *
      * @return JCE The editor object
      *
-     * @since	1.5
+     * @since    1.5
      */
     public static function getInstance($config = array())
     {
@@ -107,7 +108,7 @@ class WFEditorPlugin extends JObject
             ));
         }
 
-        $view->assign('plugin', $this);
+        $view->plugin = $this;
 
         return $view;
     }
@@ -128,7 +129,7 @@ class WFEditorPlugin extends JObject
 
     protected function getPluginVersion()
     {
-        $manifest = WF_EDITOR_PLUGIN . '/' . $this->get('name') . '.xml';
+        $manifest = $this->get('base_path') . '/' . $this->get('name') . '.xml';
 
         $version = '';
 
@@ -137,6 +138,17 @@ class WFEditorPlugin extends JObject
         }
 
         return $version;
+    }
+
+    protected function isRtl()
+    {
+        $language = JFactory::getLanguage();
+
+        if ($language->getTag() === WFLanguage::getTag()) {
+            return $language->isRTL();
+        }
+        
+        return false;
     }
 
     protected function initialize()
@@ -161,7 +173,7 @@ class WFEditorPlugin extends JObject
             'title' => JText::_('WF_' . strtoupper($this->getName() . '_TITLE')),
             'name' => $name,
             'language' => WFLanguage::getTag(),
-            'direction' => WFLanguage::getDir(),
+            'direction' => $this->isRtl() ? 'rtl' : 'ltr',
             'compress_javascript' => $this->getParam('editor.compress_javascript', 0),
             'compress_css' => $this->getParam('editor.compress_css', 0),
         ));
@@ -173,12 +185,12 @@ class WFEditorPlugin extends JObject
     public function execute()
     {
         $this->initialize();
-        
+
         // process requests if any - method will end here
         WFRequest::getInstance()->process();
 
         $this->display();
-        
+
         $document = WFDocument::getInstance();
 
         // ini language
@@ -201,7 +213,7 @@ class WFEditorPlugin extends JObject
     public function loadlanguages()
     {
         $name = $this->get('name');
-        
+
         $parser = new WFLanguageParser(array(
             'plugins' => array('core' => array($name), 'external' => array()),
             'sections' => array('dlg', $name . '_dlg', 'colorpicker'),
@@ -219,9 +231,9 @@ class WFEditorPlugin extends JObject
     {
         // check session on get request
         JSession::checkToken('get') or jexit(JText::_('JINVALID_TOKEN'));
-        
+
         $this->initialize();
-        
+
         jimport('joomla.filesystem.folder');
         $document = WFDocument::getInstance();
 
@@ -230,8 +242,8 @@ class WFEditorPlugin extends JObject
         }
 
         $document->addScript(array('jquery.min'), 'jquery');
-
         $document->addScript(array('jquery-ui.min'), 'jquery');
+        $document->addScript(array('jquery-ui.touch.min'), 'jquery');
 
         $document->addScript(array('plugin.min.js'));
         $document->addStyleSheet(array('plugin.min.css'), 'libraries');
@@ -253,6 +265,16 @@ class WFEditorPlugin extends JObject
     }
 
     /**
+     * Return the plugin name.
+     *
+     * @return string
+     */
+    public function getCaller()
+    {
+        return $this->get('caller');
+    }
+
+    /**
      * Get default values for a plugin.
      * Key / Value pairs will be retrieved from the profile or plugin manifest.
      *
@@ -260,7 +282,7 @@ class WFEditorPlugin extends JObject
      *
      * @return array
      */
-    public function getDefaults($defaults = array())
+    public function getDefaults($fieldset = 'defaults', $options = array())
     {
         $name = $this->getName();
         $caller = $this->get('caller');
@@ -269,30 +291,142 @@ class WFEditorPlugin extends JObject
             $name = $caller;
         }
 
+        $defaults = array();
+        $exclude = array();
+
+        if (isset($options['defaults'])) {
+            $defaults = $options['defaults'];
+        }
+
+        if (isset($options['exclude'])) {
+            $exclude = $options['exclude'];
+        }
+
         // get manifest path
-        $manifest = WF_EDITOR_PLUGIN . '/' . $name . '.xml';
+        $manifest = $this->get('base_path') . '/' . $name . '.xml';
+
+        // use the plugin name as the form
+        $form_id = $name;
+
+        // parameter group
+        if (isset($options['group'])) {
+            $name .= '.' . $options['group'];
+        }
+
+        if (isset($options['manifest'])) {
+            $manifest = $options['manifest'];
+            // create extension specific form id
+            $form_id .= '.' . basename($manifest, '.xml');
+        }
 
         // get parameter defaults
         if (is_file($manifest)) {
-            $form   = JForm::getInstance('com_jce.plugin.' . $name, $manifest, array('load_data' => false), true, '//extension');
-            $fields = $form->getFieldset('defaults');
-            
-            foreach($fields as $field) {
+            $form = JForm::getInstance('com_jce.plugin.' . $form_id, $manifest, array('load_data' => false), true, '//extension');
+            $fields = $form->getFieldset($fieldset);
+
+            foreach ($fields as $field) {
                 $key = $field->getAttribute('name');
 
                 if (!$key || $key === "buttons") {
                     continue;
                 }
 
-                // get parameter default
-                $value = $field->getAttribute('default');
+                if (in_array($key, $exclude)) {
+                    continue;
+                }
 
-                // get stored value, fallback to parameter default
-                $defaults[$key] = $this->getParam($key, $value);
+                $def = (string) $field->getAttribute('default');
+
+                // get parameter default value if set, use the specific plugin
+                $value = $this->getParam($name . '.' . $key, $def);
+
+                // only use non-empty values
+                if ($value !== '') {
+                    $defaults[$key] = $value;
+                }
             }
         }
 
         return $defaults;
+    }
+
+    public function getDefaultAttributes()
+    {
+        $defaults = $this->getDefaults();
+
+        $attribs = array();
+        $styles = array();
+
+        foreach ($defaults as $key => $value) {
+            switch ($key) {
+                case 'align':
+                    // convert to float
+                    if ($value == 'left' || $value == 'right') {
+                        $key = 'float';
+                    } else {
+                        $key = 'vertical-align';
+                    }
+
+                    // check for value and exclude border state parameter
+                    if ($value != '') {
+                        $styles[str_replace('_', '-', $key)] = $value;
+                    }
+                    break;
+                case 'border_width':
+                case 'border_style':
+                case 'border_color':
+                    // only if border state set
+                    $value = $defaults['border'] ? $value : '';
+
+                    // add px unit to border-width
+                    if ($value && $key == 'border_width' && is_numeric($value)) {
+                        $value .= 'px';
+                    }
+
+                    // check for value and exclude border state parameter
+                    if ($value != '') {
+                        $styles[str_replace('_', '-', $key)] = $value;
+                    }
+
+                    break;
+                case 'margin_left':
+                case 'margin_right':
+                case 'margin_top':
+                case 'margin_bottom':
+                    // add px unit to border-width
+                    if ($value && is_numeric($value)) {
+                        $value .= 'px';
+                    }
+
+                    // check for value and exclude border state parameter
+                    if ($value != '') {
+                        $styles[str_replace('_', '-', $key)] = $value;
+                    }
+
+                    break;
+                default:
+                    if ($key == 'direction') {
+                        $key = 'dir';
+                    }
+
+                    if ($key == 'classes') {
+                        $key = 'class';
+                    }
+
+                    if ($value !== '') {
+                        $attribs[$key] = $value;
+                    }
+
+                    break;
+            }
+        }
+
+        // styles object
+        if (!empty($styles)) {
+            $attribs['styles'] = $styles;
+        }
+
+        return $attribs;
     }
 
     /**
@@ -349,7 +483,7 @@ class WFEditorPlugin extends JObject
     /**
      * Convert a url to path.
      *
-     * @param	string 	The url to convert
+     * @param    string     The url to convert
      *
      * @return string Full path to file
      */
@@ -363,7 +497,7 @@ class WFEditorPlugin extends JObject
     /**
      * Returns an image url.
      *
-     * @param	string 	The file to load including path and extension eg: libaries.image.gif
+     * @param    string     The file to load including path and extension eg: libaries.image.gif
      *
      * @return string Image url
      */
@@ -434,9 +568,9 @@ class WFEditorPlugin extends JObject
         $wf = WFApplication::getInstance();
 
         // root key set
-        if ($keys[0] === 'editor' || $keys[0] === $name || $keys[0] === $caller) {
+        if ($keys[0] == 'editor' || $keys[0] == $name || $keys[0] == $caller) {
             return $wf->getParam($key, $fallback, $default, $type);
-        // no root key set, treat as shared param
+            // no root key set, treat as shared param
         } else {
             // get fallback param from editor key
             $fallback = $wf->getParam('editor.' . $key, $fallback, $default, $type);
@@ -446,7 +580,7 @@ class WFEditorPlugin extends JObject
                 $fallback = $wf->getParam($name . '.' . $key, $fallback, $default, $type);
                 $name = $caller;
             }
-            
+
             // reset the $default to prevent clearing
             if ($fallback === $default) {
                 $default = '';
@@ -460,13 +594,22 @@ class WFEditorPlugin extends JObject
     /**
      * Named wrapper to check access to a feature.
      *
-     * @param string	The feature to check, eg: upload
-     * @param mixed		The defalt value
+     * @param string    The feature to check, eg: upload
+     * @param mixed        The defalt value
      *
      * @return bool
      */
     public function checkAccess($option, $default = 0)
     {
-        return (bool)$this->getParam($option, $default);
+        return (bool) $this->getParam($option, $default);
+    }
+
+    protected function allowEvents()
+    {
+        if ((bool) $this->getParam('editor.allow_javascript')) {
+            return true;
+        }
+
+        return (bool) $this->getParam('editor.allow_event_attributes');
     }
 }

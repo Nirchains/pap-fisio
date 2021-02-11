@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright 	Copyright (c) 2009-2019 Ryan Demmer. All rights reserved
+ * @copyright 	Copyright (c) 2009-2020 Ryan Demmer. All rights reserved
  * @license   	GNU/GPL 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * JCE is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
@@ -24,7 +24,7 @@ class plgQuickiconJce extends JPlugin
         $app = JFactory::getApplication();
 
         // only in Admin and only if the component is enabled
-        if ($app->isClient('site') || JComponentHelper::getComponent('com_jce', true)->enabled === false) {
+        if ($app->getClientId() !== 1 || JComponentHelper::getComponent('com_jce', true)->enabled === false) {
             return;
         }
 
@@ -46,11 +46,9 @@ class plgQuickiconJce extends JPlugin
         $language = JFactory::getLanguage();
         $language->load('com_jce', JPATH_ADMINISTRATOR);
 
-        $filter = $this->params->get('filter', '');
-
         return array(array(
-            'link'      => 'index.php?option=com_jce&view=browser&filter=' . $filter,
-            'image'     => 'picture fa-file-image-o',
+            'link'      => 'index.php?option=com_jce&view=browser',
+            'image'     => 'picture fas fa-image',
             'access'    => array('jce.browser', 'com_jce'),
             'text'      => JText::_('PLG_QUICKICON_JCE_TITLE'),
             'id'        => 'plg_quickicon_jce',

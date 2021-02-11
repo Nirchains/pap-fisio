@@ -4,7 +4,7 @@
  *
  * @package     Joomla
  * @subpackage  Fabrik
- * @copyright   Copyright (C) 2005-2016  Media A-Team, Inc. - All rights reserved.
+ * @copyright   Copyright (C) 2005-2020  Media A-Team, Inc. - All rights reserved.
  * @license     GNU/GPL http://www.gnu.org/copyleft/gpl.html
  */
 
@@ -404,7 +404,7 @@ class Filesystemstorage extends FabrikStorageAdaptor
 		$file = $w->parseMessageForPlaceHolder($file);
 		$f = basename($file);
 		$dir = dirname($file);
-		$dir = str_replace($ulDir, $thumbdir, $dir);
+		$dir = str_replace($ulDir, ltrim($thumbdir, '/'), $dir);
 		$ext = JFile::getExt($f);
 
 		// Remove extension

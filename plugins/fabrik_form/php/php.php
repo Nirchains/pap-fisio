@@ -4,7 +4,7 @@
  *
  * @package     Joomla.Plugin
  * @subpackage  Fabrik.form.php
- * @copyright   Copyright (C) 2005-2016  Media A-Team, Inc. - All rights reserved.
+ * @copyright   Copyright (C) 2005-2020  Media A-Team, Inc. - All rights reserved.
  * @license     GNU/GPL http://www.gnu.org/copyleft/gpl.html
  */
 
@@ -453,6 +453,7 @@ class PlgFabrik_FormPHP extends PlgFabrik_Form
 	private function _requirePHP()
 	{
 		$params = $this->getParams();
+		$php_result = null;
 
 		if ($params->get('form_php_file') != -1)
 		{

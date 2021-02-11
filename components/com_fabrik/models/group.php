@@ -4,7 +4,7 @@
  *
  * @package     Joomla
  * @subpackage  Fabrik
- * @copyright   Copyright (C) 2005-2016  Media A-Team, Inc. - All rights reserved.
+ * @copyright   Copyright (C) 2005-2020  Media A-Team, Inc. - All rights reserved.
  * @license     GNU/GPL http://www.gnu.org/copyleft/gpl.html
  */
 
@@ -1566,7 +1566,7 @@ class FabrikFEModelGroup extends FabModel
 		$groupId          = $this->getId();
 		$formModel        = $this->getFormModel();
 		$origGroupRowsIds = FArrayHelper::getValue($formModel->formData, 'fabrik_group_rowids', array());
-		$origGroupRowsIds = FArrayHelper::getValue($origGroupRowsIds, $groupId, array());
+		$origGroupRowsIds = FArrayHelper::getValue($origGroupRowsIds, $groupId, '[]');
 		$origGroupRowsIds = json_decode($origGroupRowsIds);
 
 		return $origGroupRowsIds;
@@ -1627,7 +1627,7 @@ class FabrikFEModelGroup extends FabModel
 				$d = ArrayHelper::fromObject($d);
 			}
 
-			$repeatGroup = count($d);
+			$repeatGroup = is_scalar($d) ? 1 : count($d);
 		}
 		else
 		{

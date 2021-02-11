@@ -4,7 +4,7 @@
  *
  * @package     Joomla.Plugin
  * @subpackage  Fabrik.form.email
- * @copyright   Copyright (C) 2005-2016  Media A-Team, Inc. - All rights reserved.
+ * @copyright   Copyright (C) 2005-2020  Media A-Team, Inc. - All rights reserved.
  * @license     GNU/GPL http://www.gnu.org/copyleft/gpl.html
  */
 
@@ -59,7 +59,7 @@ function tryForLabel($formModel, $key, $raw, $info)
 	return array($label, $thisRaw, $show);
 }
 ?>
-<table border="1">
+<table>
 <?php
 foreach ($this->emailData as $key => $val)
 {
